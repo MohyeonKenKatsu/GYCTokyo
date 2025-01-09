@@ -5,31 +5,31 @@
         <li>
             <a href="<%= request.getContextPath() %>/Views/Pages/Calendar/index.jsp" class="active">
                 캘린더 및 투두
-                <img src="<%= request.getContextPath() %>/Views/resources/images/캘린더 흰색.png" alt="캘린더아이콘" class="icon">
+                <img src="<%= request.getContextPath() %>/Views/resources/images/CalendarLogo.png" alt="캘린더아이콘" class="icon">
             </a>
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/Views/Pages/Health/Health.jsp">
                 건강기록
-                <img src="<%= request.getContextPath() %>/Views/resources/images/운동 흰색.png" alt="운동아이콘" class="icon">
+                <img src="<%= request.getContextPath() %>/Views/resources/images/HealthLogo.png" alt="운동아이콘" class="icon">
             </a>
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/Views/Pages/PrivateDiary/PrivateDiary.jsp">
                 마음일기
-                <img src="<%= request.getContextPath() %>/Views/resources/images/마음일기 흰색.png" alt="다이어리아이콘" class="icon">
+                <img src="<%= request.getContextPath() %>/Views/resources/images/PrivateDiaryLogo.png" alt="다이어리아이콘" class="icon">
             </a>
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.jsp">
                 공유일기
-                <img src="<%= request.getContextPath() %>/Views/resources/images/공유일기 흰색.png" alt="다이어리아이콘" class="icon">
+                <img src="<%= request.getContextPath() %>/Views/resources/images/ShareDiaryLogo.png" alt="다이어리아이콘" class="icon">
             </a>
         </li>
         <li>
             <a href="<%= request.getContextPath() %>/Views/Pages/Group/Group.jsp">
                 소모임
-                <img src="<%= request.getContextPath() %>/Views/resources/images/소모임 흰색.png" alt="소모임아이콘" class="icon">
+                <img src="<%= request.getContextPath() %>/Views/resources/images/GatheringLogo.png" alt="소모임아이콘" class="icon">
             </a>
         </li>
     </ul>

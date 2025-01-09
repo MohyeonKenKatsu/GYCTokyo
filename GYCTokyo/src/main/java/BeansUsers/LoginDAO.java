@@ -99,13 +99,10 @@ public class LoginDAO
 					oPaValue[0] = EMAIL;
 					oPaValue[1] = PASSWORD;
 					
-
 					if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
 					{
 						if (this.DBMgr.Rs.next() == true) {
 							USER_ID_DATA[0] = Integer.toString(this.DBMgr.Rs.getInt("USER_ID"));
-							USER_ID_DATA[1] = this.DBMgr.Rs.getString("NICKNAME");
-							USER_ID_DATA[2] = Integer.toString(this.DBMgr.Rs.getInt("COURSE"));
 							bResult = true;
 						}
 						else {

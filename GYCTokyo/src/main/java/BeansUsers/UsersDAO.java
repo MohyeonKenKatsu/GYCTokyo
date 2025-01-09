@@ -77,7 +77,7 @@ public class UsersDAO
 	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-	public boolean ReadHeaderData(String USERID, UsersDTO sHeaderData, String[] Log) throws Exception
+	public boolean ReadHeaderData(String sUSERID, UsersDTO userDTO, String[] Log) throws Exception
 	{
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
@@ -88,26 +88,26 @@ public class UsersDAO
 	    	// -----------------------------------------------------------------------------
 			// 사원정보 읽기
 	    	// -----------------------------------------------------------------------------
-			if (USERID != null)
+			if (sUSERID != null)
 			{
 				if (this.DBMgr.DbConnect() == true)
 				{
 					// 사원정보 읽기
 					sSql = "BEGIN SP_USERS_HEADERDATA(?,?); END;";
 					Log[0] = sSql;
-					// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
 					
 					// IN 파라미터 만큼만 할당
-					oPaValue = new Object[2];
-					oPaValue[0] = 2;//Integer.valueOf(USERID);
+					oPaValue = new Object[1];
+					oPaValue[0] = Integer.valueOf(sUSERID);
+					Log[1] = sUSERID;
 					
 					if (this.DBMgr.RunQuery(sSql, oPaValue, 2, true) == true)
 					{
-						Log[1] = "server set";
+						Log[2] = "query operated";
 						while(this.DBMgr.Rs.next() == true)
 						{
-							Log[2] = "record set";							
-							sHeaderData.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
+							Log[3] = "query get result";
+							userDTO.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
 						}
 						
 						bResult = true;
@@ -119,173 +119,6 @@ public class UsersDAO
 		catch (Exception Ex)
 		{
 			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
-	}
-	/***********************************************************************
-	 * ReadSawonList()	: 오라클 데이터베이스에서 사원정보 읽기
-	 * @param sawonDTO	: 사원정보 DTO(조건용)
-	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
-	 * @throws Exception 
-	 ***********************************************************************/
-	public boolean ReadSawonList(UsersDTO sawonDTO) throws Exception
-	{
-		String sSql = null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 사원정보 읽기
-	    	// -----------------------------------------------------------------------------
-			if (this.DBMgr.DbConnect() == true)
-			{
-				// 사원정보 읽기
-				sSql = "BEGIN SP_MAN_R(?,?,?,?,?,?); END;";
-				// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
-				
-				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[5];
-				
-				oPaValue[0] = 0;
-				oPaValue[1] = "-1";
-//				oPaValue[2] = sawonDTO.getAge();
-//				oPaValue[3] = sawonDTO.getGender();
-//				oPaValue[4] = sawonDTO.getDept();
-				
-				if (this.DBMgr.RunQuery(sSql, oPaValue, 6, true) == true)
-				{
-					bResult = true;
-				}
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
-	}
-	/***********************************************************************
-	 * ReadSawonList()	: 오라클 데이터베이스에서 사원정보 읽기
-	 * @param sawonDTO	: 사원정보 DTO(조건용)
-	 * @param Sawons	: 사원정보 DTO(결과 반환용)
-	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
-	 * @throws Exception 
-	 ***********************************************************************/
-	public boolean ReadSawonList(UsersDTO sawonDTO, ArrayList<UsersDTO> Sawons) throws Exception
-	{
-		String sSql = null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 사원정보 읽기
-	    	// -----------------------------------------------------------------------------
-			if (this.DBMgr.DbConnect() == true)
-			{
-				// 사원정보 읽기
-				sSql = "BEGIN SP_MAN_R(?,?,?,?,?,?); END;";
-				// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
-				
-				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[5];
-				
-				oPaValue[0] = 0;
-				oPaValue[1] = "-1";
-//				oPaValue[2] = sawonDTO.getAge();
-//				oPaValue[3] = sawonDTO.getGender();
-//				oPaValue[4] = sawonDTO.getDept();
-				
-				if (this.DBMgr.RunQuery(sSql, oPaValue, 6, true) == true)
-				{
-					while(this.DBMgr.Rs.next() == true)
-					{
-						UsersDTO Sawon = new UsersDTO();
-						
-//						Sawon.setSabun(this.DBMgr.Rs.getInt("Sabun"));
-//						Sawon.setName(ComMgr.IsNull(this.DBMgr.Rs.getString("Name"), "").trim());
-//						Sawon.setAge(this.DBMgr.Rs.getInt("Age"));
-//						Sawon.setGender(ComMgr.IsNull(this.DBMgr.Rs.getString("Gender"), "").trim());
-//						Sawon.setTel(ComMgr.IsNull(this.DBMgr.Rs.getString("Tel"), "").trim());
-//						Sawon.setDept(ComMgr.IsNull(this.DBMgr.Rs.getString("Dept"), "").trim());
-//						Sawon.setDeptname(ComMgr.IsNull(this.DBMgr.Rs.getString("DeptName"), "").trim());
-//						Sawon.setStcd(ComMgr.IsNull(this.DBMgr.Rs.getString("StCd"), "").trim());
-//						Sawon.setStcdname(ComMgr.IsNull(this.DBMgr.Rs.getString("StCdName"), "").trim());
-//						Sawon.setBdate(ComMgr.IsNull(this.DBMgr.Rs.getString("BDate"), "").trim());
-//						Sawon.setAddress(ComMgr.IsNull(this.DBMgr.Rs.getString("Address"), "").trim());
-						
-						Sawons.add(Sawon);
-					}
-					
-					bResult = true;
-				}
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
-	}
-	/***********************************************************************
-	 * SaveSawonDetail()	: 오라클 데이터베이스에 사원정보 저장
-	 * @param sawonDTO		: 사원정보 DTO(저장용)
-	 * @return boolean		: 사원정보 저장 처리 여부(true | false)
-	 * @throws Exception 
-	 ***********************************************************************/
-	public boolean SaveSawonDetail(UsersDTO sawonDTO) throws Exception
-	{
-		String sSql = null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 사원정보 저장(JobStatus : INSERT | UPDATE | DELETE)
-	    	// -----------------------------------------------------------------------------
-			if (this.DBMgr.DbConnect() == true)
-			{
-				sSql = "BEGIN SP_MAN_CUD(?,?,?,?,?,?,?,?,?,?); END;";
-				
-				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[10];
-				
-//				oPaValue[0] = sawonDTO.getJobstatus();
-//				oPaValue[1] = sawonDTO.getSabun();
-//				oPaValue[2] = ComMgr.IsNull(sawonDTO.getName(), "");
-//				oPaValue[3] = sawonDTO.getAge();
-//				oPaValue[4] = ComMgr.IsNull(sawonDTO.getGender(), "");
-//				oPaValue[5] = ComMgr.IsNull(sawonDTO.getTel(), "");
-//				oPaValue[6] = ComMgr.IsNull(sawonDTO.getDept(), "");
-//				oPaValue[7] = ComMgr.IsNull(sawonDTO.getStcd(), "");
-//				oPaValue[8] = ComMgr.IsNull(sawonDTO.getBdate(), "");
-//				oPaValue[9] = ComMgr.IsNull(sawonDTO.getAddress(), "");
-				
-				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
-				{
-					this.DBMgr.DbCommit();
-					
-					bResult = true;
-				}
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		finally
-		{
-			this.DBMgr.DbDisConnect();
 		}
 		
 		return bResult;
