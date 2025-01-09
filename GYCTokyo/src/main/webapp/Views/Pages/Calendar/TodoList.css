@@ -1,0 +1,36 @@
+.todoList {
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background-color: #f9f9f9;
+}
+
+.todoList h2 {
+    font-size: 18px;
+    color: #333;
+}
+
+.todoList table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+.todoList th, .todoList td {
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+
+.todoList button {
+    background-color: #2a5db0;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.todoList button:hover {
+    background-color: #1e4a90;
+}
