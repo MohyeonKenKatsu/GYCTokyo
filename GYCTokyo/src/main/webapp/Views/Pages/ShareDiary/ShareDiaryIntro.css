@@ -1,0 +1,111 @@
+@charset "UTF-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', sans-serif;
+}
+
+body {
+    background-color: #f1f1f1;
+}
+
+.MainContent {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 100%;
+	max-width: 1300px;
+	padding: 20px;
+	margin: 20px;
+}
+
+header {
+	margin-bottom: 10px;
+}
+
+header .Title {
+	font-size: 30px;
+	color: #0353a4;
+	margin-bottom: 5px;
+	white-space: nowrap;
+}
+
+header .Date {
+ 	display: inline-block; 
+    background: #e0e0e0; 
+    padding: 4px 8px; 
+    border-radius: 4px; 
+    font-size: 14px;
+    margin-top: 4px;
+}
+
+.RightMenu {
+	display: flex;
+	margin-left: auto;
+}
+
+.GroupInviteButton {
+	width: 58px;
+	background: #e0e0e0; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 6px 12px; 
+    margin-left:10px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.GroupInviteButton:hover {
+	background: #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.Sort {
+	font-size: 24px;
+	cursor: pointer;
+	margin-left: 10px;
+}
+
+.Sort:hover {
+	color: #0353a4; 
+}
+
+.GroupPlusButton {
+	font-size: 60px; 
+    color: #7d7d7d; 
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.GroupPlusButton:hover {
+	font-size: 60px; 
+    color: #0353a4; 
+    margin-bottom: 20px;
+}
+
+.GroupFolders {
+	display: inline-flex;
+	flex-flow: wrap; 
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.GroupFolder {
+ 	border: 1px solid #0353a4; 
+ 	color: #0353a4;
+    border-radius: 4px; 
+    padding: 20px 40px; 
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.GroupFolder:hover {
+	background: #0353a4;
+	border: 1px solid #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
+}
