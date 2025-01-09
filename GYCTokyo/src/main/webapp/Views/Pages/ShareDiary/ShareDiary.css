@@ -33,13 +33,16 @@ header .Title {
 	white-space: nowrap;
 }
 
-header .Date {
+.DatePicker {
+	color: #242424;
  	display: inline-block; 
     background: #e0e0e0; 
     padding: 4px 8px; 
+    border: none;
     border-radius: 4px; 
     font-size: 14px;
     margin-top: 4px;
+    cursor: pointer;
 }
 
 .RightMenu {
@@ -48,6 +51,7 @@ header .Date {
 }
 
 .MemberListButton {
+	color: #242424;
 	width: 58px;
 	background: #e0e0e0; 
     border: none; 
@@ -64,6 +68,7 @@ header .Date {
 }
 
 .SD-Search {
+	color: #242424;
 	width: 58px;
 	background: #e0e0e0; 
     border: none; 
@@ -81,6 +86,7 @@ header .Date {
 }
 
 .Sort {
+	color: #242424;
 	font-size: 24px;
 	cursor: pointer;
 	margin-left:10px;
@@ -91,6 +97,7 @@ header .Date {
 }
 
 .WriteButton {
+	color: #242424;
 	width: 58px;
 	display: flex;
 	background: #e0e0e0;
@@ -100,6 +107,13 @@ header .Date {
     margin-top: 8px;
     margin-left:10px;
 	white-space: nowrap;
+	cursor: pointer;
+}
+
+.WriteButton:hover {
+	background: #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
 }
 
 .DiaryList {
@@ -107,15 +121,35 @@ header .Date {
 	flex-direction: column;
 	align-items: flex-start;
 	width: 1300px;
+	padding-left: 125px;
+	margin-top: 30px;
 }
 
 .DiaryPreview {
 	width: 900px;
+	line-height: 170%;
 	background: #ffffff;
 	border: none;
-	border-radius: 10px;
+	border-radius: 20px;
 	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-	padding: 20px;
-	margin-right: 500px;
-	margin-bottom: 15px;
+	padding: 25px;
+	margin-bottom: 30px;
+	cursor: pointer;
+}
+
+.Writer {
+	color: #0353a4;
+}
+
+.TextPreview {
+	color: #242424;
+	font-size: 16px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.EditGuide {
+	color: #d5d5d5;
+	font-size: 15px;
 }
