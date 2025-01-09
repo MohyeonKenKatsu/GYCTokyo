@@ -1,45 +1,19 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-    // 요청 데이터 인코딩 설정
-    request.setCharacterEncoding("UTF-8");
+<%@ page language="java" contentType="application/json; charset=UTF-8" pageEncoding="UTF-8"%>
+<%
+    String type = request.getParameter("type");
+    String goal = request.getParameter("goal");
+    String achieved = request.getParameter("achieved");
 
-    // JSON 응답 생성을 위한 변수
-    String jsonResponse = "";
-    
-    try {
-        // 요청 파라미터 받기
-        String type = request.getParameter("type");
-        
-        // 타입별로 다른 파라미터 처리
-        switch(type) {
-            case "음수량":
-                String waterAmount = request.getParameter("waterAmount");
-                // 여기에 데이터베이스 저장 로직 구현
-                break;
-            case "운동기록":
-                String exerciseType = request.getParameter("exerciseType");
-                String exerciseTime = request.getParameter("exerciseTime");
-                // 여기에 데이터베이스 저장 로직 구현
-                break;
-            case "수면기록":
-                String sleepTime = request.getParameter("sleepTime");
-                String wakeTime = request.getParameter("wakeTime");
-                // 여기에 데이터베이스 저장 로직 구현
-                break;
-            case "영양제":
-                String vitaminName = request.getParameter("vitaminName");
-                String vitaminAmount = request.getParameter("vitaminAmount");
-                // 여기에 데이터베이스 저장 로직 구현
-                break;
-        }
-        
-        jsonResponse = "{\"success\": true, \"message\": \"저장되었습니다.\"}";
-        
-    } catch(Exception e) {
-        jsonResponse = "{\"success\": false, \"message\": \"저장에 실패했습니다.\"}";
-        e.printStackTrace();
+    System.out.println("Type: " + type);
+    System.out.println("Goal: " + goal);
+    System.out.println("Achieved: " + achieved);
+
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
+
+    if (type == null || goal == null || achieved == null || type.isEmpty() || goal.isEmpty() || achieved.isEmpty()) {
+        response.getWriter().write("{\"success\": false, \"message\": \"입력 데이터가 올바르지 않습니다.\"}");
+    } else {
+        response.getWriter().write("{\"success\": true, \"type\": \"" + type + "\", \"goal\": \"" + goal + "\", \"achieved\": \"" + achieved + "\"}");
     }
-    
-    // JSON 응답 출력
-    out.print(jsonResponse);
-%> 
+%>
