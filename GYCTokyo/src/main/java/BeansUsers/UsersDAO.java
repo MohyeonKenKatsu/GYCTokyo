@@ -77,7 +77,7 @@ public class UsersDAO
 	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-	public boolean ReadHeaderData(String sUSERID, UsersDTO userDTO, String[] Log) throws Exception
+	public boolean ReadHeaderData(String sUSERID, UsersDTO userDTO) throws Exception
 	{
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
@@ -94,19 +94,15 @@ public class UsersDAO
 				{
 					// 사원정보 읽기
 					sSql = "BEGIN SP_USERS_HEADERDATA(?,?); END;";
-					Log[0] = sSql;
 					
 					// IN 파라미터 만큼만 할당
 					oPaValue = new Object[1];
 					oPaValue[0] = Integer.valueOf(sUSERID);
-					Log[1] = sUSERID;
 					
 					if (this.DBMgr.RunQuery(sSql, oPaValue, 2, true) == true)
 					{
-						Log[2] = "query operated";
 						while(this.DBMgr.Rs.next() == true)
 						{
-							Log[3] = "query get result";
 							userDTO.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
 						}
 						
