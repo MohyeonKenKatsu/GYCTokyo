@@ -172,7 +172,7 @@
     <header class="header">
     	
         <div class="logo">
-            <img src="<%= request.getContextPath() %>/Views/resources/images/진짜최종로고.png" alt="로고" class="logo">
+            <img src="<%= request.getContextPath() %>/Views/resources/images/LOGO.png" alt="로고" class="logo">
         </div>
         
         <div class="user-info">

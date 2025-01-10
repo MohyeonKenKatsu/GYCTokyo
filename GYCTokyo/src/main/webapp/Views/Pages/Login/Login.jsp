@@ -168,7 +168,7 @@
         
         <!-- 입력 양식 영역 -->
         <form name="loginform" action="" method="post">
-        
+        	
         	<!-- 이메일 입력 칸 -->
 	        <div class="input-container">
 	            <input type="email" id="email" name="email" placeholder="이메일" value="<%= sEMAIL %>" required>
