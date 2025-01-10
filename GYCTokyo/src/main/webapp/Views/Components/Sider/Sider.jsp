@@ -9,7 +9,7 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/Views/Pages/Health/Health.jsp">
+            <a href="<%= request.getContextPath() %>/Views/Pages/Health/HealthIndex.jsp">
                 건강기록
                 <img src="<%= request.getContextPath() %>/Views/resources/images/HealthLogo.png" alt="운동아이콘" class="icon">
             </a>
