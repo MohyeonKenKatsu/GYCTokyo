@@ -103,7 +103,7 @@
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
 	userDTO = new UsersDTO();
-	sNickname = "서버접속실패";
+	sNickname = "[서버접속실패]";
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -153,7 +153,7 @@
 	
 	String[] Log = new String[] {"", "", "", ""};
 	//사원정보 검색
-	if (this.usersDAO.ReadHeaderData(sUSERID, userDTO, Log) == true)
+	if (this.usersDAO.ReadHeaderData(sUSERID, userDTO) == true)
 	{
 		sNickname = userDTO.getNickname();
 	}
@@ -174,12 +174,20 @@
         <div class="logo">
             <img src="<%= request.getContextPath() %>/Views/resources/images/LOGO.png" alt="로고" class="logo">
         </div>
-        
+
         <div class="user-info">
+        	<button type="button" class="signup-btn" onclick="gotologin()">로그인 화면 (임시버튼)</button>
             <span><%= sNickname %> 님</span>
             <img src="<%= request.getContextPath() %>/Views/resources/images/japanFlag.svg" alt="국기" class="flag">
         </div>
 	
     </header>
+	<script type="text/javascript">
+		function gotologin()
+		{
+    		<% session.removeAttribute("USER_ID"); %>
+    		location.href="../../Pages/Login/Login.jsp";
+    	}
+    </script>
 </body>
 </html>
