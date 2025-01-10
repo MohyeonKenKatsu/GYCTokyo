@@ -12,16 +12,16 @@
 </head>
 <body>
 	<!-- 모달 배경 -->
-	<div class="Modal" id="modal">
+	<div class="NewGroupModal" id="newGroupModal">
 	
 		<!-- 모달 창 -->
 		<div class="ModalContent">
 		
-			<div class="ModalHeader">
+			<div class="SDGroupModalHeader">
 				<h2 class="Header">새 그룹 생성</h2>
       		</div>
       		
-        	<div class="ModalBody">
+        	<div class="SDGroupModalBody">
         		<table class="GroupNameTool">
         			<tr>
         				<td>
@@ -36,7 +36,7 @@
         		</table>
         	</div>
         	
-			<div class="ModalTail">
+			<div class="SDGroupModalTail">
 				<button class="NewGroupCancel">취소</button>
 				<button class="NewGroupButton">생성</button>
 			</div>
