@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>모임 조회</title>
-    <link rel="stylesheet" href="ViewGroupModal.css">
+    <link rel="stylesheet" href="ViewGatheringModal.css">
 </head>
 <body>
     <div class="modal" id="modal">
@@ -54,7 +54,7 @@
                 </div>
             </div>
             <div class="button-group">
-                <button class="reset-btn" onclick="location.href='Group.jsp'">취소</button>
+                <button class="reset-btn" onclick="location.href='Index.jsp'">취소</button>
                 <button class="submit-btn">참가</button>
             </div>
         </div>
