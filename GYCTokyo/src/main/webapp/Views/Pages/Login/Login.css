@@ -54,14 +54,14 @@ input {
     cursor: pointer;
 }
 
-.signup-btn {
+.signin-btn {
     background-color: #0353a4;
     color: white;
     border: none;
     border-radius: 12px;
 }
 
-.signin-btn {
+.signup-btn {
     background-color: #f1f1f1;
     color : #000;
     border: none;

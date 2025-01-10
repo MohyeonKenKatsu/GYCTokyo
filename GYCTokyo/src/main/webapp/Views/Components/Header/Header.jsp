@@ -88,21 +88,22 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
-	UsersDTO sHeaderData = null;
-	String sUserID = null;
+	UsersDTO userDTO = null;
+	String sUSERID = null;
 	String sNickname = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-
+	
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	String sUSERID = "2";//request.getParameter("USER_ID");
+	sUSERID = (String)session.getAttribute("USER_ID");
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	sHeaderData = new UsersDTO();
+	userDTO = new UsersDTO();
+	sNickname = "서버접속실패";
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -112,9 +113,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	--------------------------------------------------------------------------	
+	--------------------------------------------------------------------------%>
 	<jsp:useBean id="SawonDTO" class="BeansUsers.UsersDTO" scope="request"></jsp:useBean>
-	--%>	
+	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -123,8 +124,9 @@
 						:---------------------------------------------------
 	주의사항				: HTML 태그의 name 속성 값은 소문자로 시작!
 						: HTML 태그에서 데이터 입력 없는 경우 null 입력 됨!
-	------------------------------------------------------------------------	
-	<jsp:setProperty name="UsersDTO" property="*"/>--%>
+	--------------------------------------------------------------------------%>
+	<jsp:setProperty name="UsersDTO" property="*"/>
+	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법2	: Beans Property에 HTML 태그 name 사용
 						:---------------------------------------------------
@@ -147,41 +149,37 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
+	out.println("<script>console.log('" + sUSERID + "')</script>");
 	
-	sNickname = "두괄식";
-
+	String[] Log = new String[] {"", "", "", ""};
 	//사원정보 검색
-	String[] Log = new String[3];
-	if (this.usersDAO.ReadHeaderData(sUSERID, sHeaderData, Log) == true)
+	if (this.usersDAO.ReadHeaderData(sUSERID, userDTO, Log) == true)
 	{
-		sNickname = sHeaderData.getNickname();
-		out.println("<script>console.log('Nickname')</script>");
+		sNickname = userDTO.getNickname();
 	}
-
-	out.println("<script>console.log('" + Log[0] + "')</script>");
-	out.println("<script>console.log('" + Log[1] + "')</script>");
-	out.println("<script>console.log('" + Log[2] + "')</script>");
-	out.println("<script>console.log(" + Integer.valueOf(sUSERID) + ")</script>");
-
-	out.println("<script>console.log(" + sHeaderData.getNickname() + ")</script>");
+	out.println("<script>console.log('" + sNickname +"')</script>");
+	out.println("<script>console.log('" + Log[0] +"')</script>");
+	out.println("<script>console.log('" + Log[1] +"')</script>");
+	out.println("<script>console.log('" + Log[2] +"')</script>");
+	out.println("<script>console.log('" + Log[3] +"')</script>");
+	
 %>
 <body>
 	<%----------------------------------------------------------------------
 	[HTML Page - FORM 디자인 영역]
 	--------------------------------------------------------------------------%>
-
+	
     <header class="header">
-    
+    	
         <div class="logo">
             <img src="<%= request.getContextPath() %>/Views/resources/images/진짜최종로고.png" alt="로고" class="logo">
         </div>
         
         <div class="user-info">
-            <span><%=sNickname %> 님</span>
+            <span><%= sNickname %> 님</span>
             <img src="<%= request.getContextPath() %>/Views/resources/images/japanFlag.svg" alt="국기" class="flag">
-            
         </div>
-        
+	
     </header>
 </body>
 </html>

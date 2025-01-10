@@ -95,7 +95,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-
+	
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -118,7 +118,6 @@
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
 	--------------------------------------------------------------------------%>
 	<jsp:useBean id="UsersDTO" class="BeansUsers.UsersDTO" scope="request"></jsp:useBean>
-	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -129,7 +128,6 @@
 						: HTML 태그에서 데이터 입력 없는 경우 null 입력 됨!
 	--------------------------------------------------------------------------%>	
 	<jsp:setProperty name="UsersDTO" property="*"/>
-	
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
@@ -175,30 +173,31 @@
 	        <div class="input-container">
 	            <input type="email" id="email" name="email" placeholder="이메일" value="<%= sEMAIL %>" required>
 	        </div>
-	
+	        
 			<!-- 비밀번호 입력 칸 -->
 	        <div class="input-container">
 	            <input type="password" id="password" name="password" placeholder="비밀번호" required>
 	        </div>
-
+	        
 			<!-- DB 접속 제어 변수 -->
 	       	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
-	
+	       	
 			<!-- 버튼 영역 -->
 	        <div class="button-container">
-	        
+	        	
 	        	<!-- 로그인 버튼 -->
 	            <button type="submit" class="signin-btn">SIGN IN</button>
 	            
 	            <!-- 회원가입 버튼 -->
 	            <button type="button" class="signup-btn" onclick="window.location.href='SignUp.jsp'">SIGN UP</button>
-
+	        
 	        </div>
 		</form>
 	</div>
 	<%----------------------------------------------------------------------
 	[HTML Page - END]
 	--------------------------------------------------------------------------%>
+	
 	<%----------------------------------------------------------------------
 	[HTML Page - 자바스크립트 구현 영역(하단)]
 	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
@@ -263,22 +262,21 @@
 		//response.sendRedirect(sUrl);
 		// -----------------------------------------------------------------
 	%>
-	
-	
+
 <script type="text/javascript">
-		
+	
 	//POST 요청을 수행하는 함수
 	function postToDestination() {
 	    const form_user_id = document.createElement('form');
 	    form_user_id.method = 'POST';
 	    form_user_id.action = '../Calendar/index.jsp';
-	
+		
 	    // 숨겨진 필드에 데이터 추가
 	    const user_id = document.createElement('input');
 	    user_id.type = 'hidden';
 	    user_id.name = 'USER_ID';
 	    user_id.value = '<%=USER_ID_DATA[0]%>';
-	
+		
 	    form_user_id.appendChild(user_id);
 	    document.body.appendChild(form_user_id);
 	    form_user_id.submit();
@@ -287,13 +285,15 @@
 	// 로그인 실패일 경우 alert창 출력 
 	if (<%= bLoginFail %> == false) {
 		// POST 요청 실행
-        //console.log('<%=bJobProcess%>');
-        postToDestination();
+        // console.log('<%=bJobProcess%>');
+        // postToDestination();
+        <% session.setAttribute("USER_ID", USER_ID_DATA[0]); %>
+        location.href="../Calendar/index.jsp";
 	}
 	if (<%= bLoginFail %> == true) {
-		DocumentInit('로그인에 실패했습니다.');        
+		DocumentInit('로그인에 실패했습니다.');
 	}
+
 </script>
-	
 </body>
 </html>
