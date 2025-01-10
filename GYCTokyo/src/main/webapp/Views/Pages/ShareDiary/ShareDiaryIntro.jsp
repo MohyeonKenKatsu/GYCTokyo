@@ -60,6 +60,10 @@
 				<div class="GroupFolder">사내켄</div>
 			</div>
 		</main>
+		
+		<jsp:include page="NewSDGroupModal.jsp" />
+   		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/NewSDGroupModal.js" defer></script>
+		
   	</div>        
 </body>
 </html>

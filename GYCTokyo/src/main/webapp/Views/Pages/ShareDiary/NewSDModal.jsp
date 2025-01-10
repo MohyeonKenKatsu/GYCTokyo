@@ -12,7 +12,7 @@
 </head>
 <body>
 	<!-- 모달 배경 -->
-	<div class="Modal">
+	<div class="Modal" id="modal">
 	
 		<!-- 모달 창 -->
 		<div class="ModalContent">
