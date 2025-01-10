@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>모임 만들기</title>
-    <link rel="stylesheet" href="NewGroupModal.css">
+    <link rel="stylesheet" href="NewGatheringModal.css">
 </head>
 <body>
     <!-- 모달 -->
@@ -61,7 +61,7 @@
 위의 가이드에 맞춰서 작성해주세요."></textarea>
                 </div>
                 <div class="button-group">
-                    <button type="button" class="reset-btn" onclick="location.href='Group.jsp'">취소</button>
+                    <button type="button" class="reset-btn" onclick="location.href='Index.jsp'">취소</button>
                     <button type="submit" class="submit-btn">등록</button>
                 </div>
             </form>
