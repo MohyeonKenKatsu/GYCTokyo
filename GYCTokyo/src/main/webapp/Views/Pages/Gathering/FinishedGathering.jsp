@@ -6,7 +6,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>끝난 모임</title>
-    <link rel="stylesheet" href="FinishedGroup.css">
+    <link rel="stylesheet" href="FinishedGathering.css">
 </head>
 <body>
     <div class="main-container">
@@ -29,10 +29,10 @@
                     <p>내용: 카모미 보라각근데...</p>
                 </div>
                 <div class="event-card">
-                    <h3>마라상귀 먹어 모집</h3>
+                    <h3>마라샹궈 먹어 모집</h3>
                     <p>시간: 12월 20일 19시</p>
                     <p>장소: 317호 앞</p>
-                    <p>내용: 마라장량에서 시칼...</p>
+                    <p>내용: 마라장룡에서 시칼...</p>
                 </div>
                 <div class="event-card">
                     <h3>등산 모임</h3>
@@ -55,7 +55,7 @@
             </div>
 
             <div class="footer">
-                <button class="footer-btn" onclick="location.href='Group.jsp'">돌아가기</button>
+                <button class="footer-btn" onclick="location.href='Index.jsp'">돌아가기</button>
             </div>
         </div>
     </div>
