@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	// "글쓰기" 버튼 클릭 시 모달 열기
 	if (WriteButton) {
 	    WriteButton.addEventListener("click", function () {
-	        modal.style.display = "block"; // 모달창 보이기
+			modal.style.display = "block"; // 모달창 보이기
 	    });
 	}
 	

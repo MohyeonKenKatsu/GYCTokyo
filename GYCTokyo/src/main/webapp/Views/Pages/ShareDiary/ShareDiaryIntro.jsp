@@ -62,7 +62,7 @@
 		</main>
 		
 		<jsp:include page="NewSDGroupModal.jsp" />
-   		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/NewSDGroupModal.js" defer></script>
+   		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.js" defer></script>
 		
   	</div>        
 </body>
