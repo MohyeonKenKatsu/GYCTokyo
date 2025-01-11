@@ -67,6 +67,7 @@
         </main>
         
         <jsp:include page="NewSDModal.jsp" />
+        <jsp:include page="GroupMemberListModal.jsp" />
    		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiary.js" defer></script>
         
       </div>

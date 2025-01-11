@@ -7,7 +7,7 @@
 	--------------------------------------------------------------------------%>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>공유일기 작성 모달창</title>
+	<title>공유일기 그룹원 초대 모달창</title>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/InviteGroupMemberModal.css">
 </head>
 <body>
