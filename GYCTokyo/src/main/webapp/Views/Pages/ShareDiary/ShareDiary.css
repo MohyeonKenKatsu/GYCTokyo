@@ -137,7 +137,8 @@ header .Title {
 	cursor: pointer;
 }
 
-.Writer {
+.DiaryWriter {
+	font-size: 18px;
 	color: #0353a4;
 }
 

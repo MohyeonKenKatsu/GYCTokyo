@@ -7,12 +7,12 @@
 	--------------------------------------------------------------------------%>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>공유일기 작성 모달창</title>
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/NewSDModal.css">
+	<title>공유일기 조회 모달창</title>
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ViewSDModal.css">
 </head>
 <body>
 	<!-- 모달 배경 -->
-	<div class="NewSDModal" id="newSDModal">
+	<div class="ViewSDModal" id="viewSDModal">
 	
 		<!-- 모달 창 -->
 		<div class="ModalContent">
@@ -29,15 +29,16 @@
       		</div>
       		
         	<div class="ModalBody">
-				<textarea class="InputDiary" placeholder="오늘 어떤 하루를 보내셨나요? 친구들에게 나의 하루를 공유해 볼까요?"></textarea>
+				<textarea class="ViewDiary" readonly>오늘은 GYC 친구들과 같이 마라탕을 먹으러 갔다. 서연이가 좋아하는 마라장룡 마라탕. 서연이는 이걸 왜 좋아하는 걸까? 맛있기는 한데 매일 먹을 수는 없을 것 같다...</textarea>
         	</div>
         	
 			<div class="ModalTail">
-				<button class="NewDiaryCancel">취소</button>
-				<button class="NewDiarySave">저장</button>
+				<button class="ViewDiaryCancel">취소</button>
+				<button class="ViewDiaryChange">수정</button>
 			</div>
         
 		</div>
 	</div>
+	
 </body>
 </html>

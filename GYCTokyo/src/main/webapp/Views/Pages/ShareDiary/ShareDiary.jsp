@@ -54,12 +54,12 @@
 			<!-- 공유일기 게시글 리스트 -->
 			<div class="DiaryList">
 				<div class="DiaryPreview">
-					<h3 class="Writer">세니</h3>
+					<h3 class="DiaryWriter">세니</h3>
 					<p class="TextPreview">오늘은 GYC 친구들과 같이 마라탕을 먹으러 갔다. 서연이가 좋아하는 마라장룡 마라탕. 서연이는 이걸 왜 좋아하는 걸까? 맛있기는 한데 매일 먹을 수는 없을 것 같다...</p>
 					<p class="EditGuide">일기를 조회하거나 수정하려면 클릭하세요.</p>
 				</div>	
 				<div class="DiaryPreview">
-					<h3 class="Writer">김승희</h3>
+					<h3 class="DiaryWriter">김승희</h3>
 					<p class="TextPreview">눈먼 손으로 나는 삶을 만져 보았네. 그건 가시투성이였어. 가시투성이 삶의 온몸을 만지며 나는 미소 지었지. 이토록 가시가 많으니 곧 장미꽃이 피겠구나 하고.</p>
 					<p class="EditGuide">일기를 조회하거나 수정하려면 클릭하세요.</p>
 				</div>
@@ -67,6 +67,8 @@
         </main>
         
         <jsp:include page="NewSDModal.jsp" />
+        <jsp:include page="ViewSDModal.jsp" />
+        <jsp:include page="ChangeSDModal.jsp" />
         <jsp:include page="GroupMemberListModal.jsp" />
    		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiary.js" defer></script>
         
