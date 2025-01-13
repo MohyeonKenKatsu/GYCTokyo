@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Header/Header.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Sider/Sider.css">
 </head>
+	<%String selectedDate = request.getParameter("date");%>
 <body>
     <!-- 헤더 포함 -->
     <%@ include file="/Views/Components/Header/Header.jsp" %>
@@ -23,12 +24,11 @@
 
 		<!-- 메인 콘텐츠 -->
         <main class="MainContent">
-        
 			<!-- 상단 날짜와 제목 -->
-			<header>
+			<form>
 				<h1 class="Title">공유일기</h1>
-				<input type="date" class="DatePicker"/>
-			</header>
+				<input type="date" class="Date" id="date" name="date" value="<%= selectedDate %>" required>
+			</form>
 			<!-- 우측 메뉴 -->
 			<table class="RightMenu">
 				<tr>
@@ -53,16 +53,19 @@
 			
 			<!-- 공유일기 게시글 리스트 -->
 			<div class="DiaryList">
-				<div class="DiaryPreview">
-					<h3 class="DiaryWriter">세니</h3>
+			<%
+				for(int i=0; i<3; i++)
+				{
+			%>
+				<div class="DiaryPreview" id="diaryPreview<%=i %>">
+					<h3 class="DiaryWriter">세니<%=i %></h3>
 					<p class="TextPreview">오늘은 GYC 친구들과 같이 마라탕을 먹으러 갔다. 서연이가 좋아하는 마라장룡 마라탕. 서연이는 이걸 왜 좋아하는 걸까? 맛있기는 한데 매일 먹을 수는 없을 것 같다...</p>
 					<p class="EditGuide">일기를 조회하거나 수정하려면 클릭하세요.</p>
-				</div>	
-				<div class="DiaryPreview">
-					<h3 class="DiaryWriter">김승희</h3>
-					<p class="TextPreview">눈먼 손으로 나는 삶을 만져 보았네. 그건 가시투성이였어. 가시투성이 삶의 온몸을 만지며 나는 미소 지었지. 이토록 가시가 많으니 곧 장미꽃이 피겠구나 하고.</p>
-					<p class="EditGuide">일기를 조회하거나 수정하려면 클릭하세요.</p>
 				</div>
+			<%
+				}
+			%>
+
 			</div>
         </main>
         

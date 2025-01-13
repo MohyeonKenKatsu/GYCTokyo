@@ -23,34 +23,17 @@
       		
         	<div class="GMLModalBody">
 				<div class="GroupMemberList">
-					<div class="GroupMemberCard">
-						<h3 class="MemberNickname">세니</h3>
-						<p class="MemberEmail">oio3121@naver.com</p>
-					</div>
-					<div class="GroupMemberCard">
-						<h3 class="MemberNickname">세니</h3>
-						<p class="MemberEmail">oio3121@naver.com</p>
-					</div>
-					<div class="GroupMemberCard">
-						<h3 class="MemberNickname">세니</h3>
-						<p class="MemberEmail">oio3121@naver.com</p>
-					</div>
-					<div class="GroupMemberCard">
-						<h3 class="MemberNickname">세니</h3>
-						<p class="MemberEmail">oio3121@naver.com</p>
-					</div>
-					<div class="GroupMemberCard">
-						<h3 class="MemberNickname">세니</h3>
-						<p class="MemberEmail">oio3121@naver.com</p>
-					</div>
-					<div class="GroupMemberCard">
-						<h3 class="MemberNickname">세니</h3>
-						<p class="MemberEmail">oio3121@naver.com</p>
-					</div>
-					<div class="GroupMemberCard">
-						<h3 class="MemberNickname">세니</h3>
-						<p class="MemberEmail">oio3121@naver.com</p>
-					</div>
+					<%
+						for(int i=0; i<10; i++)
+						{
+					%>
+						<div class="GroupMemberCard">
+							<h3 class="MemberNickname" id="memberNickname<%=i %>">세니<%=i %></h3>
+							<p class="MemberEmail" id="memberEmail<%=i %>">oio3121<%=i %>@naver.com</p>
+						</div>
+					<%
+						}
+					%>
 				</div>
         	</div>
         	

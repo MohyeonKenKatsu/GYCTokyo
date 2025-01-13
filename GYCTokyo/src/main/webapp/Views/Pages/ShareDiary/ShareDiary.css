@@ -22,18 +22,18 @@ body {
 	margin: 30px;
 }
 
-header {
+form {
 	margin-bottom: 10px;
 }
 
-header .Title {
+form .Title {
 	font-size: 30px;
 	color: #0353a4;
 	margin-bottom: 5px;
 	white-space: nowrap;
 }
 
-.DatePicker {
+form .Date {
 	color: #242424;
  	display: inline-block; 
     background: #e0e0e0; 
