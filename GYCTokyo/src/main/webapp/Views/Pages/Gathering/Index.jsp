@@ -30,7 +30,7 @@
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/Gathering/Index.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Gathering/Header.css">
+  <%--   <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Gathering/Header.css"> --%>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Sider/Sider.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/Gathering/Gathering.css">
 	<style type="text/css">

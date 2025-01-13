@@ -82,15 +82,15 @@ public class GatheringDAO
 	    	// -----------------------------------------------------------------------------
 			switch (JobStatus)
 			{
-				case "Insert":
+				case "INSERT":
 					bResult = GatheringDetailInsert(gatheringDTO);				// 모집글 등록
 					
 					break;
-				case "Update":
+				case "UPDATE":
 					//bResult = GatheringDetailUpdate(GatheringId, gatheringDTO);	// 모집글 수정
 					
 					break;
-				case "Delete":
+				case "DELETE":
 					//bResult = GatheringDetailDelete(GatheringId);				// 모집글 삭제
 					
 					break;
@@ -136,19 +136,20 @@ public class GatheringDAO
 							GatheringId = this.DBMgr.Rs.getInt("GatheringId");
 							
 							// 모집글 등록
-							sSql = "BEGIN SP_GATHERING_CUD(?,?,?,?,?,?,?,?); END;";
+							sSql = "BEGIN SP_GATHERING_CUD(?,?,?,?,?,?,?,?,?); END;";
 							
 							// IN 파라미터 만큼만 할당
-							oPaValue = new Object[8];
+							oPaValue = new Object[9];
 							
 							oPaValue[0] = "INSERT";
 							oPaValue[1] = GatheringId;
-							oPaValue[2] = gatheringDTO.getTitle();
-							oPaValue[3] = gatheringDTO.getStart_date();
-							oPaValue[4] = gatheringDTO.getFinish_date();
-							oPaValue[5] = gatheringDTO.getActivity_date();
-							oPaValue[6] = gatheringDTO.getNumber_limit();
-							oPaValue[7] = gatheringDTO.getContent();
+							oPaValue[2] = gatheringDTO.getUser_id();
+							oPaValue[3] = gatheringDTO.getTitle();
+							oPaValue[4] = gatheringDTO.getStart_date();
+							oPaValue[5] = gatheringDTO.getFinish_date();
+							oPaValue[6] = gatheringDTO.getActivity_date();
+							oPaValue[7] = gatheringDTO.getNumber_limit();
+							oPaValue[8] = gatheringDTO.getContent();
 							
 							if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
 							{
