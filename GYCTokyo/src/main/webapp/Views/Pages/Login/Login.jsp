@@ -1,4 +1,5 @@
-<%@page import="BeansUsers.LoginDAO"%>
+<%@page import="BeansUsers.UsersDTO"%>
+<%@page import="BeansUsers.UsersDAO"%>
 <%@page import="Common.ComMgr"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8");%>
@@ -72,7 +73,7 @@
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
 	// 사원정보 검색용 DAO 객체
-	public LoginDAO loginDAO = new LoginDAO();
+	public UsersDAO usersDAO = new UsersDAO();
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -84,14 +85,15 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	Boolean bJobProcess	= null;		// 파라미터 : 작업처리 - DB 접속 여부
-	String  sEMAIL		= null;		// 파라미터 : 이메일
-	String  sPASSWORD	= null;		// 파라미터 : 비밀번호
-	Boolean bLoginFail	= null;		// 파라미터 : 로그인 실패
+	Boolean bJobProcess		= null;		// 파라미터 : 작업처리 - DB 접속 여부
+	String  sEMAIL			= null;		// 파라미터 : 이메일
+	String  sPASSWORD		= null;		// 파라미터 : 비밀번호
+	Boolean bLoginSuccess	= null;		// 파라미터 : 로그인 성공여부
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
-	String[] USER_ID_DATA = null;	// 파라미터 : 로그인 성공 시 회원정보 전달용
+	UsersDTO usersDTO = null;
+	Integer[] USER_ID_DATA = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
@@ -105,7 +107,7 @@
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	USER_ID_DATA = new String[] {"0", "0", "0"};	// 사용자 아이디, 닉네임, 교육과정을 전달
+	USER_ID_DATA = new Integer[1];	// 사용자 아이디, 닉네임, 교육과정을 전달
 	// ---------------------------------------------------------------------
 %>
 
@@ -135,23 +137,18 @@
 	// bJobProcess 작업처리 허용인 경우
 	if (bJobProcess == true)
 	{
+		usersDTO = new UsersDTO();
+		usersDTO.setEmail(sEMAIL);
+		usersDTO.setPassword(sPASSWORD);
+		
 		// 로그인 정보가 사용자 테이블에 있을 경우 = 로그인 성공
-		if (this.loginDAO.Login(sEMAIL, sPASSWORD, USER_ID_DATA) == true)
+		if (this.usersDAO.Login(usersDTO, USER_ID_DATA) == true)
 		{
-			bLoginFail = false;
-
-			// 아이디, 닉네임, 과정을 넘겨주면서 캘린더 index 페이지로 이동
-			//response.sendRedirect("../Calendar/index.jsp?USER_ID=" + USER_ID_DATA[0]);
-			
-			//response.sendRedirect(
-			//out.println(
-			//String.format("../Calendar/index.jsp?USER_ID=%s",// &NICKNAME=%s&COURSE=%s",
-			//			   USER_ID_DATA[0])//, USER_ID_DATA[1], USER_ID_DATA[2])
-			//);
+			bLoginSuccess = true;
 		}
 		// 로그인 정보가 사용자 테이블에 없을 경우 = 로그인 실패
 		else {
-			bLoginFail = true;
+			bLoginSuccess = false;
 		}
 	}
 %>
@@ -207,6 +204,19 @@
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
 		
+		// 로그인 결과처리
+		
+		// 로그인 성공시 사용자 아이디를 세션에 저장하고 캘린더/일정 페이지로 이동
+		if (<%= bLoginSuccess %> == true)
+		{
+	        <% session.setAttribute("USER_ID", USER_ID_DATA[0]); %>
+	        location.href="../Calendar/index.jsp";
+		}
+		// 로그인 실패 시 경고창 출력
+		if (<%= bLoginSuccess %> == false)
+		{
+			DocumentInit('로그인에 실패했습니다.');
+		}
 		// -----------------------------------------------------------------
 	</script>
 	<%------------------------------------------------------------------
@@ -262,38 +272,5 @@
 		//response.sendRedirect(sUrl);
 		// -----------------------------------------------------------------
 	%>
-
-<script type="text/javascript">
-	
-	//POST 요청을 수행하는 함수
-	function postToDestination() {
-	    const form_user_id = document.createElement('form');
-	    form_user_id.method = 'POST';
-	    form_user_id.action = '../Calendar/index.jsp';
-		
-	    // 숨겨진 필드에 데이터 추가
-	    const user_id = document.createElement('input');
-	    user_id.type = 'hidden';
-	    user_id.name = 'USER_ID';
-	    user_id.value = '<%=USER_ID_DATA[0]%>';
-		
-	    form_user_id.appendChild(user_id);
-	    document.body.appendChild(form_user_id);
-	    form_user_id.submit();
-	}
-	
-	// 로그인 실패일 경우 alert창 출력 
-	if (<%= bLoginFail %> == false) {
-		// POST 요청 실행
-        // console.log('<%=bJobProcess%>');
-        // postToDestination();
-        <% session.setAttribute("USER_ID", USER_ID_DATA[0]); %>
-        location.href="../Calendar/index.jsp";
-	}
-	if (<%= bLoginFail %> == true) {
-		DocumentInit('로그인에 실패했습니다.');
-	}
-
-</script>
 </body>
 </html>

@@ -6,6 +6,9 @@
 //═════════════════════════════════════════════════════════════════════════════════════════
 package BeansGathering;
 import java.util.ArrayList;
+import java.util.List;
+
+import BeansGathering.GatheringDTO;
 import Common.ComMgr;
 import Common.ExceptionMgr;
 import DAO.DBOracleMgr;
@@ -82,15 +85,15 @@ public class GatheringDAO
 	    	// -----------------------------------------------------------------------------
 			switch (JobStatus)
 			{
-				case "Insert":
+				case "INSERT":
 					bResult = GatheringDetailInsert(gatheringDTO);				// 모집글 등록
 					
 					break;
-				case "Update":
+				case "UPDATE":
 					//bResult = GatheringDetailUpdate(GatheringId, gatheringDTO);	// 모집글 수정
 					
 					break;
-				case "Delete":
+				case "DELETE":
 					//bResult = GatheringDetailDelete(GatheringId);				// 모집글 삭제
 					
 					break;
@@ -136,19 +139,20 @@ public class GatheringDAO
 							GatheringId = this.DBMgr.Rs.getInt("GatheringId");
 							
 							// 모집글 등록
-							sSql = "BEGIN SP_GATHERING_CUD(?,?,?,?,?,?,?,?); END;";
+							sSql = "BEGIN SP_GATHERING_CUD(?,?,?,?,?,?,?,?,?); END;";
 							
 							// IN 파라미터 만큼만 할당
-							oPaValue = new Object[8];
+							oPaValue = new Object[9];
 							
 							oPaValue[0] = "INSERT";
 							oPaValue[1] = GatheringId;
-							oPaValue[2] = gatheringDTO.getTitle();
-							oPaValue[3] = gatheringDTO.getStart_date();
-							oPaValue[4] = gatheringDTO.getFinish_date();
-							oPaValue[5] = gatheringDTO.getActivity_date();
-							oPaValue[6] = gatheringDTO.getNumber_limit();
-							oPaValue[7] = gatheringDTO.getContent();
+							oPaValue[2] = gatheringDTO.getUser_id();
+							oPaValue[3] = gatheringDTO.getTitle();
+							oPaValue[4] = gatheringDTO.getStart_date();
+							oPaValue[5] = gatheringDTO.getFinish_date();
+							oPaValue[6] = gatheringDTO.getActivity_date();
+							oPaValue[7] = gatheringDTO.getNumber_limit();
+							oPaValue[8] = gatheringDTO.getContent();
 							
 							if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
 							{
@@ -198,7 +202,7 @@ public class GatheringDAO
 				oPaValue = new Object[8];
 				
 				oPaValue[0] = "INSERT";
-				oPaValue[1] = GatheringId;
+				oPaValue[1] = gatheringDTO.getGroup_id();
 				oPaValue[2] = gatheringDTO.getTitle();
 				oPaValue[3] = gatheringDTO.getStart_date();
 				oPaValue[4] = gatheringDTO.getFinish_date();
@@ -280,11 +284,89 @@ public class GatheringDAO
 		
 		return bResult;
 	}
+	/***********************************************************************
+	 * ReadGatheringById() : 특정 GROUP_ID에 해당하는 모임 정보 가져오기
+	 * @param groupId      : 조회하고자 하는 GROUP_ID
+	 * @return GatheringDTO: 모임 정보 DTO
+	 * @throws Exception 
+	 ***********************************************************************/
+	public GatheringDTO ReadGatheringById(int groupId) throws Exception {
+	    GatheringDTO dto = null; // 반환할 DTO 객체
+	    String sSql = null;      // SQL 쿼리
+	    Object[] oPaValue = null; // SQL 파라미터
 
+	    try {
+	        // DB 연결 확인
+	        if (this.DBMgr.DbConnect() == true) {
+	            // SQL 쿼리 작성
+	            sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DATE, NUMBER_LIMIT, CONTENT "
+	                 + "FROM TB_GATHERING "
+	                 + "WHERE GROUP_ID = ?";
 
-	// —————————————————————————————————————————————————————————————————————————————————————
+	            // 파라미터 설정
+	            oPaValue = new Object[1];
+	            oPaValue[0] = groupId;
+
+	            // 쿼리 실행
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, true) == true) {
+	                if (this.DBMgr.Rs.next()) {
+	                    dto = new GatheringDTO();
+	                    dto.setGroup_id(this.DBMgr.Rs.getInt("GROUP_ID"));
+	                    dto.setUser_id(this.DBMgr.Rs.getInt("USER_ID"));
+	                    dto.setTitle(this.DBMgr.Rs.getString("TITLE"));
+	                    dto.setStart_date(this.DBMgr.Rs.getString("START_DATE"));
+	                    dto.setFinish_date(this.DBMgr.Rs.getString("FINISH_DATE"));
+	                    dto.setActivity_date(this.DBMgr.Rs.getString("ACTIVITY_DATE"));
+	                    dto.setNumber_limit(this.DBMgr.Rs.getInt("NUMBER_LIMIT"));
+	                    dto.setContent(this.DBMgr.Rs.getString("CONTENT"));
+	                }
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex);
+	    }
+
+	    return dto;
+	}
+	/***********************************************************************
+	 * getAllGatherings : 전체 소모임 정보 가져오기
+	 * @return List<GatheringDTO> : 소모임 정보 목록
+	 ***********************************************************************/
+	public List<GatheringDTO> getAllGatherings() throws Exception {
+	    List<GatheringDTO> gatheringList = new ArrayList<>();
+	    String sSql = null;
+
+	    try {
+	        if (this.DBMgr.DbConnect() == true) {
+	            // 전체 소모임 정보 가져오는 SQL 작성
+	            sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT "
+	                 + "FROM TB_GATHERING";
+
+	            if (this.DBMgr.RunQuery(sSql, null, 0, true) == true) {
+	                while (this.DBMgr.Rs.next()) {
+	                    GatheringDTO dto = new GatheringDTO();
+	                    dto.setGroup_id(this.DBMgr.Rs.getInt("GROUP_ID"));
+	                    dto.setUser_id(this.DBMgr.Rs.getInt("USER_ID"));
+	                    dto.setTitle(this.DBMgr.Rs.getString("TITLE"));
+	                    dto.setStart_date(this.DBMgr.Rs.getString("START_DATE"));
+	                    dto.setFinish_date(this.DBMgr.Rs.getString("FINISH_DATE"));
+	                    dto.setActivity_date(this.DBMgr.Rs.getString("ACTIVITY_DAY"));
+	                    dto.setNumber_limit(this.DBMgr.Rs.getInt("NUMBER_LIMIT"));
+	                    dto.setContent(this.DBMgr.Rs.getString("CONTENT"));
+	                    gatheringList.add(dto);
+	                }
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex);
+	    }
+
+	    return gatheringList;
+	}
 }
-//#################################################################################################
+	//#################################################################################################
 //<END>
 //#################################################################################################
 
