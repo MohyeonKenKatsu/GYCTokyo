@@ -27,7 +27,7 @@
             </a>
         </li>
         <li>
-            <a href="<%= request.getContextPath() %>/Views/Pages/Group/Group.jsp">
+            <a href="<%= request.getContextPath() %>/Views/Pages/Gathering/Index.jsp">
                 소모임
                 <img src="<%= request.getContextPath() %>/Views/resources/images/GatheringLogo.png" alt="소모임아이콘" class="icon">
             </a>
