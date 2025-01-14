@@ -77,6 +77,8 @@ public class CalendarDAO {
         } finally {
             this.DBMgr.DbDisConnect();
         }
+     // 디버깅 로그 추가
+        System.out.println("Fetched Events: " + eventList);
         return eventList;
     }
 }

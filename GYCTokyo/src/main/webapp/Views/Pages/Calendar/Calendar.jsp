@@ -34,6 +34,12 @@
     </div>
 
     <!-- FullCalendar JS -->
+    <%
+    // 디버깅 로그
+    for (CalendarDTO event : userEvents) {
+        out.println("<script>console.log('Event: " + event.getPlan() + ", " + event.getCalendar_date() + "');</script>");
+    }
+%>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -42,16 +48,18 @@
      // JSP에서 JavaScript 배열 생성
         const userEvents = [
             <% for (CalendarDTO event : userEvents) { %>
-                {
-                    id: '<%= event.getCalendar_id() %>',
-                    title: '<%= event.getPlan() %>',
-                    start: '<%= event.getCalendar_date() %>',
-                    category: '<%= event.getCategory() %>',
-                    memo: '<%= event.getMemo() %>'
-                },
+            {
+                id: '<%= event.getCalendar_id() %>',
+                title: '<%= event.getPlan() %>',
+                start: '<%= event.getCalendar_date() %>',
+                allDay: true,
+                category: '<%= event.getCategory() %>',
+                memo: '<%= event.getMemo() %>',
+                backgroundColor: '<%= event.getCategory().equals("1") ? "#3688D8" : event.getCategory().equals("2") ? "#FF8FAB" : "#CCC" %>' // 배경색 지정
+            },
             <% } %>
         ];
-
+        console.log("User Events:", userEvents);
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
             locale: 'ko', // 한국어 지원
