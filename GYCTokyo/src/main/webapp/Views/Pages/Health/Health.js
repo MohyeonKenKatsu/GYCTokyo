@@ -101,7 +101,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div class="input-group">
                         <label>오늘의 목표 음수량을 알려주세요! (ml)</label>
 						<div style="height: 5px;"></div>
-						<select id="watherAmount" name="watherAmount" onchange="updateWaterBottles(this.value)">
+						<select id="goalWater" name="goal_water" onchange="updateWaterBottles(this.value)">
 						    <option value=""> &nbsp;선택하세요&nbsp; </option>
 						    <option value="1"> 500 ml </option>
 						    <option value="2"> 1000 ml </option>
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div style="height: 15px;"></div>
 
 						<label>오늘 성공한 음수량을 알려주세요! (ml)</label>
-						<select id="waterAchieved" name="waterAchieved">
+						<select id="achievedWater" name="achieved_water">
 						<div style="height: 5px;"></div>
 						    <option value=""> &nbsp;선택하세요&nbsp; </option>
 						    <option value="1"> 500 ml </option>
@@ -131,51 +131,50 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 `;
 				    
-				        case 'exercise':
-				            return `
-				                <div class="exercise-icons">
-				                    <img src="walk.png" alt="걷기" data-type="walk" onclick="selectExerciseType(this)">
-				                    <img src="running.png" alt="달리기" data-type="run" onclick="selectExerciseType(this)">
-				                    <img src="weight.png" alt="웨이트" data-type="weightlifting" onclick="selectExerciseType(this)">
-				                    <img src="hiking.png" alt="등산" data-type="hiking" onclick="selectExerciseType(this)">
-				                    <img src="cycling.png" alt="자전거" data-type="cycling" onclick="selectExerciseType(this)">
-				                </div>
-				                <div class="input-group">
-				                    <label>오늘의 목표 운동시간을 알려주세요!</label>
-				                    <select id="goalExerciseTime">
-				                        <option value="">선택하세요</option>
-				                        <option value="30">30분</option>
-				                        <option value="60">60분</option>
-				                        <option value="90">90분</option>
-				                    </select>
-				                </div>
-				                <div class="input-group">
-				                    <label>오늘의 성공한 운동시간을 알려주세요!</label>
-				                    <select id="achievedExerciseTime">
-				                        <option value="">선택하세요</option>
-				                        <option value="30">30분</option>
-				                        <option value="60">60분</option>
-				                        <option value="90">90분</option>
-				                    </select>
-				                </div>
-				                <div id="exerciseProgressBar" class="progress-bar">
-				                    <div id="exerciseProgressFill" class="progress-fill"></div>
-				                </div>
-				                <p id="exerciseComment" class="exercise-comment"></p>
-				            `;
-							case 'sleep':
-							    return `
-							        <div class="input-group">
-							            <label>취침시간을 알려주세요!</label>
-							            <input type="time" id="sleepTime" name="sleepTime">
-
-							            <div style="height: 15px;"></div>
-
-							            <label>기상시간을 알려주세요!</label>
-							            <input type="time" id="wakeTime" name="wakeTime">
-							        </div>
-							        <p id="sleepDurationComment" style="margin-top: 15px; font-size: 16px; color: #666;"></p>
-							    `;
+				case 'exercise':
+				    return `
+				        <div class="exercise-icons">
+				            <img src="walk.png" alt="걷기" data-type="walk" onclick="selectExerciseType(this)">
+				            <img src="running.png" alt="달리기" data-type="run" onclick="selectExerciseType(this)">
+				            <img src="weight.png" alt="웨이트" data-type="weight" onclick="selectExerciseType(this)">
+				            <img src="hiking.png" alt="등산" data-type="hiking" onclick="selectExerciseType(this)">
+				            <img src="cycling.png" alt="자전거" data-type="cycling" onclick="selectExerciseType(this)">
+				        </div>
+						<input type="hidden" id="selectedExerciseType" name="type_exercise">
+				        <div class="input-group">
+				            <label>오늘의 목표 운동시간을 알려주세요!</label>
+				            <select id="goalExerciseTime" name="goal_exercise">
+				                <option value="">선택하세요</option>
+				                <option value="1">30분</option>
+				                <option value="2">60분</option>
+				                <option value="3">90분</option>
+				            </select>
+				        </div>
+				        <div class="input-group">
+				            <label>오늘의 성공한 운동시간을 알려주세요!</label>
+				            <select id="achievedExerciseTime" name="achieved_exercise">
+				                <option value="">선택하세요</option>
+				                <option value="1">30분</option>
+				                <option value="2">60분</option>
+				                <option value="3">90분</option>
+				            </select>
+				        </div>
+				        <div id="exerciseProgressBar" class="progress-bar">
+				            <div id="exerciseProgressFill" class="progress-fill"></div>
+				        </div>
+				        <p id="exerciseComment" class="exercise-comment"></p>
+				    `;
+					case 'sleep':
+					    return `
+					        <div class="input-group">
+					            <label>취침시간을 알려주세요!</label>
+					            <input type="time" id="sleepTime" name="bedtime">
+					            <div style="height: 15px;"></div>
+					            <label>기상시간을 알려주세요!</label>
+					            <input type="time" id="wakeTime" name="waketime">
+					        </div>
+					        <p id="sleepDurationComment" style="margin-top: 15px; font-size: 16px; color: #666;"></p>
+					    `;
 				        default:
 				            return '<p>준비 중입니다.</p>';
 				    }
@@ -183,10 +182,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				
 	document.addEventListener('change', function(event) {
 	    const target = event.target;
-	    if (target.id === 'watherAmount') { // 목표 음수량 선택 시 물병 출력
+	    if (target.id === 'goalWater') { // 목표 음수량 선택 시 물병 출력
 	        updateWaterBottles(target.value);
 	    }
-		if (target.id === 'waterAchieved') {
+		if (target.id === 'achievedWater') {
 		    updateAchievedWater(target.value); // 달성 음수량 선택 시 물병 상태 변경
 		}
 	});
@@ -214,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	function updateAchievedWater(value) {
 	    const bottles = document.querySelectorAll('.water-bottle'); // 모든 물통 이미지 선택
 	    const achievedCount = parseInt(value, 10); // 선택된 달성 음수량을 숫자로 변환
-	    const goalCount = parseInt(document.getElementById('watherAmount').value, 10); // 목표 음수량 가져오기
+	    const goalCount = parseInt(document.getElementById('goalWater').value, 10); // 목표 음수량 가져오기
 	    const commentContainer = document.getElementById('commentContainer'); // 코멘트 영역
 
 	    if (!achievedCount || achievedCount < 1 || achievedCount > bottles.length) return; // 유효하지 않은 선택 방지
@@ -244,41 +243,48 @@ document.addEventListener('DOMContentLoaded', function() {
 	    }
 	}
 
+	// 기록 저장 함수
+	window.saveRecord = function () {
+	    const formData = new URLSearchParams();
 
-    // 저장 함수
-    window.saveRecord = function() {
-        const type = modalTitle.textContent;
-        const formData = new URLSearchParams();
-        
-        const inputs = modal.querySelectorAll('input');
-        inputs.forEach(input => {
-            formData.append(input.name, input.value);
-        });
-        
-        formData.append('type', type);
-        
-        fetch('saveNewHealth.jsp', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: formData.toString()
-        })
-        .then(response => response.json())
-        .then(data => {
-            if(data.success) {
-                alert('저장되었습니다.');
-                modal.classList.remove('active');
-            } else {
-                alert('저장에 실패했습니다.');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            alert('저장 중 오류가 발생했습니다.');
-        });
-    };
+	    // 모달 제목에서 type 값 추출
+	    const type = modalTitle.textContent.trim();
+	    formData.append('type', type);
 
+	    // 모달 내부 입력값 수집
+	    const inputs = modal.querySelectorAll('input, select');
+	    inputs.forEach(input => {
+	        if (input.name) {
+	            formData.append(input.name, input.value || ""); // 빈 값도 처리
+	        }
+	    });
+
+	    console.log("전송할 데이터:", formData.toString()); // 디버깅 로그
+
+	    fetch('saveHealth.jsp', {
+	        method: 'POST',
+	        headers: {
+	            'Content-Type': 'application/x-www-form-urlencoded',
+	        },
+	        body: formData.toString(),
+	    })
+	        .then(response => response.json())
+	        .then(data => {
+	            console.log("서버 응답 데이터:", data);
+	            if (data.success) {
+	                alert('저장되었습니다.');
+	                modal.classList.remove('active');
+	            } else {
+	                alert('저장에 실패했습니다.');
+	            }
+	        })
+	        .catch(error => {
+	            console.error('Error:', error);
+	            alert('저장 중 오류가 발생했습니다.');
+	        });
+	};
+
+	
 	// 모달 닫기
 	window.closeModal = function() {
 	    modal.classList.remove('active');
@@ -303,8 +309,24 @@ function selectExerciseType(element) {
     const icons = document.querySelectorAll('.exercise-icons img');
     icons.forEach(icon => icon.classList.remove('selected'));
     element.classList.add('selected');
-    selectedExerciseType = element.dataset.type;
+
+    // 선택된 운동종류를 hidden input에 저장
+    const selectedType = element.getAttribute('data-type');
+    const hiddenInput = document.getElementById('selectedExerciseType');
+    if (hiddenInput) {
+        hiddenInput.value = selectedType;
+    } else {
+        const input = document.createElement('input');
+        input.type = 'hidden';
+        input.id = 'selectedExerciseType';
+        input.name = 'type_exercise';
+        input.value = selectedType;
+        document.body.appendChild(input); // body에 추가
+    }
+
+    console.log('선택된 운동종류:', selectedType); // 디버깅용
 }
+
 
 function updateExerciseProgress() {
     const goalTime = document.getElementById('goalExerciseTime').value;
