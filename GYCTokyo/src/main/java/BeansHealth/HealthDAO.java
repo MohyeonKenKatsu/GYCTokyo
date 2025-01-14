@@ -7,7 +7,6 @@
 package BeansHealth;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import BeansUsers.UsersDTO;
 import Common.ComMgr;
