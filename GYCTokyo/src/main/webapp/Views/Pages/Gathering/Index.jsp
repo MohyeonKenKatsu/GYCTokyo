@@ -2,6 +2,7 @@
 <%@page import="Common.ComMgr"%>
 <%@page import="BeansGathering.GatheringDAO"%>
 <%@page import="java.util.Enumeration"%>
+<%@page import="java.util.List"%>
 <%@page import="java.io.File"%>
 <%@page import="java.util.Date"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -84,11 +85,18 @@
 	public GatheringDAO gatheringDAO = new GatheringDAO();
 	// ---------------------------------------------------------------------
 %>
+
+
+
 <%--------------------------------------------------------------------------
 [JSP 지역 변수 선언 및 로직 구현 영역 - 스크립트릿 영역]
 	- this 로 접근 불가 : 같은 페이지가 여러번 갱신되면 변수/함수 유지 안 됨
 	- 즉 현재 페이지가 여러번 갱신 될 때마다 스크립트릿 영역이 다시 실행되어 모두 초기화 됨
 ------------------------------------------------------------------------------%>
+
+
+
+
 <%
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
@@ -179,11 +187,9 @@
 <%
 	GatheringDTO.setUser_id(123);
 
-if (bJobProcess == true && "INSERT".equalsIgnoreCase(sJobStatus)) {
+	if (bJobProcess == true && "INSERT".equalsIgnoreCase(sJobStatus)) {
     // 소모임 기본 정보 설정
 
-
-    
 	GatheringDTO.setTitle(title);                 // 글 제목 설정
     GatheringDTO.setStart_date(start_date);       // 모집 시작 날짜 설정
     GatheringDTO.setFinish_date(finish_date);     // 모집 종료 날짜 설정
@@ -214,6 +220,8 @@ if (bJobProcess == true && "INSERT".equalsIgnoreCase(sJobStatus)) {
 	}
    	// ---------------------------------------------------------------------
 %>
+
+
 <body class="Body">
 	<%----------------------------------------------------------------------
 	[HTML Page - FORM 디자인 영역]

@@ -1,3 +1,6 @@
+<%@page import="BeansGathering.GatheringDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="BeansGathering.GatheringDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -26,48 +29,21 @@
                 <button class="create-btn" onclick="location.href='NewGatheringModal.jsp'">모임 만들기</button>
             </div>
             
-            <div class="event-cards">
-                <div class="event-card" onclick="location.href='ViewGatheringModal.jsp'">
-                    <h3>카모미 팟 모집</h3>
-                    <p>시간: 12월 23일 18시</p>
-                    <p>장소: 독서실 앞</p>
-                    <p>내용: 카모미 보라각근데...</p>
-                    <button>참가</button>
-                    <span class="participant-count">11/15</span> <!-- 인원 수 추가 -->
-                </div>
-                <div class="event-card" onclick="location.href='ViewGatheringModal.jsp'">
-                    <h3>마라상귀 먹어 모집</h3>
-                    <p>시간: 12월 20일 19시</p>
-                    <p>장소: 317호 앞</p>
-                    <p>내용: 마라장량에서 시칼...</p>
-                    <button>참가</button>
-                    <span class="participant-count">11/15</span> <!-- 인원 수 추가 -->
-                </div>
-                <div class="event-card" onclick="location.href='ViewGatheringModal.jsp'">
-                    <h3>마라상귀 먹어 모집</h3>
-                    <p>시간: 11월 23일 18시</p>
-                    <p>장소: 독서실 앞</p>
-                    <p>내용: 카모미 보라각근데...</p>
-                    <button>참가</button>
-                    <span class="participant-count">11/15</span> <!-- 인원 수 추가 -->
-                </div>
-                <div class="event-card" onclick="location.href='ViewGatheringModal.jsp'">
-                    <h3>퀴퀴로우 먹어 모집</h3>
-                    <p>시간: 12월 2일 19시</p>
-                    <p>장소: 바쿠스홀</p>
-                    <p>내용: 꿔바로우를 먹자...</p>
-                    <button>참가</button>
-                    <span class="participant-count">11/15</span> <!-- 인원 수 추가 -->
-                </div>
-                <div class="event-card" onclick="location.href='ViewGatheringModal.jsp'">
-                    <h3>일본어공부 모임</h3>
-                    <p>시간: 11월 20일 19시</p>
-                    <p>장소: 바쿠스홀</p>
-                    <p>내용: 일본어 공부 모임...</p>
-                    <button>참가</button>
-                    <span class="participant-count">11/15</span> <!-- 인원 수 추가 -->
-                </div>
-            </div>
+		   <div class="event-cards">
+		    <%-- GatheringDAO를 이용해 DB에서 데이터를 읽어옵니다. --%>
+		    <%
+		        GatheringDAO gatheringDAO = new GatheringDAO();
+		        List<GatheringDTO> gatheringList = gatheringDAO.getAllGatherings(); // DB에서 모임 리스트 가져오기
+		        for (GatheringDTO gathering : gatheringList) {
+		    %>
+		        <div class="event-card">
+		            <h3><%= gathering.getTitle() %></h3> <!-- 제목 -->
+		            <p>활동 날짜: <%= gathering.getActivity_date() %></p> <!-- 활동 날짜 -->
+		            <p>내용: <%= gathering.getContent() %></p> <!-- 내용 -->
+		            <button>참가</button>
+		        </div>
+		    <% } %>
+</div>
 
             <div class="footer">
                 <button class="footer-btn" onclick="location.href='FinishedGathering.jsp'">끝난 모임 보기</button>
