@@ -1,3 +1,6 @@
+<%@page import="HeaderFlagMapping.HeaderFlagHash"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="javax.swing.plaf.IconUIResource"%>
 <%@page import="BeansUsers.UsersDTO"%>
 <%@page import="Common.ComMgr"%>
 <%@page import="BeansUsers.UsersDAO"%>
@@ -89,21 +92,25 @@
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
 	UsersDTO userDTO = null;
-	String sUSERID = null;
-	String sNickname = null;
+	Integer iUSERID = null;
+	String sNICKNAME = null;
+	Integer iCOURSE = null;
+	String sFlagSrc = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	HashMap<Integer, String> flagMap = HeaderFlagHash.gethashFlag();
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	sUSERID = (String)session.getAttribute("USER_ID");
+	iUSERID = (Integer)session.getAttribute("USER_ID");
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
 	userDTO = new UsersDTO();
-	sNickname = "[서버접속실패]";
+	sNICKNAME = "[서버접속실패]";
+	// null일때 임시용
+	sFlagSrc = request.getContextPath() + "/Views/resources/images/japanFlag.svg";
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -113,9 +120,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	--------------------------------------------------------------------------%>
+	------------------------------------------------------------------------
 	<jsp:useBean id="SawonDTO" class="BeansUsers.UsersDTO" scope="request"></jsp:useBean>
-	
+	--%>
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -124,8 +131,8 @@
 						:---------------------------------------------------
 	주의사항				: HTML 태그의 name 속성 값은 소문자로 시작!
 						: HTML 태그에서 데이터 입력 없는 경우 null 입력 됨!
-	--------------------------------------------------------------------------%>
-	<jsp:setProperty name="UsersDTO" property="*"/>
+	------------------------------------------------------------------------
+	<jsp:setProperty name="UsersDTO" property="*"/>--%>
 	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법2	: Beans Property에 HTML 태그 name 사용
@@ -149,21 +156,22 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	out.println("<script>console.log('" + sUSERID + "')</script>");
-	
-	String[] Log = new String[] {"", "", "", ""};
 	//사원정보 검색
-	if (this.usersDAO.ReadHeaderData(sUSERID, userDTO) == true)
+	if (this.usersDAO.ReadHeaderData(iUSERID, userDTO) == true)
 	{
-		sNickname = userDTO.getNickname();
+		sNICKNAME = userDTO.getNickname();
+		iCOURSE = userDTO.getCourse();
 	}
-	out.println("<script>console.log('" + sNickname +"')</script>");
-	out.println("<script>console.log('" + Log[0] +"')</script>");
-	out.println("<script>console.log('" + Log[1] +"')</script>");
-	out.println("<script>console.log('" + Log[2] +"')</script>");
-	out.println("<script>console.log('" + Log[3] +"')</script>");
+	out.println("<script>console.log('" + sNICKNAME +"')</script>");
+	out.println("<script>console.log('" + iCOURSE +"')</script>");
 	
+	if (iCOURSE != null)
+	{
+		sFlagSrc = request.getContextPath() + "/Views/resources/images/" + flagMap.get(iCOURSE);
+	}
 %>
+
+
 <body>
 	<%----------------------------------------------------------------------
 	[HTML Page - FORM 디자인 영역]
@@ -172,20 +180,26 @@
     <header class="header">
     	
         <div class="logo">
+	        <a href="../../Pages/Calendar/index.jsp">
             <img src="<%= request.getContextPath() %>/Views/resources/images/LOGO.png" alt="로고" class="logo">
+            </a>
         </div>
 
         <div class="user-info">
         	<button type="button" class="signup-btn" onclick="gotologin()">로그인 화면 (임시버튼)</button>
-            <span><%= sNickname %> 님</span>
-            <img src="<%= request.getContextPath() %>/Views/resources/images/japanFlag.svg" alt="국기" class="flag">
+            <span><%= sNICKNAME %> 님</span>
+
+			<a href=''>
+            <img src=<%= sFlagSrc %> alt="국기" class="flag">
+            </a>
         </div>
 	
     </header>
+    
+    
 	<script type="text/javascript">
 		function gotologin()
 		{
-    		<% session.removeAttribute("USER_ID"); %>
     		location.href="../../Pages/Login/Login.jsp";
     	}
     </script>
