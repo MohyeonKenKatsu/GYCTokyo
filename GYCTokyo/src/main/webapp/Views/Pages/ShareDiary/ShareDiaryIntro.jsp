@@ -25,13 +25,30 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		function openShareDiary ()
+		function openShareDiary (group_id, user_id)
 		{
-			let url = 'ShareDiary.jsp?date=';
-			let date = document.getElementById('date').value;
+			let url = 'ShareDiary.jsp'; // 초기 화면에서 선택한 날짜가 메인 화면으로 옮겨감
+			let date = document.getElementById('date').value; // 초기 화면 선택 날짜(기본값: 오늘 날짜)
 			
-			url = url+date;
+			url = url + '?date=' + date + '&group_id=' + group_id + '&user_id=' + user_id;
 			location.href=url;
+		}
+		
+		function openModal(modalType)
+		{
+			let ifModalWindow = document.getElementById('ifModalWindow');
+			
+			divModalFrame.style.display = "block";
+			
+			if(modalType === 'NewSDGroupModal')
+				{			
+					ifModalWindow.src = 'NewSDGroupModal.jsp';
+				}
+			
+			if(modalType === 'InviteGroupMemberModal')
+				{
+					ifModalWindow.src = 'InviteGroupMemberModal.jsp';
+				}
 		}
 		// -----------------------------------------------------------------
 	</script>
@@ -73,7 +90,7 @@
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	
+	//String selectedDate = request.getParameter("date");
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -122,7 +139,6 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	
 %>
 <body>
 	<%----------------------------------------------------------------------
@@ -150,7 +166,7 @@
 			<table class="RightMenu">
 				<tr>
 					<td>
-				    	<button class="GroupInviteButton">초대</button>
+				    	<button class="GroupInviteButton" id="groupInviteButton" onclick="openModal('InviteGroupMemberModal')">초대</button>
 					</td>
 					<td>
 				    	<div class="Sort">☰</div>
@@ -159,19 +175,30 @@
 			</table>
 		  
 			<!-- 추가(+) 버튼 -->
-			<div class="GroupPlusButton">+</div>
+			<div class="GroupPlusButton" id="groupPlusButton" onclick="openModal('NewSDGroupModal')">+</div>
 		  
 			<!-- 폴더 아이콘 -->
-			<div class="GroupFolders" onclick="openShareDiary()">
+			<div class="GroupFolders">
 			<%
-				for(int i=0; i<3; i++)
+				for(int i=1; i<=3; i++)
 				{
 			%>
-					<div class="GroupFolder" id="GroupFolder<%=i %>">사내켄<%=i %></div>
+					<div class="GroupFolder" id="GroupFolder<%=i %>" onclick="openShareDiary(1, 1)">사내켄<%=i %></div>
 			<%
 				}
 			%>		
 			</div>
+		<%------------------------------------------------------------------
+		[모달 창 페이지 - START]
+		----------------------------------------------------------------------%>
+		<div class="Modal-Frame" id="divModalFrame">
+	        <div class="Modal-Content">
+	            <iframe class="Modal-Window" id="ifModalWindow"></iframe>
+	        </div>
+        </div>
+		<%------------------------------------------------------------------
+		[모달 창 페이지 - END]
+		----------------------------------------------------------------------%>
 		</main>
 	<%----------------------------------------------------------------------
 	[HTML Page - END]
@@ -184,12 +211,9 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-			document.getElementById('date').value = new Date().toISOString().substring(0, 10);
+		document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 		// -----------------------------------------------------------------
 	</script>
-
-		<jsp:include page="NewSDGroupModal.jsp" />
-		<jsp:include page="InviteGroupMemberModal.jsp" />
    		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.js" defer></script>
 	</div>        
 </body>

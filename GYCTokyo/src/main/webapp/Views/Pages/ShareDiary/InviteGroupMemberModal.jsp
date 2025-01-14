@@ -9,6 +9,7 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>공유일기 그룹원 초대 모달창</title>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/InviteGroupMemberModal.css">
+	<script type="text/javascript" src="ShareDiaryIntro.js"></script>
 </head>
 <body>
 	<!-- 모달 배경 -->

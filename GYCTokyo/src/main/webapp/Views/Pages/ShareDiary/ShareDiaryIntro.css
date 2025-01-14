@@ -113,3 +113,35 @@ header .Date {
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 	color: white;
 }
+
+/* -----------------------------------------------------------------
+	Modal 창 스타일시트
+   ----------------------------------------------------------------- */
+.Modal-Frame {
+	background-color: rgba(0,0,0,0.3);				/* 배경 흐릿하게 처리 */
+	display: none;									/* 기본적으로 숨김 */
+    height: 100%;									/* 브라우저 전체 높이 */
+	left: 0; top: 0;								/* 모달창 프레임 좌측, 상단 위치 */
+	overflow: auto;									/* 모달창이 넘치면 내부에서 스크롤 */
+	position: fixed;								/* 모달창 프레임을 고정 : 부모창 disabled */
+	width: 100%;									/* 모달창 프레임을 브라우저 폭으로 */
+	z-index: 1;										/* 모달창 프레임을 위로 */
+}
+
+.Modal-Content {
+	background-color: transparent;					/* 모달창 배경색 */
+	border: none;									/* 모달창 테두리 스타일 */
+	width: 500px;									/* 모달창 넓이 */
+	height: 500px;									/* 모달창 높이 */
+	left: 50%; top: 50%;							/* 모달창 좌측/상단 위치 */
+	position: absolute;								/* 모달창 위치 속성 */
+	transform: translate(-50%, -50%);				/* 모달창 x, y 만큼 이동 */
+}
+
+.Modal-Window {
+	border: none;									/* 모달창 페이지(iframe) 테두리 */
+	height: 100%;									/* 모달창 페이지(iframe) 높이를 Modal-Content 높이로 */
+	width: 100%;									/* 모달창 페이지(iframe) 넓이를 Modal-Content 넓이로 */
+}
+
+/* ----------------------------------------------------------------- */
