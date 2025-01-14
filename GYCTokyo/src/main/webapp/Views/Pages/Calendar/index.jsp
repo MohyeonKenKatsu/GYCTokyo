@@ -24,7 +24,7 @@
             <%@ include file="/Views/Pages/Calendar/Calendar.jsp" %>
 
             <!-- To-Do 리스트 -->
-            <%@ include file="/Views/Pages/Calendar/TodoList.jsp" %>
+            <%-- <%@ include file="/Views/Pages/Calendar/TodoList.jsp" %> --%>
         </main>
     </div>
 </body>

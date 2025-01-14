@@ -1,6 +1,5 @@
-/* 모달 기본 상태 (숨김) */
+
 .modal {
-    display: none; /* 기본적으로 숨김 상태 */
     position: fixed;
     top: 0;
     left: 0;

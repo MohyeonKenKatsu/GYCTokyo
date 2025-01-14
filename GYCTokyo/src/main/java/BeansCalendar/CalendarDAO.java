@@ -1,129 +1,84 @@
 //#################################################################################################
 //CalendarDAO.java - 캘린 DAO 모듈
 //#################################################################################################
-//═════════════════════════════════════════════════════════════════════════════════════════
-//외부모듈 영역
-//═════════════════════════════════════════════════════════════════════════════════════════
 package BeansCalendar;
 
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 import Common.ComMgr;
 import Common.ExceptionMgr;
 
-//═════════════════════════════════════════════════════════════════════════════════════════
-//사용자정의 클래스 영역
-//═════════════════════════════════════════════════════════════════════════════════════════
-/***********************************************************************
-* LoginDAO		: 로그인 Bean DAO 클래스<br>
-* Inheritance	: None
-***********************************************************************/
-public class CalendarDAO
-{
-	// —————————————————————————————————————————————————————————————————————————————————————
-	// 전역상수 관리 - 필수영역
-	// —————————————————————————————————————————————————————————————————————————————————————
-	
-	// —————————————————————————————————————————————————————————————————————————————————————
-	// 전역변수 관리 - 필수영역(정적변수)
-	// —————————————————————————————————————————————————————————————————————————————————————
-	
-	// —————————————————————————————————————————————————————————————————————————————————————
-	// 전역변수 관리 - 필수영역(인스턴스변수)
-	// —————————————————————————————————————————————————————————————————————————————————————
-	/** DBMgr : 오라클 데이터베이스 DAO 객체 선언 */
-	public DAO.DBOracleMgr DBMgr = null;
-	// —————————————————————————————————————————————————————————————————————————————————————
-	// 생성자 관리 - 필수영역(인스턴스함수)
-	// —————————————————————————————————————————————————————————————————————————————————————
-	/***********************************************************************
-	 * LoginDAO()	: 생성자
-	 * @param void	: None
-	 ***********************************************************************/
-	public CalendarDAO()
-	{
-		try
-		{
-			// -----------------------------------------------------------------------------
-			// 초기화 작업 관리
-			// -----------------------------------------------------------------------------
-			ExceptionMgr.SetMode(ExceptionMgr.RUN_MODE.DEBUG);
-			
-			this.DBMgr = new DAO.DBOracleMgr(); 							// DAO 객체 생성
-			this.DBMgr.SetConnectionStringFromProperties("db.properties");	// DB 연결문자열 읽기 
-			
-			//this.DBMgr.SetConnectionString("gyctokyo.duckdns.org", 1521, "educ", "educ", "XE");	// My
-			// -----------------------------------------------------------------------------
-		}
-		
-		catch (Exception Ex)
-		{
-			ExceptionMgr.DisplayException(Ex);	// 예외처리(콘솔)
-		}
-	}
-	// —————————————————————————————————————————————————————————————————————————————————————
-	// 전역함수 관리 - 필수영역(정적함수)
-	// —————————————————————————————————————————————————————————————————————————————————————
-	
-	// —————————————————————————————————————————————————————————————————————————————————————
-	// 전역함수 관리 - 필수영역(인스턴스함수)
-	// —————————————————————————————————————————————————————————————————————————————————————
-	/***********************************************************************
-	 * addEvent()			: 오라클 데이터베이스에 일정추가하기
-	 * @param calendarId	: 캘린더 아이디 
-	 * @param userId		: 유저 아이디 
-	 * @param title			: 일정명 
-	 * @param date			: 일정 날짜
-	 * @param memo 			: 메모 
-	 * @return boolean	: 로그인 성공 여부(true | false)
-	 * @throws Exception 
-	 ***********************************************************************/
-	 // 일정 추가
-	public boolean addEvent(CalendarDTO calendarDTO) throws Exception {
-		
-		String sSql = null;
-	      Object[] oPaValue = null;
-	      boolean bResult = false;
-	      
-	      try
-	      {
-	         // 사원정보 저장 (JobStatus : INSERT|UPDATE|DELETE)
-	         if (this.DBMgr.DbConnect() == true)
-	         {
-	            // 사원정보 저장
-	            sSql = "BEGIN SP_CALENDAR_CUD(?, ?, ?, ?, ?, ?, ?); END;";
-	            
-	            // IN 파라미터 갯수 만큼 메모리 할당
-	            oPaValue = new Object[7];
-	            
-	            oPaValue[0] = calendarDTO.getJobstatus();
-	            oPaValue[1] = calendarDTO.getCalendar_id();
-	            oPaValue[2] = calendarDTO.getUser_id();
-	            oPaValue[3] = calendarDTO.getPlan();
-	            oPaValue[4] = calendarDTO.getCalendar_date();
-	            oPaValue[5] = calendarDTO.getCategory();
-	            oPaValue[6] = calendarDTO.getMemo();
+public class CalendarDAO {
+    public DAO.DBOracleMgr DBMgr = null;
 
+    public CalendarDAO() {
+        try {
+            ExceptionMgr.SetMode(ExceptionMgr.RUN_MODE.DEBUG);
+            this.DBMgr = new DAO.DBOracleMgr();
+            this.DBMgr.SetConnectionStringFromProperties("db.properties");
+        } catch (Exception Ex) {
+            ExceptionMgr.DisplayException(Ex);
+        }
+    }
 
-	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
-	            {
-	               this.DBMgr.DbCommit();
-	               
-	               bResult = true;
-	            }
-	         }
-	      }
-	      catch (Exception Ex)
-	      {
-	         Common.ExceptionMgr.DisplayException(Ex);
-	      }
-	      finally
-	      {
-	         this.DBMgr.DbDisConnect();
-	      }
-	      
-	      return bResult;
-	}
+    public boolean addEvent(CalendarDTO calendarDTO) throws Exception {
+        String sSql = null;
+        Object[] oPaValue = null;
+        boolean bResult = false;
 
+        try {
+            if (this.DBMgr.DbConnect() == true) {
+                sSql = "BEGIN SP_CALENDAR_CUD(?, ?, ?, ?, ?, ?, ?); END;";
+                oPaValue = new Object[7];
+                oPaValue[0] = calendarDTO.getJobstatus();
+                oPaValue[1] = calendarDTO.getCalendar_id();
+                oPaValue[2] = calendarDTO.getUser_id();
+                oPaValue[3] = calendarDTO.getPlan();
+                oPaValue[4] = calendarDTO.getCalendar_date();
+                oPaValue[5] = calendarDTO.getCategory();
+                oPaValue[6] = calendarDTO.getMemo();
 
+                if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true) {
+                    this.DBMgr.DbCommit();
+                    bResult = true;
+                }
+            }
+        } catch (Exception Ex) {
+            Common.ExceptionMgr.DisplayException(Ex);
+        } finally {
+            this.DBMgr.DbDisConnect();
+        }
+
+        return bResult;
+    }
+
+ // 사용자의 이벤트 가져오기
+    public List<CalendarDTO> getUserEvents(int userId) throws Exception {
+        List<CalendarDTO> eventList = new ArrayList<>();
+        String sSql = "SELECT CALENDAR_ID, USER_ID, PLAN, CALENDAR_DATE, CATEGORY, MEMO " +
+                      "FROM TB_CALENDAR WHERE USER_ID = ?";
+        try {
+            if (this.DBMgr.DbConnect() == true) {
+                Object[] params = { userId };
+                if (this.DBMgr.RunQuery(sSql, params, 0, true)) {
+                    while (this.DBMgr.Rs.next()) {
+                        CalendarDTO dto = new CalendarDTO();
+                        dto.setCalendar_id(this.DBMgr.Rs.getInt("CALENDAR_ID"));
+                        dto.setUser_id(this.DBMgr.Rs.getInt("USER_ID"));
+                        dto.setPlan(this.DBMgr.Rs.getString("PLAN"));
+                        dto.setCalendar_date(this.DBMgr.Rs.getString("CALENDAR_DATE"));
+                        dto.setCategory(this.DBMgr.Rs.getString("CATEGORY"));
+                        dto.setMemo(this.DBMgr.Rs.getString("MEMO"));
+                        eventList.add(dto);
+                    }
+                }
+            }
+        } finally {
+            this.DBMgr.DbDisConnect();
+        }
+        return eventList;
+    }
 }
 //#################################################################################################
 //<END>
