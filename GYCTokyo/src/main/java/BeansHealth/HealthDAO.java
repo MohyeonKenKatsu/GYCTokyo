@@ -186,47 +186,6 @@ public class HealthDAO
 
 	    return bResult;
 	}
-	// 여기서부터 수정!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-	/***********************************************************************
-	 * saveHealthRecord()	: 오라클 데이터베이스에 건강기록 저장
-	 * @param HealthDTO		: 건강기록 DTO(저장용)
-	 * @return boolean		: 사원정보 저장 처리 여부(true | false)
-	 * @throws Exception 
-	 ***********************************************************************/
-	public List<HealthDTO> getHealthRecords(int userId, Date startDate, Date endDate) {
-	    List<HealthDTO> records = new ArrayList<>();
-	    String sql = "BEGIN SP_GET_HEALTH_RECORDS(?, ?, ?, ?); END;";
-	    try {
-	        if (this.DBMgr.DbConnect()) {
-	            CallableStatement cs = this.DBMgr.GetConnection().prepareCall(sql);
-	            cs.setInt(1, userId);
-	            cs.setDate(2, new java.sql.Date(startDate.getTime()));
-	            cs.setDate(3, new java.sql.Date(endDate.getTime()));
-	            cs.registerOutParameter(4, OracleTypes.CURSOR);
-	            cs.execute();
-
-	            ResultSet rs = (ResultSet) cs.getObject(4);
-	            while (rs.next()) {
-	                HealthDTO dto = new HealthDTO();
-	                dto.setHealth_date(rs.getString("HEALTH_DATE"));
-	                dto.setType_exercise(rs.getString("TYPE_EXERCISE"));
-	                dto.setGoal_exercise(rs.getString("GOAL_EXERCISE"));
-	                dto.setAchieved_exercise(rs.getString("ACHIEVED_EXERCISE"));
-	                dto.setGoal_water(rs.getString("GOAL_WATER"));
-	                dto.setAchieved_water(rs.getString("ACHIEVED_WATER"));
-	                dto.setBedtime(rs.getString("BEDTIME"));
-	                dto.setWaketime(rs.getString("WAKETIME"));
-	                records.add(dto);
-	            }
-	        }
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    } finally {
-	        this.DBMgr.DbDisConnect();
-	    }
-	    return records;
-	}
-
 	// —————————————————————————————————————————————————————————————————————————————————————
 }
 //#################################################################################################
