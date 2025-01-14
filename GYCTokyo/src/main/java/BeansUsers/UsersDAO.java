@@ -1,12 +1,10 @@
 //#################################################################################################
-//SawonDAO.java - 사원검색 DAO 모듈
+// UsersDAO.java - 사용자(Users) 테이블 접근 DAO 모듈
 //#################################################################################################
 //═════════════════════════════════════════════════════════════════════════════════════════
 //외부모듈 영역
 //═════════════════════════════════════════════════════════════════════════════════════════
 package BeansUsers;
-
-import java.util.ArrayList;
 
 import Common.ComMgr;
 import Common.ExceptionMgr;
@@ -15,7 +13,7 @@ import Common.ExceptionMgr;
 //사용자정의 클래스 영역
 //═════════════════════════════════════════════════════════════════════════════════════════
 /***********************************************************************
-* SawonDAO		: 사원검색 Bean DAO 클래스<br>
+* UsersDAO		: 사용자(Users) 테이블 접근 BEAN DAO 클래스<br>
 * Inheritance	: None
 ***********************************************************************/
 public class UsersDAO
@@ -37,7 +35,7 @@ public class UsersDAO
 	// 생성자 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
 	/***********************************************************************
-	 * SawonDAO()	: 생성자
+	 * UsersDAO()	: 생성자
 	 * @param void	: None
 	 ***********************************************************************/
 	public UsersDAO()
@@ -71,13 +69,106 @@ public class UsersDAO
 	// 전역함수 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
 	/***********************************************************************
-	 * ReadSawon()		: 오라클 데이터베이스에서 사원정보 읽기
-	 * @param Sabun		: 사번(조건용)
-	 * @param sawonDTO	: 사원정보 DTO(결과 반환용)
+	 * Login()			: 오라클 데이터베이스에 로그인 시도
+	 * @param EMAIL		: 아이디(조건용)
+	 * @param PASSWORD	: 비밀번호(조건용)
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean Login(UsersDTO usersDTO, Integer[] USER_ID_DATA) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_LOGIN(?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[2];
+				
+				oPaValue[0] = usersDTO.getEmail();
+				oPaValue[1] = usersDTO.getPassword();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
+				{
+					if (this.DBMgr.Rs.next() == true) {
+						USER_ID_DATA[0] = this.DBMgr.Rs.getInt("USER_ID");
+						bResult = true;
+					}
+					else {
+						bResult = false;
+					}
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * Signup()			: 오라클 데이터베이스에서 회원정보 저장(회원가입)
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean Signup(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_SIGNUP(?,?,?,?,?,?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[8];
+				
+				oPaValue[0] = "INSERT";
+				oPaValue[1] = 0;//usersdto.getUser_id();
+				oPaValue[2] = usersdto.getEmail();
+				oPaValue[3] = usersdto.getPassword();
+				oPaValue[4] = usersdto.getNickname();
+				oPaValue[5] = usersdto.getBirthday();
+				oPaValue[6] = usersdto.getTel();
+				oPaValue[7] = usersdto.getCourse();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
+				{
+					this.DBMgr.DbCommit();
+					
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * ReadHeaderData()	: 오라클 데이터베이스에서 헤더에 필요한 정보 불러오기
+	 * @param sUserID	: 사용자 아이디
+	 * @param usersDTO	: 회원정보 DTO(결과 반환용)
 	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-	public boolean ReadHeaderData(String sUSERID, UsersDTO userDTO) throws Exception
+	public boolean ReadHeaderData(Integer iUSERID, UsersDTO usersDTO) throws Exception
 	{
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
@@ -88,7 +179,7 @@ public class UsersDAO
 	    	// -----------------------------------------------------------------------------
 			// 사원정보 읽기
 	    	// -----------------------------------------------------------------------------
-			if (sUSERID != null)
+			if (iUSERID != null)
 			{
 				if (this.DBMgr.DbConnect() == true)
 				{
@@ -97,13 +188,14 @@ public class UsersDAO
 					
 					// IN 파라미터 만큼만 할당
 					oPaValue = new Object[1];
-					oPaValue[0] = Integer.valueOf(sUSERID);
+					oPaValue[0] = iUSERID;
 					
 					if (this.DBMgr.RunQuery(sSql, oPaValue, 2, true) == true)
 					{
 						while(this.DBMgr.Rs.next() == true)
 						{
-							userDTO.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
+							usersDTO.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
+							usersDTO.setCourse(this.DBMgr.Rs.getInt("COURSE"));
 						}
 						
 						bResult = true;
