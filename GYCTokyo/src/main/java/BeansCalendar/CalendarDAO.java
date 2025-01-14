@@ -6,8 +6,6 @@
 //═════════════════════════════════════════════════════════════════════════════════════════
 package BeansCalendar;
 
-import java.util.ArrayList;
-
 import Common.ComMgr;
 import Common.ExceptionMgr;
 
@@ -69,60 +67,63 @@ public class CalendarDAO
 	// 전역함수 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
 	/***********************************************************************
-	 * Login()			: 오라클 데이터베이스에서 사원정보 읽기
-	 * @param EMAIL		: 아이디(조건용)
-	 * @param PASSWORD	: 비밀번호(조건용)
+	 * addEvent()			: 오라클 데이터베이스에 일정추가하기
+	 * @param calendarId	: 캘린더 아이디 
+	 * @param userId		: 유저 아이디 
+	 * @param title			: 일정명 
+	 * @param date			: 일정 날짜
+	 * @param memo 			: 메모 
 	 * @return boolean	: 로그인 성공 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-	public boolean Login(String EMAIL, String PASSWORD, String[] USER_ID_DATA) throws Exception
-	{
-		String sSql = null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
+	 // 일정 추가
+	public boolean addEvent(CalendarDTO calendarDTO) throws Exception {
 		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 사원정보 읽기
-	    	// -----------------------------------------------------------------------------
-			if (EMAIL != null)
-			{
-				if (this.DBMgr.DbConnect() == true)
-				{
-					// 사원정보 읽기
-					sSql = "BEGIN SP_USERS_LOGIN(?,?,?); END;";
-					
-					// IN 파라미터 만큼만 할당
-					oPaValue = new Object[2];
-					
-					oPaValue[0] = EMAIL;
-					oPaValue[1] = PASSWORD;
-					
+		String sSql = null;
+	      Object[] oPaValue = null;
+	      boolean bResult = false;
+	      
+	      try
+	      {
+	         // 사원정보 저장 (JobStatus : INSERT|UPDATE|DELETE)
+	         if (this.DBMgr.DbConnect() == true)
+	         {
+	            // 사원정보 저장
+	            sSql = "BEGIN SP_CALENDAR_CUD(?, ?, ?, ?, ?, ?, ?); END;";
+	            
+	            // IN 파라미터 갯수 만큼 메모리 할당
+	            oPaValue = new Object[7];
+	            
+	            oPaValue[0] = calendarDTO.getJobstatus();
+	            oPaValue[1] = calendarDTO.getCalendar_id();
+	            oPaValue[2] = calendarDTO.getUser_id();
+	            oPaValue[3] = calendarDTO.getPlan();
+	            oPaValue[4] = calendarDTO.getCalendar_date();
+	            oPaValue[5] = calendarDTO.getCategory();
+	            oPaValue[6] = calendarDTO.getMemo();
 
-					if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
-					{
-						if (this.DBMgr.Rs.next() == true) {
-							USER_ID_DATA[0] = Integer.toString(this.DBMgr.Rs.getInt("USER_ID"));
-							USER_ID_DATA[1] = this.DBMgr.Rs.getString("NICKNAME");
-							USER_ID_DATA[2] = Integer.toString(this.DBMgr.Rs.getInt("COURSE"));
-							bResult = true;
-						}
-						else {
-							bResult = false;
-						}
-					}
-				}
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
+
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
+	            {
+	               this.DBMgr.DbCommit();
+	               
+	               bResult = true;
+	            }
+	         }
+	      }
+	      catch (Exception Ex)
+	      {
+	         Common.ExceptionMgr.DisplayException(Ex);
+	      }
+	      finally
+	      {
+	         this.DBMgr.DbDisConnect();
+	      }
+	      
+	      return bResult;
 	}
+
+
 }
 //#################################################################################################
 //<END>
