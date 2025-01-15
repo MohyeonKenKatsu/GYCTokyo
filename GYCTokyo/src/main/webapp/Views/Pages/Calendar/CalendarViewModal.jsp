@@ -38,14 +38,21 @@
                     <label for="memo">메모</label>
                     <textarea id="memo" name="memo" readonly><%= memo %></textarea>
 
-                    <div class="modalFooter">
-                        <button type="button" id="deleteModal" class="modalButtonDelete">삭제</button>
-                    </div>
+                   <!-- Hidden Inputs -->
+				    <input type="hidden" id="calendarId" value="<%= request.getParameter("calendar_id") %>">
+				    <input type="hidden" id="userId" value="<%= session.getAttribute("USER_ID") %>">
+				    
+				    
+				
+				    <div class="modalFooter">
+				        <button type="button" id="deleteModal" class="modalButtonDelete">삭제</button>
+				    </div>
                 </form>
             </div>
         </div>
     </div>
     <script src="<%= request.getContextPath() %>/Views/Pages/Calendar/Calendar.js"></script>
+    <script> const contextPath = "<%= request.getContextPath() %>"; // 서버 컨텍스트 경로 </script>
 </body>
 </html>
     
