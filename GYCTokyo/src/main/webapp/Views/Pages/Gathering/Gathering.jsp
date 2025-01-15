@@ -36,11 +36,10 @@
 		        List<GatheringDTO> gatheringList = gatheringDAO.getAllGatherings(); // DB에서 모임 리스트 가져오기
 		        for (GatheringDTO gathering : gatheringList) {
 		    %>
-		        <div class="event-card">
+		        <div class="event-card" onclick="location.href='ViewGatheringModal.jsp?GROUP_ID=<%= gathering.getGroup_id() %>'">
 		            <h3><%= gathering.getTitle() %></h3> <!-- 제목 -->
 		            <p>활동 날짜: <%= gathering.getActivity_date() %></p> <!-- 활동 날짜 -->
 		            <p>내용: <%= gathering.getContent() %></p> <!-- 내용 -->
-		            <button>참가</button>
 		        </div>
 		    <% } %>
 </div>

@@ -293,19 +293,17 @@ public class GatheringDAO
 	public GatheringDTO ReadGatheringById(int groupId) throws Exception {
 	    GatheringDTO dto = null; // 반환할 DTO 객체
 	    String sSql = null;      // SQL 쿼리
-	    Object[] oPaValue = null; // SQL 파라미터
+
 
 	    try {
 	        // DB 연결 확인
 	        if (this.DBMgr.DbConnect() == true) {
 	            // SQL 쿼리 작성
-	            sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DATE, NUMBER_LIMIT, CONTENT "
+	            sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT "
 	                 + "FROM TB_GATHERING "
 	                 + "WHERE GROUP_ID = ?";
 
-	            // 파라미터 설정
-	            oPaValue = new Object[1];
-	            oPaValue[0] = groupId;
+	            Object[] oPaValue = { groupId };
 
 	            // 쿼리 실행
 	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, true) == true) {
@@ -316,7 +314,7 @@ public class GatheringDAO
 	                    dto.setTitle(this.DBMgr.Rs.getString("TITLE"));
 	                    dto.setStart_date(this.DBMgr.Rs.getString("START_DATE"));
 	                    dto.setFinish_date(this.DBMgr.Rs.getString("FINISH_DATE"));
-	                    dto.setActivity_date(this.DBMgr.Rs.getString("ACTIVITY_DATE"));
+	                    dto.setActivity_date(this.DBMgr.Rs.getString("ACTIVITY_DAY"));
 	                    dto.setNumber_limit(this.DBMgr.Rs.getInt("NUMBER_LIMIT"));
 	                    dto.setContent(this.DBMgr.Rs.getString("CONTENT"));
 	                }
@@ -340,8 +338,9 @@ public class GatheringDAO
 	    try {
 	        if (this.DBMgr.DbConnect() == true) {
 	            // 전체 소모임 정보 가져오는 SQL 작성
-	            sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT "
-	                 + "FROM TB_GATHERING";
+	        	sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
+	        		       "FROM TB_GATHERING " +
+	        		       "ORDER BY GROUP_ID DESC";
 
 	            if (this.DBMgr.RunQuery(sSql, null, 0, true) == true) {
 	                while (this.DBMgr.Rs.next()) {
