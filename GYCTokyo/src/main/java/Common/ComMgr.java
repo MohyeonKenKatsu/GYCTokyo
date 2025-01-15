@@ -556,6 +556,29 @@ public class ComMgr
 	    return sResult;
 	}
 	/***********************************************************************
+	 * IsNull()				: null 확인
+	 * @param CheckValue	: 확인 할 값
+	 * @param DefaultValue	: null인 경우 반환 할 기본값
+	 * @return Integer		: null이 아닌 정수값 반환
+	 ***********************************************************************/
+	public static Integer IsNull(Object CheckValue, Integer DefaultValue)
+	{
+		Integer nResult = null;
+		
+	    try
+	    {
+	    	nResult = (CheckValue != null) ? (Integer)CheckValue : DefaultValue;
+	    	
+	    	nResult = (nResult.toString().trim().length() > 0) ? nResult : DefaultValue;
+	    }
+	    catch (Exception Ex)
+	    {
+	    	nResult = DefaultValue;
+	    }
+	    
+	    return nResult;
+	}
+	/***********************************************************************
 	 * MakeString()		: Size 만큼 RepeatStr을 반복해서 문자열 만들기
 	 * @param Size		: 문자열 반복 횟수
 	 * @param RepeatStr	: 반복 할 문자열
