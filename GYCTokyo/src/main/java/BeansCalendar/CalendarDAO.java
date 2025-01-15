@@ -81,6 +81,27 @@ public class CalendarDAO {
         System.out.println("Fetched Events: " + eventList);
         return eventList;
     }
+    
+    //사용자 이벤트 삭제하기 
+    public boolean deleteEvent(int calendarId, int userId) throws Exception {
+        String sSql = "BEGIN SP_CALENDAR_CUD(?, ?, ?, NULL, NULL, NULL, NULL); END;";
+        boolean result = false;
+        try {
+            if (this.DBMgr.DbConnect()) {
+                Object[] params = {"DELETE", calendarId, userId};
+                if (this.DBMgr.RunQuery(sSql, params, 0, false)) {
+                    this.DBMgr.DbCommit();
+                    result = true;
+                }
+            }
+        } catch (Exception e) {
+            Common.ExceptionMgr.DisplayException(e);
+        } finally {
+            this.DBMgr.DbDisConnect();
+        }
+        return result;
+    }
+
 }
 //#################################################################################################
 //<END>

@@ -35,16 +35,19 @@
 					    <option value="2" <%= "2".equals(category) ? "selected" : "" %>>개인 일정</option>
 					</select>
 
-
                     <label for="memo">메모</label>
                     <textarea id="memo" name="memo" readonly><%= memo %></textarea>
 
                     <div class="modalFooter">
-                        <button type="button" id="deleteModal" class="modalButtonDelete">삭</button>
+                        <button type="button" id="deleteModal" class="modalButtonDelete">삭제</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
+    <script src="<%= request.getContextPath() %>/Views/Pages/Calendar/Calendar.js"></script>
+</body>
+</html>
+    
 </body>
 </html>

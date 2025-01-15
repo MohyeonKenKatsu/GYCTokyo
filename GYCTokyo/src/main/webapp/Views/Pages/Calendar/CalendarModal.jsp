@@ -104,5 +104,9 @@
         </div>
     </div>
 </div>
+<script>
+    const contextPath = "<%= request.getContextPath() %>";
+</script>
+ <script src="<%= request.getContextPath() %>/Views/Pages/Calendar/Calendar.js"></script>
 </body>
 </html>
