@@ -1,5 +1,7 @@
+<%@page import="java.time.LocalDate"%>
 <%@page import="BeansShareDiary.ShareDiaryDAO"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,8 +9,15 @@
 	[HTML Page - 헤드 영역]
 	--------------------------------------------------------------------------%>
 	<%--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--%>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+	<meta http-equiv="Expires" content="0"/>
+	<meta http-equiv="pragma" content="no-cache"/>
+    <meta name="Description" content="검색 엔진을 위해 웹 페이지에 대한 설명을 명시"/>
+    <meta name="keywords" content="검색 엔진을 위해 웹 페이지와 관련된 키워드 목록을 콤마로 구분해서 명시"/>
+    <meta name="Author" content="문서의 저자를 명시"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>공유일기</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
@@ -25,27 +34,31 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		function openModal(modalType, date, group_id, user_id)
+		function openModal(modalType, date, groupId, userId)
 		{
 			let ifModalWindow = document.getElementById('ifModalWindow');
-			//alert(date);
-			divModalFrame.style.display = "block";
+			let divModalFrame = document.getElementById('divModalFrame');
 			
-			if(modalType === 'NewSDModal')
-			{			
-				ifModalWindow.src = 'NewSDModal.jsp';
-			}
-			else if(modalType === 'ViewSDModal')
+			if (ifModalWindow != null && divModalFrame != null)
 			{
-				ifModalWindow.src = 'ViewSDModal.jsp?date=' + date + '&group_id=' + group_id + '&user_id=' + user_id;
-			}
-			else if(modalType === 'ChangeSDModal')
-			{
-				ifModalWindow.src = 'ChangeSDModal.jsp'
-			}
-			else if(modalType === 'GroupMemberListModal')
-			{
-				ifModalWindow.src = 'GroupMemberListModal.jsp'
+				divModalFrame.style.display = "block";
+				
+				if(modalType === 'NewSDModal')
+				{			
+					ifModalWindow.src = 'NewSDModal.jsp?date=' + date + '&groupId=' + groupId + '&userId=' + userId;
+				}
+				else if(modalType === 'ViewSDModal')
+				{
+					ifModalWindow.src = 'ViewSDModal.jsp?date=' + date + '&groupId=' + groupId + '&userId=' + userId;
+				}
+				else if(modalType === 'ChangeSDModal')
+				{
+					ifModalWindow.src = 'ChangeSDModal.jsp?date=' + date + '&groupId=' + groupId + '&userId=' + userId;
+				}
+				else if(modalType === 'GroupMemberListModal')
+				{
+					ifModalWindow.src = 'GroupMemberListModal.jsp';
+				}
 			}
 		}
 		// -----------------------------------------------------------------
@@ -74,9 +87,9 @@
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
 	//Boolean bJobProcess = ComMgr.IsNull(request.getParameter("jobprocess"), false);
-	String sDate = request.getParameter("date");
-	Integer nGroupId = ComMgr.IsNull(request.getParameter("group_id"), -1);
-	Integer nUserId = ComMgr.IsNull(request.getParameter("user_id"), -1);
+	String 	sDate		= null;
+	Integer nGroupId	= null;
+	Integer nUserId		= null;
 	
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
@@ -85,12 +98,19 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	Boolean bContinue		= false;						// 사원정보 검색 유무
+	Boolean bContinue = false;						// 공유일기 게시글 리스트 검색 유무
 
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
+	sDate		= ComMgr.IsNull(request.getParameter("date"), LocalDate.now().toString());
+	nGroupId	= ComMgr.IsNull(request.getParameter("groupId"), -1);
+	nUserId		= ComMgr.IsNull(request.getParameter("userId"), -1);
 	
+	if (nGroupId != -1 && nUserId != -1)
+	{
+		bContinue = true;
+	}
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -145,22 +165,17 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	// bJobProcess 작업처리 허용 && 검색인 경우 사원정보 검색
-	//if (bJobProcess == true && sJobStatus.equals("SELECT") == true)
-	{
-		// 사원정보 검색 결과용 ArrayList 객체 생성
-		//Sawons = new ArrayList<SawonDTO>(); 
-		
-		// 사원정보 검색
-		if (this.shareDiaryDAO.ReadShareDiaryInGroupList(ShareDiaryDTO) == true)
+		// 그룹 내 공유일기 정보 검색
+		if (bContinue == true)
 		{
-			if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
+			if (this.shareDiaryDAO.ReadShareDiaryInGroupList(ShareDiaryDTO) == true)
 			{
-				bContinue = true;
+				if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
+				{
+					bContinue = true;
+				}
 			}
 		}
-	}
-
 %>
 <body>
 	<%----------------------------------------------------------------------
@@ -176,7 +191,7 @@
 			메인 페이지
 		----------------------------------------------------------------------%>
 		<!-- 메인 콘텐츠 -->
-        <form class="MainContent" name="form1" action="ShareDiary.jsp?group_id=<%=nGroupId %>&user_id=<%=nUserId %>" method="post">
+        <form class="MainContent" name="form1" action="ShareDiary.jsp?groupId=<%=nGroupId %>&userId=<%=nUserId %>" method="post">
 			<!-- 상단 날짜와 제목 -->
 			<div class="Header">
 			<h1 class="Title">공유일기</h1>
@@ -190,10 +205,7 @@
 				    	<input type="button" class="MemberListButton" id="memberListButton" onclick="openModal('GroupMemberListModal')" value="그룹원"/>
 					</td>
 					<td>
-				    	<input type="button" class="WriteButton" id="writeButton" onclick="openModal('NewSDModal')" value="글쓰기"/>
-					</td>
-					<td>
-					    <div class="Sort">☰</div>
+				    	<input type="button" class="WriteButton" id="writeButton" onclick="openModal('NewSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nUserId %>)" value="글쓰기"/>
 					</td>
 				</tr>
 			</table>
@@ -207,7 +219,7 @@
 				{
 			%>
 				<div class="DiaryPreview" id="diaryPreview" onclick="openModal('ViewSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nUserId %>)">
-					<h3 class="DiaryWriter">세니</h3>
+					<h3 class="DiaryWriter"><%=this.shareDiaryDAO.DBMgr.Rs.getString("NICKNAME") %></h3>
 					<p class="TextPreview"><%=this.shareDiaryDAO.DBMgr.Rs.getString("SD_CONTENT") %></p>
 					<p class="EditGuide">일기를 조회하거나 수정하려면 클릭하세요.</p>
 				</div>

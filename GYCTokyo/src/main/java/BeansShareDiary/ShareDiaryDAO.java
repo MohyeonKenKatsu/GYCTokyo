@@ -71,77 +71,13 @@ public class ShareDiaryDAO
 	// 전역함수 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
 	/***********************************************************************
-	 * ReadSawon()		: 오라클 데이터베이스에서 사원정보 읽기
-	 * @param Sabun		: 사번(조건용)
+	 * ReadShareDiaryGroupList()	: 오라클 데이터베이스에서 내가 속한 그룹 리스트 읽기
+	 * @param Sabun					: 사번(조건용)
 	 * @param sawonDTO	: 사원정보 DTO(결과 반환용)
 	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-/*	public boolean ReadSawon(Integer Sabun, SawonDTO sawonDTO) throws Exception
-	{
-		String sSql = null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 사원정보 읽기
-	    	// -----------------------------------------------------------------------------
-			if (Sabun != null)
-			{
-				if (this.DBMgr.DbConnect() == true)
-				{
-					// 사원정보 읽기
-					sSql = "BEGIN SP_MAN_R(?,?,?,?,?,?); END;";
-					// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
-					
-					// IN 파라미터 만큼만 할당
-					oPaValue = new Object[5];
-					
-					oPaValue[0] = Sabun;
-					oPaValue[1] = "-1";
-					oPaValue[2] = 0;
-					oPaValue[3] = "-1";
-					oPaValue[4] = "-1";
-					
-					if (this.DBMgr.RunQuery(sSql, oPaValue, 6, true) == true)
-					{
-						while(this.DBMgr.Rs.next() == true)
-						{
-							sawonDTO.setSabun(this.DBMgr.Rs.getInt("Sabun"));
-							sawonDTO.setName(ComMgr.IsNull(this.DBMgr.Rs.getString("Name"), "").trim());
-							sawonDTO.setAge(this.DBMgr.Rs.getInt("Age"));
-							sawonDTO.setGender(ComMgr.IsNull(this.DBMgr.Rs.getString("Gender"), "").trim());
-							sawonDTO.setTel(ComMgr.IsNull(this.DBMgr.Rs.getString("Tel"), "").trim());
-							sawonDTO.setDept(ComMgr.IsNull(this.DBMgr.Rs.getString("Dept"), "").trim());
-							sawonDTO.setDeptname(ComMgr.IsNull(this.DBMgr.Rs.getString("DeptName"), "").trim());
-							sawonDTO.setStcd(ComMgr.IsNull(this.DBMgr.Rs.getString("StCd"), "").trim());
-							sawonDTO.setStcdname(ComMgr.IsNull(this.DBMgr.Rs.getString("StCdName"), "").trim());
-							sawonDTO.setBdate(ComMgr.IsNull(this.DBMgr.Rs.getString("BDate"), "").trim());
-							sawonDTO.setAddress(ComMgr.IsNull(this.DBMgr.Rs.getString("Address"), "").trim());
-						}
-						
-						bResult = true;
-					}
-				}
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
-	}*/
-	/***********************************************************************
-	 * ReadSawonList()	: 오라클 데이터베이스에서 사원정보 읽기
-	 * @param sawonDTO	: 사원정보 DTO(조건용)
-	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
-	 * @throws Exception 
-	 ***********************************************************************/
-	public boolean ReadShareDiaryInGroupList(ShareDiaryDTO shareDiaryDTO) throws Exception
+	public boolean ReadShareDiaryGroupList(ShareDiaryDTO shareDiaryDTO) throws Exception
 	{
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
@@ -154,7 +90,50 @@ public class ShareDiaryDAO
 	    	// -----------------------------------------------------------------------------
 			if (this.DBMgr.DbConnect() == true)
 			{
-				// 사원정보 읽기
+				// 공유일기 리스트 읽기
+				sSql = "BEGIN SP_SHAREGROUP_R(?,?); END;";
+				// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[1];
+				
+				oPaValue[0] = shareDiaryDTO.getUserId();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 2, true) == true)
+				{
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	
+	/***********************************************************************
+	 * ReadShareDiaryInGroupList()	: 오라클 데이터베이스에서 공유일기 읽기
+	 * @param ShareDiaryDTO	: 공유일기 DTO(조건용)
+	 * @return boolean	: 공유일기 리스트 검색 처리 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean ReadShareDiaryInGroupList(ShareDiaryDTO shareDiaryDTO) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+	    	// -----------------------------------------------------------------------------
+			// 공유일기 리스트 읽기
+	    	// -----------------------------------------------------------------------------
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 공유일기 리스트 읽기
 				sSql = "BEGIN SP_SHAREDAIRY_R(?,?,?,?); END;";
 				// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
 				
@@ -246,12 +225,12 @@ public class ShareDiaryDAO
 		return bResult;
 	}*/
 	/***********************************************************************
-	 * SaveSawonDetail()	: 오라클 데이터베이스에 사원정보 저장
-	 * @param sawonDTO		: 사원정보 DTO(저장용)
+	 * SaveShareDiaryNewGroup()	: 오라클 데이터베이스에 새 그룹명 저장
+	 * @param shareDiaryDTO		: 공유일기 DTO(저장용)
 	 * @return boolean		: 사원정보 저장 처리 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-/*	public boolean SaveSawonDetail(SawonDTO sawonDTO) throws Exception
+	public boolean SaveShareDiaryNewGroup(ShareDiaryDTO shareDiaryDTO) throws Exception
 	{
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
@@ -260,25 +239,17 @@ public class ShareDiaryDAO
 		try
 		{
 	    	// -----------------------------------------------------------------------------
-			// 사원정보 저장(JobStatus : INSERT | UPDATE | DELETE)
+			// 사원정보 저장(JobStatus : INSERT)
 	    	// -----------------------------------------------------------------------------
 			if (this.DBMgr.DbConnect() == true)
 			{
-				sSql = "BEGIN SP_MAN_CUD(?,?,?,?,?,?,?,?,?,?); END;";
+				sSql = "BEGIN SP_SHAREGROUP_C(?,?); END;";
 				
 				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[10];
+				oPaValue = new Object[2];
 				
-				oPaValue[0] = sawonDTO.getJobstatus();
-				oPaValue[1] = sawonDTO.getSabun();
-				oPaValue[2] = ComMgr.IsNull(sawonDTO.getName(), "");
-				oPaValue[3] = sawonDTO.getAge();
-				oPaValue[4] = ComMgr.IsNull(sawonDTO.getGender(), "");
-				oPaValue[5] = ComMgr.IsNull(sawonDTO.getTel(), "");
-				oPaValue[6] = ComMgr.IsNull(sawonDTO.getDept(), "");
-				oPaValue[7] = ComMgr.IsNull(sawonDTO.getStcd(), "");
-				oPaValue[8] = ComMgr.IsNull(sawonDTO.getBdate(), "");
-				oPaValue[9] = ComMgr.IsNull(sawonDTO.getAddress(), "");
+				oPaValue[0] = shareDiaryDTO.getGroupname();
+				oPaValue[1] = shareDiaryDTO.getUserId();
 				
 				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
 				{
@@ -299,7 +270,7 @@ public class ShareDiaryDAO
 		}
 		
 		return bResult;
-	}*/
+	}
 	// —————————————————————————————————————————————————————————————————————————————————————
 }
 //#################################################################################################

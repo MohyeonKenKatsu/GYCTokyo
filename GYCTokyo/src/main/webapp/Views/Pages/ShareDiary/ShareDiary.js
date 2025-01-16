@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	// 디버깅: 선택된 요소 확인
 	console.log("Clicked Outside Modal");
 		
-// iframe이 로드되었을 때 실행
+	// iframe이 로드되었을 때 실행
 	iframe.onload = function() {
 		const iframeDoc = iframe.contentDocument || iframe.contentWindow.document; // iframe 내부 문서 접근
 		

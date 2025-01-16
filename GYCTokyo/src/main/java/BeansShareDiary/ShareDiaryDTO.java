@@ -31,6 +31,8 @@ public class ShareDiaryDTO
 	private String date	= null;			// 날짜
 	private Integer groupId	= null;		// 그룹번호
 	private Integer userId = null;		// 유저번호
+	private String nickname = null;		// 닉네임
+	private String groupname = null;	// 그룹 이름
 	// —————————————————————————————————————————————————————————————————————————————————————
 	// 생성자 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
@@ -84,6 +86,27 @@ public class ShareDiaryDTO
 	{
 		this.userId = userId;
 	}
+
+	public String getNickname()
+	{
+		return nickname;
+	}
+
+	public void setNickname(String nickname)
+	{
+		this.nickname = nickname;
+	}
+
+	public String getGroupname()
+	{
+		return groupname;
+	}
+
+	public void setGroupname(String groupname)
+	{
+		this.groupname = groupname;
+	}
+	
 	// —————————————————————————————————————————————————————————————————————————————————————
 }
 //#################################################################################################

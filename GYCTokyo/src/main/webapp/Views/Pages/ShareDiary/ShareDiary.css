@@ -102,17 +102,6 @@ body {
 	color: white;
 }
 
-.Sort {
-	color: #242424;
-	font-size: 24px;
-	cursor: pointer;
-	margin-left:10px;
-}
-
-.Sort:hover {
-	color: #0353a4; 
-}
-
 .DiaryList {
 	display: flex;
 	flex-direction: column;
@@ -156,7 +145,7 @@ body {
 	Modal 창 스타일시트
    ----------------------------------------------------------------- */
 .Modal-Frame {
-	background-color: rgba(0,0,0,0.3);				/* 배경 흐릿하게 처리 */
+	background-color: rgba(0,0,0,0.3);			/* 배경 흐릿하게 처리 */
 	display: none;									/* 기본적으로 숨김 */
     height: 100%;									/* 브라우저 전체 높이 */
 	left: 0; top: 0;								/* 모달창 프레임 좌측, 상단 위치 */

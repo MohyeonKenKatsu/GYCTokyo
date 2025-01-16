@@ -1,23 +1,39 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page import="Common.ComMgr"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<%----------------------------------------------------------------------
 	[HTML Page - 헤드 영역]
 	--------------------------------------------------------------------------%>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<%--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--%>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+	<meta http-equiv="Expires" content="0"/>
+	<meta http-equiv="pragma" content="no-cache"/>
+    <meta name="Description" content="검색 엔진을 위해 웹 페이지에 대한 설명을 명시"/>
+    <meta name="keywords" content="검색 엔진을 위해 웹 페이지와 관련된 키워드 목록을 콤마로 구분해서 명시"/>
+    <meta name="Author" content="문서의 저자를 명시"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>공유일기 작성 모달창</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
+		<style type="text/css">
+		/* -----------------------------------------------------------------
+			HTML Page 스타일시트
+		   ----------------------------------------------------------------- */
+			
+        /* ----------------------------------------------------------------- */
+	</style>	
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/NewSDModal.css">
 	<%----------------------------------------------------------------------
 	[HTML Page - 자바스크립트 구현 영역(상단)]
 	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
 	--------------------------------------------------------------------------%>
-	<script type="text/javascript" src="ShareDiary.js"></script>
 	<script type="text/javascript">
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
@@ -35,7 +51,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	
+
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -47,7 +63,9 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	
+	String 	sDate		= null;
+	Integer nGroupId	= null;
+	Integer nUserId		= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
@@ -55,11 +73,13 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	
+	sDate = ComMgr.IsNull(request.getParameter("date"), "날짜 없음");
+	nGroupId = ComMgr.IsNull(request.getParameter("group_id"), -1);
+	nUserId = ComMgr.IsNull(request.getParameter("user_id"), -1);	
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -122,7 +142,7 @@
 		
 			<div class="ModalHeader">
 				<h2 class="Header">공유일기</h2>
-				<input type="date" class="Date"/>
+				<div class="Date" id="date"><%=sDate %></div>
 				<table class="ViewWriter">
 					<tr>
 						<td class="Writer">작성자</td>
