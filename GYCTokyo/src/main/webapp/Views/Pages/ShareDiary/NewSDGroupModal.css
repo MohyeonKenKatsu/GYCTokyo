@@ -4,7 +4,7 @@
 	font-family: 'Pretendard', sans-serif;
 }
 
-.NewSDModal {
+.NewGroupModal {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -17,84 +17,65 @@
 .ModalContent {
 	background: #ffffff;
 	margin: 10% auto;
-	width: 450px;
-	height: 550px;
+	width: 400px;
+	height: 350px;
 	padding: 30px;
 	border-radius: 20px;
 	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 	text-align: left;
 }
 
-.ModalHeader {
+.SDGroupModalHeader {
 	padding-left: 15px;
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 .Header {
 	font-size: 23px;
 	color: #0353a4;
-	margin-top: 10px;
+	margin-top: 20px;
 	margin-bottom: 10px;
 	white-space: nowrap;
 }
 
-.ModalBody {
+.SDGroupModalBody {
 	display: flex;
-	justify-content: center;
-	margin-top: 10px;
-	margin-bottom: 30px;
+	padding-left: 15px;
+	margin-top: 40px;
 	}
 
-.Date {
+.GroupName {
 	color: #242424;
- 	display: inline-block; 
-    background: #e0e0e0; 
-    padding: 4px 8px; 
-    border: none;
-    border-radius: 4px; 
-    font-size: 14px;
+	font-size: 18px;
+	font-weight: bold;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	white-space: nowrap;
 }
 
-.ViewWriter {
-	margin-top: 5px;
+.InputGroupName {
+	color: #242424;
+	resize: none;
+	font-size: 20px;
+	display:flex;
+	width: 360px;
+	height: 30px;
+	margin-top: 30px;
 	margin-bottom: 5px;
 }
 
-.Writer {
-	color: #0353a4;
-	font-size: 16px;
-	font-weight: bold;
-	padding-right: 7px;
-}
-
-.Nickname {
-	color: #242424;
-	font-size: 15px;
-}
-
-.InputDiary {
-	resize: none;
-	font-size: 16px;
-	line-height: 170%;
-	letter-spacing: 0.1em;
-	display:flex;
-	width: 380px;
-	height: 350px;
-	margin-top: 3px;
-	overflow-y: scroll;
-}
-
-.InputDiary::placeholder {
+.InputGroupName::placeholder {
 	color: #d5d5d5;
 	}
 	
-.ModalTail {
-	padding-right: 20px;
+.SDGroupModalTail {
 	display: flex;
 	justify-content: flex-end;
+	padding-right: 20px;
+	margin-top: 110px;
 }
 
-.NewDiaryCancel {
+.NewGroupCancel {
 	color: #242424;
 	width: 58px;
 	background: #e0e0e0; 
@@ -106,7 +87,7 @@
     cursor: pointer;
 }
 
-.NewDiarySave {
+.NewGroupButton {
 	color: #ffffff;
 	width: 58px;
 	background: #0353a4; 

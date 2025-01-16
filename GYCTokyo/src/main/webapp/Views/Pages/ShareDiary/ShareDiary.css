@@ -22,18 +22,18 @@ body {
 	margin: 30px;
 }
 
-header {
+.Header {
 	margin-bottom: 10px;
 }
 
-header .Title {
+.Title {
 	font-size: 30px;
 	color: #0353a4;
 	margin-bottom: 5px;
 	white-space: nowrap;
 }
 
-.DatePicker {
+.Date {
 	color: #242424;
  	display: inline-block; 
     background: #e0e0e0; 
@@ -43,6 +43,23 @@ header .Title {
     font-size: 14px;
     margin-top: 4px;
     cursor: pointer;
+}
+
+.Submit {
+	color: #242424;
+	width: 50px;
+	background: #e0e0e0; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 6px 12px; 
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.Submit:hover {
+	background: #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
 }
 
 .RightMenu {
@@ -67,7 +84,7 @@ header .Title {
 	color: white;
 }
 
-.SD-Search {
+.WriteButton {
 	color: #242424;
 	width: 58px;
 	background: #e0e0e0; 
@@ -79,7 +96,7 @@ header .Title {
     cursor: pointer;
 }
 
-.SD-Search:hover {
+.WriteButton:hover {
 	background: #0353a4; 
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 	color: white;
@@ -94,26 +111,6 @@ header .Title {
 
 .Sort:hover {
 	color: #0353a4; 
-}
-
-.WriteButton {
-	color: #242424;
-	width: 58px;
-	display: flex;
-	background: #e0e0e0;
-    border: none;
-    border-radius: 4px;
-    padding: 6px 12px;
-    margin-top: 8px;
-    margin-left:10px;
-	white-space: nowrap;
-	cursor: pointer;
-}
-
-.WriteButton:hover {
-	background: #0353a4; 
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-	color: white;
 }
 
 .DiaryList {
@@ -137,7 +134,8 @@ header .Title {
 	cursor: pointer;
 }
 
-.Writer {
+.DiaryWriter {
+	font-size: 18px;
 	color: #0353a4;
 }
 
@@ -153,3 +151,35 @@ header .Title {
 	color: #d5d5d5;
 	font-size: 15px;
 }
+
+/* -----------------------------------------------------------------
+	Modal 창 스타일시트
+   ----------------------------------------------------------------- */
+.Modal-Frame {
+	background-color: rgba(0,0,0,0.3);				/* 배경 흐릿하게 처리 */
+	display: none;									/* 기본적으로 숨김 */
+    height: 100%;									/* 브라우저 전체 높이 */
+	left: 0; top: 0;								/* 모달창 프레임 좌측, 상단 위치 */
+	overflow: auto;									/* 모달창이 넘치면 내부에서 스크롤 */
+	position: fixed;								/* 모달창 프레임을 고정 : 부모창 disabled */
+	width: 100%;									/* 모달창 프레임을 브라우저 폭으로 */
+	z-index: 1;										/* 모달창 프레임을 위로 */
+}
+
+.Modal-Content {
+	background-color: transparent;					/* 모달창 배경색 */
+	border: none;									/* 모달창 테두리 스타일 */
+	width: 600px;									/* 모달창 넓이 */
+	height: 800px;									/* 모달창 높이 */
+	left: 50%; top: 50%;							/* 모달창 좌측/상단 위치 */
+	position: absolute;								/* 모달창 위치 속성 */
+	transform: translate(-50%, -50%);				/* 모달창 x, y 만큼 이동 */
+}
+
+.Modal-Window {
+	border: none;									/* 모달창 페이지(iframe) 테두리 */
+	height: 100%;									/* 모달창 페이지(iframe) 높이를 Modal-Content 높이로 */
+	width: 100%;									/* 모달창 페이지(iframe) 넓이를 Modal-Content 넓이로 */
+}
+
+/* ----------------------------------------------------------------- */

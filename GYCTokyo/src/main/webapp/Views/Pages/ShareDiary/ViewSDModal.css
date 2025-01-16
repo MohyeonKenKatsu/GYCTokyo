@@ -4,7 +4,7 @@
 	font-family: 'Pretendard', sans-serif;
 }
 
-.NewSDModal {
+.ViewSDModal {
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -72,8 +72,9 @@
 	font-size: 15px;
 }
 
-.InputDiary {
+.ViewDiary {
 	resize: none;
+	color: #242424;
 	font-size: 16px;
 	line-height: 170%;
 	letter-spacing: 0.1em;
@@ -81,12 +82,9 @@
 	width: 380px;
 	height: 350px;
 	margin-top: 3px;
-	overflow-y: scroll;
+	overflow: scroll;
+	overflow-x: hidden;
 }
-
-.InputDiary::placeholder {
-	color: #d5d5d5;
-	}
 	
 .ModalTail {
 	padding-right: 20px;
@@ -94,7 +92,7 @@
 	justify-content: flex-end;
 }
 
-.NewDiaryCancel {
+.ViewDiaryCancel {
 	color: #242424;
 	width: 58px;
 	background: #e0e0e0; 
@@ -106,7 +104,7 @@
     cursor: pointer;
 }
 
-.NewDiarySave {
+.ViewDiaryChange {
 	color: #ffffff;
 	width: 58px;
 	background: #0353a4; 

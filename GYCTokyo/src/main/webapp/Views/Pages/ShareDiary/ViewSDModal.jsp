@@ -1,55 +1,29 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@page import="Common.ComMgr"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<%----------------------------------------------------------------------
 	[HTML Page - 헤드 영역]
 	--------------------------------------------------------------------------%>
-	<%--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--%>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>공유일기</title>
+	<title>공유일기 조회 모달창</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
-	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Header/Header.css">
-    <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Sider/Sider.css">
+	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ViewSDModal.css">
 	<%----------------------------------------------------------------------
 	[HTML Page - 자바스크립트 구현 영역(상단)]
 	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
 	--------------------------------------------------------------------------%>
+	<script type="text/javascript" src="ShareDiary.js"></script>
 	<script type="text/javascript">
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		function openShareDiary (group_id, user_id)
-		{
-			let url = 'ShareDiary.jsp'; // 초기 화면에서 선택한 날짜가 메인 화면으로 옮겨감
-			let date = document.getElementById('date').value; // 초기 화면 선택 날짜(기본값: 오늘 날짜)
-			
-			url = url + '?date=' + date + '&group_id=' + group_id + '&user_id=' + user_id;
-			location.href=url;
-		}
 		
-		function openModal(modalType)
-		{
-			let ifModalWindow = document.getElementById('ifModalWindow');
-			
-			divModalFrame.style.display = "block";
-			
-			if(modalType === 'NewSDGroupModal')
-				{			
-					ifModalWindow.src = 'NewSDGroupModal.jsp';
-				}
-			
-			if(modalType === 'InviteGroupMemberModal')
-				{
-					ifModalWindow.src = 'InviteGroupMemberModal.jsp';
-				}
-		}
 		// -----------------------------------------------------------------
 	</script>
 </head>
@@ -90,7 +64,9 @@
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	//String selectedDate = request.getParameter("date");
+	String sDate = request.getParameter("date");
+	Integer nGroupId = ComMgr.IsNull(request.getParameter("group_id"), -1);
+	Integer nUserId = ComMgr.IsNull(request.getParameter("user_id"), -1);
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -139,68 +115,38 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
+
 %>
 <body>
-	<%----------------------------------------------------------------------
-	[HTML Page - FORM 디자인 영역]
-	--------------------------------------------------------------------------%>
-	<!-- 헤더 포함 -->
-	<%@ include file="/Views/Components/Header/Header.jsp" %>
-	<div style="display: flex;">
+	<!-- 모달 배경 -->
+	<div class="ViewSDModal" id="viewSDModal">
 	
-	<!-- 사이드바 포함 -->
-	<%@ include file="/Views/Components/Sider/Sider.jsp" %>
-		<%------------------------------------------------------------------
-			메인 페이지
-		----------------------------------------------------------------------%>
-		<!-- 메인 콘텐츠 -->
-		<main class="MainContent">
-        
-			<!-- 상단 날짜와 제목 -->
-			<header>
-				<h1 class="Title">공유일기</h1>
-				<input type="date" class="Date" id="date" name="date" required>
-			</header>
-			
-			<!-- 우측 메뉴 -->
-			<table class="RightMenu">
-				<tr>
-					<td>
-				    	<button class="GroupInviteButton" id="groupInviteButton" onclick="openModal('InviteGroupMemberModal')">초대</button>
-					</td>
-					<td>
-				    	<div class="Sort">☰</div>
-					</td>
-				</tr>
-			</table>
-		  
-			<!-- 추가(+) 버튼 -->
-			<div class="GroupPlusButton" id="groupPlusButton" onclick="openModal('NewSDGroupModal')">+</div>
-		  
-			<!-- 폴더 아이콘 -->
-			<div class="GroupFolders">
-			<%
-				for(int i=1; i<=3; i++)
-				{
-			%>
-					<div class="GroupFolder" id="GroupFolder<%=i %>" onclick="openShareDiary(1, 1)">사내켄<%=i %></div>
-			<%
-				}
-			%>		
+		<!-- 모달 창 -->
+		<div class="ModalContent">
+		
+			<div class="ModalHeader">
+				<h2 class="Header">공유일기</h2>
+				<div class="Date" id="date"><%=sDate %></div>
+				<table class="ViewWriter">
+					<tr>
+						<td class="Writer">작성자</td>
+						<td class="Nickname">세니</td>
+					</tr>
+				</table>
+      		</div>
+      		
+        	<div class="ModalBody">
+				<textarea class="ViewDiary" readonly>오늘은 GYC 친구들과 같이 마라탕을 먹으러 갔다. 서연이가 좋아하는 마라장룡 마라탕. 서연이는 이걸 왜 좋아하는 걸까? 맛있기는 한데 매일 먹을 수는 없을 것 같다...</textarea>
+        	</div>
+        	
+			<div class="ModalTail">
+				<button class="ViewDiaryCancel">취소</button>
+				<button class="ViewDiaryChange" onclick="parent.openModal('ChangeSDModal')">수정</button>
 			</div>
-		<%------------------------------------------------------------------
-		[모달 창 페이지 - START]
-		----------------------------------------------------------------------%>
-		<div class="Modal-Frame" id="divModalFrame">
-	        <div class="Modal-Content">
-	            <iframe class="Modal-Window" id="ifModalWindow"></iframe>
-	        </div>
-        </div>
-		<%------------------------------------------------------------------
-		[모달 창 페이지 - END]
-		----------------------------------------------------------------------%>
-		</main>
-	<%----------------------------------------------------------------------
+        
+		</div>
+	</div>
+    <%----------------------------------------------------------------------
 	[HTML Page - END]
 	--------------------------------------------------------------------------%>
 	<%----------------------------------------------------------------------
@@ -211,10 +157,7 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		document.getElementById('date').value = new Date().toISOString().substring(0, 10);
 		// -----------------------------------------------------------------
 	</script>
-   		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.js" defer></script>
-	</div>        
 </body>
 </html>
