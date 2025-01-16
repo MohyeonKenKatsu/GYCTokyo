@@ -33,7 +33,7 @@ body {
 	white-space: nowrap;
 }
 
-form .Date {
+.Date {
 	color: #242424;
  	display: inline-block; 
     background: #e0e0e0; 
@@ -43,6 +43,23 @@ form .Date {
     font-size: 14px;
     margin-top: 4px;
     cursor: pointer;
+}
+
+.Submit {
+	color: #242424;
+	width: 50px;
+	background: #e0e0e0; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 6px 12px; 
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.Submit:hover {
+	background: #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
 }
 
 .RightMenu {
