@@ -26,3 +26,8 @@
 .openModalButton:hover {
     background-color: #1e4a90;
 }
+
+/* full Calendar css */
+ .fc-event {
+    border: none !important;
+ }
