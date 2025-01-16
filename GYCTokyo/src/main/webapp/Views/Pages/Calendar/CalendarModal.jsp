@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="BeansCalendar.CalendarDAO, BeansCalendar.CalendarDTO" %>
+<%@ page import="BeansCalendar.CalendarDAO, BeansCalendar.CalendarDTO, java.util.List" %>
 <% request.setCharacterEncoding("UTF-8"); %>
 <!DOCTYPE html>
 <html lang="ko">
@@ -11,9 +11,10 @@
 </head>
 <body>
 <%
-		//DAO와 DTO 초기화
+		//DAO 초기화
 		CalendarDAO dao = new CalendarDAO();
 		CalendarDTO dto = new CalendarDTO();
+		
 		
 		// 세션에서 사용자 ID 가져오기
 		Integer userId = (Integer) session.getAttribute("USER_ID");
@@ -24,6 +25,10 @@
 		}
 		String userIdStr = userId.toString();
 		out.println("<script>console.log('USER_ID in session: " + userIdStr + "');</script>");
+		
+		// 사용자 ID 가져오기 (이미 가져온 userId 사용)
+		List<CalendarDTO> userEvents = dao.getUserEvents(userId); // 현재 사용자 이벤트 가져오기
+		int nextCalendarId = dao.calculateNextCalendarId(userEvents); // 새로운 캘린더 ID 계산
 		
 		// 폼 파라미터 처리
 		String calendarId = request.getParameter("calendar_id");
@@ -76,6 +81,9 @@
             <% } %>
             <!-- 일정 추가 폼 -->
             <form id="modalForm" action="<%= request.getContextPath() %>/Views/Pages/Calendar/CalendarModal.jsp" method="post">
+                <input type="hidden" id="calendarId" name="calendar_id" value="<%= nextCalendarId %>">
+                <input type="hidden" id="userId" name="user_id" value="<%= userId %>">
+                
                 <label for="plan">일정 제목</label>
                 <input type="text" id="plan" name="plan" placeholder="일정 제목을 입력하세요" value="<%= plan != null ? plan : "" %>" required />
 
