@@ -78,7 +78,7 @@ public class HealthDAO
 	 * @return boolean	: 사원정보 검색 처리 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-	public boolean ReadHeaderData(String sUSERID, UsersDTO userDTO) throws Exception
+	public boolean ReadHeaderData(HealthDTO healthDTO) throws Exception
 	{
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
@@ -89,26 +89,29 @@ public class HealthDAO
 	    	// -----------------------------------------------------------------------------
 			// 사원정보 읽기
 	    	// -----------------------------------------------------------------------------
-			if (sUSERID != null)
+			if (this.DBMgr.DbConnect() == true)
 			{
-				if (this.DBMgr.DbConnect() == true)
+				// 사원정보 읽기
+				sSql = "BEGIN SP_HEALTH_R(?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[2];
+				oPaValue[0] = healthDTO.getHealth_date();
+				oPaValue[1] = healthDTO.getUser_id();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
 				{
-					// 사원정보 읽기
-					sSql = "BEGIN SP_USERS_HEADERDATA(?,?); END;";
-					
-					// IN 파라미터 만큼만 할당
-					oPaValue = new Object[1];
-					oPaValue[0] = Integer.valueOf(sUSERID);
-					
-					if (this.DBMgr.RunQuery(sSql, oPaValue, 2, true) == true)
+					if (this.DBMgr.Rs.next())
 					{
-						while(this.DBMgr.Rs.next() == true)
-						{
-							userDTO.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
-						}
-						
-						bResult = true;
+						healthDTO.setGoal_water(this.DBMgr.Rs.getString("GOAL_WATER"));
+						healthDTO.setAchieved_water(this.DBMgr.Rs.getString("ACHIEVED_WATER"));
+						healthDTO.setType_exercise(this.DBMgr.Rs.getString("TYPE_EXERCISE"));
+						healthDTO.setGoal_exercise(this.DBMgr.Rs.getString("GOAL_EXERCISE"));
+						healthDTO.setAchieved_exercise(this.DBMgr.Rs.getString("ACHIEVED_EXERCISE"));
+						healthDTO.setBedtime(this.DBMgr.Rs.getString("BEDTIME"));
+						healthDTO.setWaketime(this.DBMgr.Rs.getString("WAKETIME"));
 					}
+					bResult = true;
 				}
 			}
 	    	// -----------------------------------------------------------------------------
@@ -139,7 +142,6 @@ public class HealthDAO
 	            sSql = "BEGIN SP_HEALTH_CUD(?,?,?,?,?,?,?,?,?,?); END;";
 
 	            // 디버깅: HealthDTO 객체의 필드 확인
-	            System.out.println("DAO에 전달된 jobstatus: " + healthDTO.getJobstatus());
 	            System.out.println("DAO에 전달된 health_date: " + healthDTO.getHealth_date());
 	            System.out.println("DAO에 전달된 user_id: " + healthDTO.getUser_id());
 	            System.out.println("DAO에 전달된 goal_water: " + healthDTO.getGoal_water());

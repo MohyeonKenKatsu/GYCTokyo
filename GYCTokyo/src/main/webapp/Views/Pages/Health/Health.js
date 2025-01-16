@@ -1,22 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-	 // 현재 날짜 표시
-	 const today = new Date();
-	 const dateDisplay = document.getElementById('currentDate');
-	 const year = today.getFullYear();
-	 const month = String(today.getMonth() + 1).padStart(2, '0');
-	 const day = String(today.getDate()).padStart(2, '0');
-	 dateDisplay.textContent = `${year}.${month}.${day}`;
-	 const formattedDate = today.toLocaleDateString('ko-KR', {
-	     year: 'numeric',
-	     month: '2-digit',
-	     day: '2-digit'
-	 }).split(' ').join('').replace(/\./g, '');
-	 
-	 const finalDate = formattedDate.slice(0, 4) + '.' + 
-	                  formattedDate.slice(4, 6) + '.' + 
-	                  formattedDate.slice(6, 8);
-	 
-	 dateDisplay.textContent = finalDate;
 
     // 내비게이션 버튼 이벤트
     const prevButton = document.querySelector('.prev');
@@ -24,10 +6,42 @@ document.addEventListener('DOMContentLoaded', function() {
     
     prevButton.addEventListener('click', () => {
         // 이전 날짜로 이동
+		const textdate = document.getElementById('textdate');
+
+		date = textdate.value.split('-');
+
+		d = new Date(parseInt(date[0]), date[1]-1, date[2]);
+
+		d.setDate(d.getDate() - 1);
+
+		year = d.getFullYear().toString();
+		month = (d.getMonth()+1).toString();
+		month = month.length == 1 ? '0' + month : month;
+		month = '-' + month + '-';
+		day = d.getDate().toString();
+		day = day.length == 1 ? '0' + day : day;
+
+		textdate.value = year+month+day;
     });
     
     nextButton.addEventListener('click', () => {
         // 다음 날짜로 이동
+		const textdate = document.getElementById('textdate');
+		
+		date = textdate.value.split('-');
+		
+		d = new Date(parseInt(date[0]), date[1]-1, date[2]);
+		
+		d.setDate(d.getDate() + 1);
+		
+		year = d.getFullYear().toString();
+		month = (d.getMonth()+1).toString();
+		month = month.length == 1 ? '0' + month : month;
+		month = '-' + month + '-';
+		day = d.getDate().toString();
+		day = day.length == 1 ? '0' + day : day;
+		
+		textdate.value = year+month+day;
     });
 
     // 선택 메뉴와 모달 관련 요소
@@ -92,6 +106,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 모달 내용 생성 함수
     function getModalContent(type) {
+		let textdate = document.getElementById('textdate').value;
+		let textuserid = document.getElementById('textuserid').value;
+		
         switch(type) {
             case 'water':
                 return `
@@ -100,8 +117,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 						<div class="input-group">
                         <label>오늘의 목표 음수량을 알려주세요! (ml)</label>
+						<input type="hidden" name="jobstatus" value="WATER">
+						<input type="hidden" name="textdate" value="` + textdate + `">
+						<input type="hidden" name="textuserid" value="` + textuserid + `">
 						<div style="height: 5px;"></div>
-						<select id="goalWater" name="goal_water" onchange="updateWaterBottles(this.value)">
+						<select id="goalWater" name="goal_water" onchange="updateWaterBottles(this.value)" required>
 						    <option value=""> &nbsp;선택하세요&nbsp; </option>
 						    <option value="1"> 500 ml </option>
 						    <option value="2"> 1000 ml </option>
@@ -114,7 +134,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						<div style="height: 15px;"></div>
 
 						<label>오늘 성공한 음수량을 알려주세요! (ml)</label>
-						<select id="achievedWater" name="achieved_water">
+						<select id="achievedWater" name="achieved_water" required>
 						<div style="height: 5px;"></div>
 						    <option value=""> &nbsp;선택하세요&nbsp; </option>
 						    <option value="1"> 500 ml </option>
@@ -143,6 +163,9 @@ document.addEventListener('DOMContentLoaded', function() {
 						<input type="hidden" id="selectedExerciseType" name="type_exercise">
 				        <div class="input-group">
 				            <label>오늘의 목표 운동시간을 알려주세요!</label>
+							<input type="hidden" name="jobstatus" value="EXERCISE">
+							<input type="hidden" name="textdate" value="` + textdate + `">
+							<input type="hidden" name="textuserid" value="` + textuserid + `">
 				            <select id="goalExerciseTime" name="goal_exercise">
 				                <option value="">선택하세요</option>
 				                <option value="1">30분</option>
@@ -168,6 +191,9 @@ document.addEventListener('DOMContentLoaded', function() {
 					    return `
 					        <div class="input-group">
 					            <label>취침시간을 알려주세요!</label>
+								<input type="hidden" name="jobstatus" value="SLEEP">
+								<input type="hidden" name="textdate" value="` + textdate + `">
+								<input type="hidden" name="textuserid" value="` + textuserid + `">
 					            <input type="time" id="sleepTime" name="bedtime">
 					            <div style="height: 15px;"></div>
 					            <label>기상시간을 알려주세요!</label>
@@ -274,6 +300,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	            if (data.success) {
 	                alert('저장되었습니다.');
 	                modal.classList.remove('active');
+					parent.form1.submit();
 	            } else {
 	                alert('저장에 실패했습니다.');
 	            }

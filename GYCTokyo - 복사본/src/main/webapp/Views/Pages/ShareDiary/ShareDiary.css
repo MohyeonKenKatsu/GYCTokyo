@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Pretendard', sans-serif;
+}
+
+body {
+    background-color: #f1f1f1;
+}
+
+.MainContent {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: flex-start;
+	width: 100%;
+	max-width: 100%;
+	padding: 50px;
+	margin: 30px;
+}
+
+header {
+	margin-bottom: 10px;
+}
+
+header .Title {
+	font-size: 30px;
+	color: #0353a4;
+	margin-bottom: 5px;
+	white-space: nowrap;
+}
+
+.DatePicker {
+	color: #242424;
+ 	display: inline-block; 
+    background: #e0e0e0; 
+    padding: 4px 8px; 
+    border: none;
+    border-radius: 4px; 
+    font-size: 14px;
+    margin-top: 4px;
+    cursor: pointer;
+}
+
+.RightMenu {
+	display: flex;
+	margin-left: auto;
+}
+
+.MemberListButton {
+	color: #242424;
+	width: 58px;
+	background: #e0e0e0; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 6px 12px; 
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.MemberListButton:hover {
+	background: #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.SD-Search {
+	color: #242424;
+	width: 58px;
+	background: #e0e0e0; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 6px 12px; 
+    margin-left:10px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.SD-Search:hover {
+	background: #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.Sort {
+	color: #242424;
+	font-size: 24px;
+	cursor: pointer;
+	margin-left:10px;
+}
+
+.Sort:hover {
+	color: #0353a4; 
+}
+
+.WriteButton {
+	color: #242424;
+	width: 58px;
+	display: flex;
+	background: #e0e0e0;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    margin-top: 8px;
+    margin-left:10px;
+	white-space: nowrap;
+	cursor: pointer;
+}
+
+.WriteButton:hover {
+	background: #0353a4; 
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	color: white;
+}
+
+.DiaryList {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	width: 1300px;
+	padding-left: 18%;
+	margin-top: 30px;
+}
+
+.DiaryPreview {
+	width: 900px;
+	line-height: 170%;
+	background: #ffffff;
+	border: none;
+	border-radius: 20px;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	padding: 25px;
+	margin-bottom: 30px;
+	cursor: pointer;
+}
+
+.Writer {
+	color: #0353a4;
+}
+
+.TextPreview {
+	color: #242424;
+	font-size: 16px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.EditGuide {
+	color: #d5d5d5;
+	font-size: 15px;
+}

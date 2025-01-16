@@ -1,0 +1,130 @@
+@charset "UTF-8";
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+input::placeholder, 
+textarea::placeholder {
+    font-family: Pretendard, Arial, sans-serif;
+    color: #aaa;
+    font-size: 14px;
+}
+
+body {
+    font-family: Pretendard, Arial, sans-serif;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.modal-content {
+    background-color: white;
+    width: 500px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: left;
+}
+
+.title-input {
+    width: 100%;
+    font-size: 18px;
+    color: #444;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+    padding: 10px 0; /* 내외부 여백 조정 */
+    background-color: transparent; /* 배경색 제거 */
+    font-weight: bold;
+}
+
+.title-input::placeholder {
+    color: #bbb;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+.modal-content hr {
+    margin: 10px 0;
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.flex-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flex-row label {
+    width: 40%;
+    font-size: 14px;
+    color: #444;
+}
+
+.flex-row input, .flex-row select {
+    width: 55%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+textarea {
+    resize: none;
+    width: 100%;
+    height: 120px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.reset-btn, .submit-btn {
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.reset-btn {
+    background-color: #f1f1f1;
+    color: #444;
+}
+
+.reset-btn:hover {
+    background-color: #ddd;
+}
+
+.submit-btn {
+    background-color: #0353a4;
+    color: white;
+}
+
+.submit-btn:hover {
+    background-color: #024c8c;
+}

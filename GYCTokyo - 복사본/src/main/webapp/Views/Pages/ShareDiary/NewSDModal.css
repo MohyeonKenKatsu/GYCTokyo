@@ -1,0 +1,117 @@
+@charset "UTF-8";
+
+* {
+	font-family: 'Pretendard', sans-serif;
+}
+
+.Modal {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.ModalContent {
+	background: #ffffff;
+	margin: 10% auto;
+	width: 450px;
+	height: 550px;
+	padding: 30px;
+	border-radius: 20px;
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+	text-align: left;
+}
+
+.ModalHeader {
+	padding-left: 15px;
+	margin-bottom: 10px;
+}
+
+.Header {
+	font-size: 23px;
+	color: #0353a4;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	white-space: nowrap;
+}
+
+.ModalBody {
+	display: flex;
+	justify-content: center;
+	margin-top: 10px;
+	margin-bottom: 30px;
+	}
+
+.DatePicker {
+	color: #242424;
+ 	display: inline-block; 
+    background: #e0e0e0; 
+    padding: 4px 8px; 
+    border: none;
+    border-radius: 4px; 
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.ViewWriter {
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
+
+.Writer {
+	color: #0353a4;
+	font-size: 16px;
+	font-weight: bold;
+	padding-right: 7px;
+}
+
+.Nickname {
+	color: #242424;
+	font-size: 15px;
+}
+
+.InputDiary {
+	font-size: 16px;
+	line-height: 170%;
+	letter-spacing: 0.1em;
+	display:flex;
+	width: 380px;
+	height: 350px;
+	margin-top: 3px;
+	overflow: scroll;
+}
+
+.InputDiary::placeholder {
+	color: #d5d5d5;
+	}
+	
+.ModalTail {
+	padding-right: 20px;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.DiaryCancel {
+	color: #242424;
+	width: 58px;
+	background: #e0e0e0; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 6px 12px;
+    margin-right: 10px; 
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.DiarySave {
+	color: #ffffff;
+	width: 58px;
+	background: #0353a4; 
+    border: none; 
+    border-radius: 4px; 
+    padding: 6px 12px; 
+    white-space: nowrap;
+    cursor: pointer;
+}

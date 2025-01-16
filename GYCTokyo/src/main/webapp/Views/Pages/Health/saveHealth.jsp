@@ -11,6 +11,9 @@
 	    try {
 	        // 데이터 수신
 	        String type = request.getParameter("type");
+	        String jobstatus = request.getParameter("jobstatus");
+	        String textdate = request.getParameter("textdate");
+	        Integer textuserid = Integer.valueOf(request.getParameter("textuserid"));
 	        String goalWater = request.getParameter("goal_water");
 	        String achievedWater = request.getParameter("achieved_water");
 	        String typeExercise = request.getParameter("type_exercise"); // 추가
@@ -21,9 +24,10 @@
 	
 	        // DTO 설정
 	        HealthDTO healthDTO = new HealthDTO();
-	        healthDTO.setJobstatus("INSERT");
-	        healthDTO.setHealth_date(new java.text.SimpleDateFormat("yyyy-MM-dd").format(new java.util.Date()));
-	        healthDTO.setUser_id(1); // 사용자 ID
+	        
+	        healthDTO.setJobstatus(jobstatus);
+	        healthDTO.setHealth_date(textdate);
+	        healthDTO.setUser_id(textuserid); // 사용자 ID
 	        healthDTO.setGoal_water(goalWater);
 	        healthDTO.setAchieved_water(achievedWater);
 	        healthDTO.setType_exercise(typeExercise); // 설정

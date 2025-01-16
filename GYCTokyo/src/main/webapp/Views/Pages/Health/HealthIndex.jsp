@@ -11,7 +11,7 @@
 </head>
 <body>
     <!-- 헤더 포함 -->
-    <%--<%@ include file="/Views/Components/Header/Header.jsp" %>--%>
+    <%@ include file="/Views/Components/Header/Header.jsp" %>
 
     <div style="display: flex;">
         <!-- 사이드바 포함 -->
