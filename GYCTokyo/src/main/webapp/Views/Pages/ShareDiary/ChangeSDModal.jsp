@@ -20,7 +20,7 @@
 		
 			<div class="ModalHeader">
 				<h2 class="Header">공유일기</h2>
-				<input type="date" class="DatePicker"/>
+				<input type="date" class="Date"/>
 				<table class="ViewWriter">
 					<tr>
 						<td class="Writer">작성자</td>
