@@ -33,7 +33,7 @@
 }
 
 .modalBody input, .modalBody select, .modalBody textarea {
-    width: 100%;
+    width: 90%;
     padding: 8px;
     margin-bottom: 20px;
     border: 1px solid #ccc;
