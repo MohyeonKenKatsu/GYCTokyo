@@ -84,8 +84,8 @@
 
                 <label for="category">카테고리</label>
                 <select id="category" name="category">
-                    <option value="GYC" <%= "GYC".equals(category) ? "selected" : "" %>>GYC 일정</option>
-                    <option value="기타" <%= "기타".equals(category) ? "selected" : "" %>>개인 일정</option>
+                    <option value="1" <%= "GYC".equals(category) ? "selected" : "" %>>GYC 일정</option>
+                    <option value="2" <%= "기타".equals(category) ? "selected" : "" %>>개인 일정</option>
                 </select>
 
                 <label for="memo">메모</label>
@@ -104,5 +104,9 @@
         </div>
     </div>
 </div>
+<script>
+    const contextPath = "<%= request.getContextPath() %>";
+</script>
+ <script src="<%= request.getContextPath() %>/Views/Pages/Calendar/Calendar.js"></script>
 </body>
 </html>

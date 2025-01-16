@@ -176,15 +176,20 @@
 	            <input type="password" id="password" name="password" placeholder="비밀번호" required>
 	        </div>
 	        
+	        <div class="FindButton-container">
+	        	&nbsp;
+		        <a class="FindButton" href="FindEmail.jsp">아이디 찾기</a>
+		        &nbsp;&nbsp;·&nbsp;&nbsp;
+		        <a class="FindButton" href="FindPassword.jsp">비밀번호 찾기</a>
+	        </div>
+	        
 			<!-- DB 접속 제어 변수 -->
 	       	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
 	       	
 			<!-- 버튼 영역 -->
 	        <div class="button-container">
-	        	
 	        	<!-- 로그인 버튼 -->
 	            <button type="submit" class="signin-btn">SIGN IN</button>
-	            
 	            <!-- 회원가입 버튼 -->
 	            <button type="button" class="signup-btn" onclick="window.location.href='SignUp.jsp'">SIGN UP</button>
 	        
