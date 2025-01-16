@@ -22,6 +22,20 @@ public class CalendarDAO {
         }
     }
 
+    
+    // 현재 사용자의 이벤트 리스트에서 가장 큰 calendar_id 찾기
+    public int calculateNextCalendarId(List<CalendarDTO> eventList) {
+       
+        int maxId = 0;
+        for (CalendarDTO event : eventList) {
+            if (event.getCalendar_id() > maxId) {
+                maxId = event.getCalendar_id();
+            }
+        }
+        // 새로운 ID는 maxId + 1
+        return maxId + 1;
+    }
+
     public boolean addEvent(CalendarDTO calendarDTO) throws Exception {
         String sSql = null;
         Object[] oPaValue = null;
