@@ -5,6 +5,10 @@
 //외부모듈 영역
 //═════════════════════════════════════════════════════════════════════════════════════════
 package BeansPrivateDiary;
+import java.util.ArrayList;
+
+import java.util.List;
+
 import Common.ComMgr;
 import Common.ExceptionMgr;
 
@@ -191,69 +195,91 @@ public class PrivateDiaryDAO
 
 
 
-	/***********************************************************************
-	 * GatheringDetailUpdate()	: 모집글을 오라클 데이터베이스에서 수정(Update)
-	 * @param GatheringId		: 모집글 Id
-	 * @param GatheringDTO		: 모집글 DTO 객체
-	 * @return boolean			: true | false
-	 ***********************************************************************/
-/*	public boolean GatheringDetailUpdate(int GatheringId, GatheringDTO gatheringDTO)
-	{
-		String sSql	= null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 모집글 수정
-	    	// -----------------------------------------------------------------------------
-			if (this.DBMgr.DbConnect() == true)
-			{
-				// 모집글 수정
-				sSql = "BEGIN SP_GATHERING_CUD(?,?,?,?,?,?,?,?); END;";
+    /***********************************************************************
+     * getDiaryByDateAndUser() : 특정 날짜와 사용자 ID에 해당하는 개인 일기 정보 가져오기
+     * @param pd_date : 조회하고자 하는 일기 날짜
+     * @param user_id : 조회하고자 하는 사용자 ID
+     * @return PrivateDiaryDTO : 개인 일기 정보 DTO
+     * @throws Exception 
+     ***********************************************************************/
+    public PrivateDiaryDTO getDiaryByDateAndUser(String pd_date, int user_id) throws Exception {
+        PrivateDiaryDTO dto = null; // 반환할 DTO 객체
+        String sSql = null;         // SQL 쿼리
 
-				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[8];
-				
-				oPaValue[0] = "INSERT";
-				oPaValue[1] = GatheringId;
-				oPaValue[2] = gatheringDTO.getTitle();
-				oPaValue[3] = gatheringDTO.getStart_date();
-				oPaValue[4] = gatheringDTO.getFinish_date();
-				oPaValue[5] = gatheringDTO.getActivity_date();
-				oPaValue[6] = gatheringDTO.getNumber_limit();
-				oPaValue[7] = gatheringDTO.getContent();
-				
-				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
-				{
-					
-					this.DBMgr.DbCommit();
-					
-					bResult = true;
-				}
-				
-				this.DBMgr.DbDisConnect();
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
-	} 
-	***********************************************************************
-	 * GatheringDetailDelete()	: 모집글을 오라클 데이터베이스에서 삭제(Delete)
-	 * @param GatheringId		: 모집글 Id
-	 * @return boolean		: true | false
-	 ***********************************************************************/
+        try {
+            // DB 연결 확인
+            if (this.DBMgr.DbConnect() == true) {
+                // SQL 쿼리 작성
+                sSql = "SELECT JOBSTATUS, PD_DATE, USER_ID, PD_CONTENT, EMOJI "
+                     + "FROM TB_PRIVATEDIARY "
+                     + "WHERE PD_DATE = ? AND USER_ID = ?";
 
+                Object[] oPaValue = { pd_date, user_id };
 
+                // 쿼리 실행
+                if (this.DBMgr.RunQuery(sSql, oPaValue, 0, true) == true) {
+                    if (this.DBMgr.Rs.next()) {
+                        dto = new PrivateDiaryDTO();
+                        dto.setJobstatus(this.DBMgr.Rs.getString("JOBSTATUS"));
+                        dto.setPd_date(this.DBMgr.Rs.getString("PD_DATE"));
+                        dto.setUser_id(this.DBMgr.Rs.getInt("USER_ID"));
+                        dto.setPd_content(this.DBMgr.Rs.getString("PD_CONTENT"));
+                        dto.setEmoji(this.DBMgr.Rs.getString("EMOJI"));
+                    }
+                }
+                this.DBMgr.DbDisConnect();
+            }
+        } catch (Exception Ex) {
+            Common.ExceptionMgr.DisplayException(Ex);
+        }
 
-	// —————————————————————————————————————————————————————————————————————————————————————
+        return dto;
+    }
+
+    /***********************************************************************
+     * getAllDiariesByUser() : 특정 사용자 ID의 모든 개인 일기 정보 가져오기
+     * @param user_id : 조회하고자 하는 사용자 ID
+     * @return List<PrivateDiaryDTO> : 개인 일기 정보 목록
+     * @throws Exception 
+     ***********************************************************************/
+    public List<PrivateDiaryDTO> getAllDiariesByUser(int user_id) throws Exception {
+        List<PrivateDiaryDTO> diaryList = new ArrayList<>();
+        String sSql = null;
+
+        try {
+            // DB 연결 확인
+            if (this.DBMgr.DbConnect() == true) {
+                // 특정 사용자 ID의 전체 개인 일기 정보 가져오는 SQL 작성
+                sSql = "SELECT JOBSTATUS, PD_DATE, USER_ID, PD_CONTENT, EMOJI "
+                     + "FROM TB_PRIVATE_DIARY "
+                     + "WHERE USER_ID = ? "
+                     + "ORDER BY PD_DATE DESC";
+
+                Object[] oPaValue = { user_id };
+
+                // 쿼리 실행
+                if (this.DBMgr.RunQuery(sSql, oPaValue, 0, true) == true) {
+                    while (this.DBMgr.Rs.next()) {
+                        PrivateDiaryDTO dto = new PrivateDiaryDTO();
+                        dto.setJobstatus(this.DBMgr.Rs.getString("JOBSTATUS"));
+                        dto.setPd_date(this.DBMgr.Rs.getString("PD_DATE"));
+                        dto.setUser_id(this.DBMgr.Rs.getInt("USER_ID"));
+                        dto.setPd_content(this.DBMgr.Rs.getString("PD_CONTENT"));
+                        dto.setEmoji(this.DBMgr.Rs.getString("EMOJI"));
+                        diaryList.add(dto);
+                    }
+                }
+                this.DBMgr.DbDisConnect();
+            }
+        } catch (Exception Ex) {
+            Common.ExceptionMgr.DisplayException(Ex);
+        }
+
+        return diaryList;
+    }
 }
+	// —————————————————————————————————————————————————————————————————————————————————————
+
 //#################################################################################################
 //<END>
 //#################################################################################################

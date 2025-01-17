@@ -6,27 +6,62 @@
            box-sizing: border-box; /* 패딩 포함된 박스 크기 계산 */
        }
 
-	.add-entry {
-	    display: flex;
-	    justify-content: flex-start;
-	    margin-top: 1rem; /* 위쪽에 여백 추가 */
-	}
-
+	/* + 버튼*/
 	.add-button {
-	    width: 60px; /* 크기 조정 */
-	    height: 60px; /* 크기 조정 */
-	    border: none;
-	    border-radius: 50%;
-	    background-color: #0353a4;
+	    background-color: #0353a4; /* 파란색 배경 */
 	    color: white;
-	    font-size: 2rem; /* 크기 조정 */
+	    border: none;
+	    width: 60px; /* 버튼 너비 */
+	    height: 60px; /* 버튼 높이 (동그라미 만들기 위해 너비와 동일) */
+	    font-size: 24px; /* 글씨 크기 */
+	    border-radius: 50%; /* 동그라미 모양 */
 	    cursor: pointer;
-	    transition: background-color 0.3s;
+	    display: flex; /* 안의 +를 중앙 정렬하기 위한 설정 */
+	    justify-content: center;
+	    align-items: center;
 	}
-
+	
 	.add-button:hover {
-	    background-color: #0353a4;
+	    background-color: #0056b3; /* 호버 시 더 짙은 파란색 */
 	}
+	.diary-cards {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 10px; /* 카드 사이 간격 */
+	    padding: 10px;
+	}
+	
+	.diary-card {
+	    background-color: #fff; /* 카드 배경색 */
+	    border: 1px solid #e0e0e0; /* 테두리 */
+	    border-radius: 10px; /* 둥근 모서리 */
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 */
+	    padding: 15px;
+	    display: flex;
+	    flex-direction: column;
+	    gap: 8px; /* 내부 요소 간격 */
+	    cursor: pointer; /* 클릭 가능하게 */
+	    transition: transform 0.2s, box-shadow 0.2s; /* 호버 효과 */
+	}
+	
+	.diary-card:hover {
+	    transform: translateY(-5px); /* 살짝 위로 이동 */
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 증가 */
+	}
+	
+	.diary-title {
+	    font-size: 16px;
+	    font-weight: bold;
+	    color: #333;
+	    margin: 0; /* 제목 위아래 여백 제거 */
+	}
+	
+	.diary-card p {
+	    font-size: 14px;
+	    color: #666;
+	    margin: 0; /* 문장 위아래 여백 제거 */
+	}
+	
 
 
        /* 모달창 스타일 */
@@ -193,4 +228,3 @@
     .success-alert-modal .close-button:hover {
         background: #0056b3;
     }
-
