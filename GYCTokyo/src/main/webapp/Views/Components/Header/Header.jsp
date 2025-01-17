@@ -63,7 +63,7 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-        
+		
 		// -----------------------------------------------------------------
 	</script>
 </head>
@@ -103,12 +103,11 @@
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	iUSERID = (Integer)session.getAttribute("USER_ID");
+	iUSERID = ComMgr.IsNull(session.getAttribute("USER_ID"), 0);
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
 	userDTO = new UsersDTO();
-	sNICKNAME = "[서버접속실패]";
 	// null일때 임시용
 	sFlagSrc = request.getContextPath() + "/Views/resources/images/japanFlag.svg";
 	// ---------------------------------------------------------------------
@@ -177,7 +176,7 @@
 	[HTML Page - FORM 디자인 영역]
 	--------------------------------------------------------------------------%>
 	
-    <header class="header">
+    <header id="divModalParent" class="header">
     	
         <div class="logo">
 	        <a href="../../Pages/Calendar/index.jsp">
@@ -188,14 +187,29 @@
         <div class="user-info">
         	<button type="button" class="signup-btn" onclick="gotologin()">로그인 화면 (임시버튼)</button>
             <span><%= sNICKNAME %> 님</span>
-
-			<a href=''>
+            
+			<a href="<%= request.getContextPath() %>/Views/Pages/Login/MyPage.jsp">
+			<!--
+			<a href="#" onclick="ShowModalWindow('<%= request.getContextPath() %>/Views/Pages/Login/MyPage.jsp');">
+             -->
             <img src=<%= sFlagSrc %> alt="국기" class="flag">
             </a>
         </div>
 	
     </header>
     
+	<%------------------------------------------------------------------
+	[모달 창 페이지 - START]
+	----------------------------------------------------------------------%>
+	<div class="Modal-Frame" id="divModalFrame">
+        <div class="Modal-Content">
+            <span class="Modal-Close" id="btnClose">&times;&nbsp;</span>
+            <iframe class="Modal-Window" id="ifModalWindow"></iframe>
+        </div>
+    </div>
+	<%------------------------------------------------------------------
+	[모달 창 페이지 - END]
+	----------------------------------------------------------------------%>		
     
 	<script type="text/javascript">
 		function gotologin()
