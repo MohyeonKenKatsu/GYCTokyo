@@ -228,3 +228,29 @@
     .success-alert-modal .close-button:hover {
         background: #0056b3;
     }
+    
+    
+    .diary-entries {
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+}
+
+	.diary-entry {
+	    margin-bottom: 15px;
+	    padding: 10px;
+	    border-bottom: 1px solid #ddd;
+	}
+	
+	.diary-entry h3 {
+	    font-size: 18px;
+	    margin-bottom: 5px;
+	}
+	
+	.diary-entry p {
+	    margin: 0;
+	    font-size: 14px;
+	}
+	    

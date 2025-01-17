@@ -201,7 +201,7 @@
 		    </button>
 		
 		<!-- 일기 카드 리스트 -->
-		<div class="diary-cards">
+<!-- 		<div class="diary-cards">
 		    <div class="diary-card">
 		        <h3 class="diary-title">2025-01-16</h3>
 		        <p>오늘은 GYC 친구들과 같이 명수당을 갔다. 날씨가 좋아서 기분이 좋았다.</p>
@@ -212,7 +212,27 @@
 		    </div>
 		</div>
         </section>
-    	</div>
+    	</div> -->
+			    	<%@ page import="BeansPrivateDiary.PrivateDiaryDTO" %>
+			<%@ page import="BeansPrivateDiary.PrivateDiaryDAO" %>
+			<%@ page import="java.util.List" %>
+			
+			<%
+			    PrivateDiaryDAO diaryDAO = new PrivateDiaryDAO();
+			    List<PrivateDiaryDTO> diaryList = diaryDAO.getAllPrivateDiaries();
+			%>
+			
+			<div class="diary-entries">
+			    <h2>모든 마음일기</h2>
+			    <% for (PrivateDiaryDTO diary : diaryList) { %>
+			        <div class="diary-entry">
+			            <h3><%= diary.getPd_date() %></h3>
+			            <p><strong>날씨:</strong> <%= diary.getEmoji() %></p>
+			            <p><strong>내용:</strong> <%= diary.getPd_content() %></p>
+			        </div>
+			    <% } %>
+			</div>
+    	
 
     <!-- 모달창 -->
     <form action="PrivateDiary.jsp?JobProcess=true" method="post">
