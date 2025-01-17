@@ -1,5 +1,3 @@
-<%@page import="HeaderFlagMapping.HeaderFlagHash"%>
-<%@page import="java.util.HashMap"%>
 <%@page import="BeansUsers.UsersDTO"%>
 <%@page import="BeansUsers.UsersDAO"%>
 <%@page import="Common.ComMgr"%>
@@ -26,7 +24,6 @@
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
-	<link rel="stylesheet" href="SignUp.css">
 	<style type="text/css">
 		/* -----------------------------------------------------------------
 			HTML Page 스타일시트
@@ -38,7 +35,6 @@
 	[HTML Page - 자바스크립트 구현 영역(상단)]
 	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
 	--------------------------------------------------------------------------%>
-	<script type="text/javascript" src="SignUp.js"></script>
 	<script type="text/javascript">
 		// -----------------------------------------------------------------
 		// [브라우저 갱신 완료 시 호출 할 이벤트 핸들러 연결 - 필수]
@@ -62,36 +58,7 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-				
-		function LengthLimit(id)
-		{
-			const len = document.getElementById(id).value.length;
-			let shortMessage = document.getElementById("short");
-	
-			if (len > 0 && len < 8)
-			{
-				shortMessage.style.display="block";
-			}
-			else 
-			{
-				shortMessage.style.display="none";
-			}
-		}
-		function SameCheck(id1, id2)
-		{
-			const val1 = document.getElementById(id1).value;
-			const val2 = document.getElementById(id2).value;
-			let shortMessage = document.getElementById("notsame");
-	
-			if (val1 == val2)
-			{
-				shortMessage.style.display="none";
-			}
-			else 
-			{
-				shortMessage.style.display="block";
-			}
-		}
+		
 		// -----------------------------------------------------------------
 	</script>
 </head>
@@ -117,7 +84,6 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	Boolean bJobProcess		= null;		// 파라미터 : 작업처리 - DB 접속 여부
 	String  sEMAIL			= null;		// 파라미터 : 이메일
 	String  sPASSWORD		= null;		// 파라미터 : 비밀번호
 	String 	sNICKNAME 		= null;		// 파라미터 : 닉네임
@@ -131,12 +97,10 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	Boolean bSignupSuccess 	= null;		// 파라미터 : 회원가입 결과
-	HashMap<Integer, String> courseMap = HeaderFlagHash.gethashCourse();
+	
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	bJobProcess	= ComMgr.IsNull(request.getParameter("jobprocess"), false);		// 파라미터 : 작업처리 : null 확인(false : 아무동작 없음)
 	sEMAIL		= ComMgr.IsNull(request.getParameter("email"), "");				// 파라미터 : 이메일
 	sPASSWORD	= ComMgr.IsNull(request.getParameter("password"), "");			// 파라미터 : 이메일
 	sNICKNAME	= ComMgr.IsNull(request.getParameter("nickname"), "");			// 파라미터 : 이메일
@@ -146,7 +110,7 @@
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-
+	
 	// ---------------------------------------------------------------------
 %>
 
@@ -172,7 +136,6 @@
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
-
 <%
 	// 회원가입 시도중일 경우
 	if (bJobProcess == true)
@@ -196,108 +159,8 @@
 	}
 %>
 
-<script type="text/javascript">
-	// 회원가입에 성공했을 경우
-	if (<%= bSignupSuccess %> == true)
-	{
-		DocumentInit("회원가입에 성공했습니다.");
-		location.href="Login.jsp";
-	}
-	// 회원가입에 실패했을 경우
-	if (<%= bSignupSuccess %> == false)
-	{
-		DocumentInit("회원가입 시도 중 오류가 발생했습니다.");
-	}
-</script>
-
 <body>
-	<div class="container">
-		<div id="divModalParent" class="form-container">
-			<h1 class="signup-title">SIGN UP</h1>
-			<form action="" method="post">
-				<table class="form-table">
-				
-					<tr>
-						<td><label for="email">이메일</label></td>
-						<td><input type="email" id="email" name="email" placeholder="이메일을 입력하세요." value="<%= sEMAIL %>" required></td>
-						<td><button type="button" id="checkEmail" class="check-btn" onclick="window.location.href='SignUpCheck.jsp?obj=email&value='">중복확인</button></td>
-					</tr>
-					
-					<tr>
-						<td><label for="password">비밀번호</label></td>
-						<td class="inputform"><input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" maxlength="12"
-						oninput="LengthLimit('password')"
-						required></td>
-					</tr>
-					
-					<tr>
-						<td></td>
-						<td class="inputform"><p class="pwtext" id="short" style="display:none;">&nbsp;&nbsp;&nbsp;비밀번호의 길이는 8글자 이상 12글자 미만이어야 합니다.</p></td>
-					</tr>
-					
-					<tr>
-						<td><label for="confirmpassword">비밀번호 확인</label></td>
-						<td class="inputform"><input type="password" id="confirmpassword" name="confirmpassword" placeholder="비밀번호를 한 번 더 입력하세요." maxlength="12"
-						oninput="SameCheck('password', 'confirmpassword')"
-						required></td>
-					</tr>
-					
-					<tr>
-						<td></td>
-						<td class="inputform"><p class="pwtext" id="notsame" style="display:none;">&nbsp;&nbsp;&nbsp;비밀번호가 다릅니다.</p></td>
-					</tr>
-					
-					<tr>
-						<td><label for="nickname">닉네임</label></td>
-						<td><input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." maxlength="8" value="<%= sNICKNAME %>" required></td>
-						<td><button type="button" id="checkNickName" class="check-btn" onclick="window.location.href='SignUpCheck.jsp?obj=nickname&value='">중복확인</button></td> 
-					</tr>
-					
-					<tr>
-						<td><label for="course">과정선택</label></td>
-						<td>
-							<select id="course" name="course" required>
-								<option value="0">선택하세요</option>
-								<% for (int i : courseMap.keySet())
-								{
-									out.println(String.format("<option value='%d'>%s</option>",
-																			  i, courseMap.get(i) ));
-								}
-								%>
-							</select>
-						</td>
-					</tr>
-					
-					<tr>
-						<td><label for="birthday">생일</label></td>
-						<td><input type="date" id="birthday" name="birthday" value="<%= sBIRTHDAY %>" min="1900-01-01"></td>
-					</tr>
-					
-					<tr>
-						<td><label for="tel">전화번호 뒤 4자리</label></td>
-						<td><input type="text" id="tel" name="tel" placeholder="전화번호 뒤 4자리를 입력하세요" maxlength="4"
-						oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
-						value="<%= sTEL %>" required></td>
-					</tr>
-				</table>
-				
-				<!-- DB 접속 제어 변수 -->
-	    	   	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
-	    	   	
-				<div class = button-container>
-					<button type="reset" class="reset-btn" onclick="window.location.href='Login.jsp'">취소</button>
-					<button type="submit" class="signup-btn">등록</button>
-				</div>
-				
-			</form>
-		</div>
-		
-	</div>
-	
-	<script>
-		document.getElementById('birthday').value = new Date().toISOString().substring(0, 10);
-		// -----------------------------------------------------------------
-	</script>
+
 	<%------------------------------------------------------------------
 	[JSP 페이지에서 바로 이동(바이패스)]
 	----------------------------------------------------------------------%>
@@ -346,9 +209,9 @@
 		//				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
 		//				: 브라우저의 Url 주소는 sUrl 페이지로 변경 됨
 		// -----------------------------------------------------------------
-		//String sUrl = "Hello.jsp?name1=value1&name2=value2";
-		//
-		//response.sendRedirect(sUrl);
+		String sUrl = "SignUp.jsp";
+		
+		response.sendRedirect(sUrl);
 		// -----------------------------------------------------------------
 	%>
 </body>
