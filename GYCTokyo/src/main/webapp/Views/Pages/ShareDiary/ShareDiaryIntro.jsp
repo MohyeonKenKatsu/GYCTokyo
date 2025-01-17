@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8");%>
@@ -190,7 +191,7 @@ if (bContinue == true)
 			<!-- 상단 날짜와 제목 -->
 			<header>
 				<h1 class="Title">공유일기</h1>
-				<input type="date" class="Date" id="date" name="date" required>
+				<input type="date" class="Date" id="date" name="date" value="<%=LocalDate.now().toString() %>" required>
 			</header>
 			
 			<!-- 우측 메뉴 -->
@@ -246,7 +247,7 @@ if (bContinue == true)
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		document.getElementById('date').value = new Date().toISOString().substring(0, 10);
+
 		// -----------------------------------------------------------------
 	</script>
    		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.js" defer></script>

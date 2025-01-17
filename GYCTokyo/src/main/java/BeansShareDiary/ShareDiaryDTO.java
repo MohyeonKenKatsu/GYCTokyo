@@ -31,8 +31,11 @@ public class ShareDiaryDTO
 	private String date	= null;			// 날짜
 	private Integer groupId	= null;		// 그룹번호
 	private Integer userId = null;		// 유저번호
+	private Integer contentId = null;	// 내용번호
 	private String nickname = null;		// 닉네임
 	private String groupname = null;	// 그룹 이름
+	private String sdcontent = null;	// 내용
+	private String jobStatus = null;	// 작업상태
 	// —————————————————————————————————————————————————————————————————————————————————————
 	// 생성자 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
@@ -66,25 +69,40 @@ public class ShareDiaryDTO
 	{
 		return date;
 	}
+	
 	public void setDate(String date)
 	{
 		this.date = date;
 	}
+	
 	public Integer getGroupId()
 	{
 		return groupId;
 	}
+	
 	public void setGroupId(Integer groupId)
 	{
 		this.groupId = groupId;
 	}
+	
 	public Integer getUserId()
 	{
 		return userId;
 	}
+	
 	public void setUserId(Integer userId)
 	{
 		this.userId = userId;
+	}
+
+	public Integer getContentId()
+	{
+		return contentId;
+	}
+	
+	public void setContentId(Integer contentId)
+	{
+		this.contentId = contentId;
 	}
 
 	public String getNickname()
@@ -105,6 +123,26 @@ public class ShareDiaryDTO
 	public void setGroupname(String groupname)
 	{
 		this.groupname = groupname;
+	}
+
+	public String getSdcontent()
+	{
+		return sdcontent;
+	}
+
+	public void setSdcontent(String sdcontent)
+	{
+		this.sdcontent = sdcontent;
+	}
+
+	public String getJobStatus()
+	{
+		return jobStatus;
+	}
+
+	public void setJobStatus(String jobStatus)
+	{
+		this.jobStatus = jobStatus;
 	}
 	
 	// —————————————————————————————————————————————————————————————————————————————————————

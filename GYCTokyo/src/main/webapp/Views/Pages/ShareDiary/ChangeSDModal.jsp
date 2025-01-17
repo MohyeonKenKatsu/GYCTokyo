@@ -63,9 +63,10 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	String 	sDate		= null;
-	Integer nGroupId	= null;
-	Integer nUserId		= null;
+	String 	sDate			= null;
+	Integer nGroupId		= null;
+	Integer nDiaryUserId	= null;
+	Integer nContentId		= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
@@ -78,8 +79,9 @@
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
 	sDate = ComMgr.IsNull(request.getParameter("date"), "날짜 없음");
-	nGroupId = ComMgr.IsNull(request.getParameter("group_id"), -1);
-	nUserId = ComMgr.IsNull(request.getParameter("user_id"), -1);	
+	nGroupId = ComMgr.IsNull(request.getParameter("groupId"), -1);
+	nDiaryUserId = ComMgr.IsNull(request.getParameter("diaryUserId"), -1);	
+	nContentId   = ComMgr.IsNull(request.getParameter("contentId"), -1);
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -135,6 +137,7 @@
 
 %>
 <body>
+<form name="form1" action="" method="post">
 	<!-- 모달 배경 -->
 	<div class="ChangeSDModal" id="changeSDModal">
 	
@@ -176,6 +179,7 @@
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
 		// -----------------------------------------------------------------
-	</script>	
+	</script>
+</form>
 </body>
 </html>

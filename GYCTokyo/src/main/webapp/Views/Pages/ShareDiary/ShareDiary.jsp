@@ -34,26 +34,25 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		function openModal(modalType, date, groupId, userId)
+		function openModal(modalType, date, groupId, diaryUserId, contentId)
 		{
 			let ifModalWindow = document.getElementById('ifModalWindow');
 			let divModalFrame = document.getElementById('divModalFrame');
-			
+						
 			if (ifModalWindow != null && divModalFrame != null)
 			{
 				divModalFrame.style.display = "block";
-				
 				if(modalType === 'NewSDModal')
 				{			
-					ifModalWindow.src = 'NewSDModal.jsp?date=' + date + '&groupId=' + groupId + '&userId=' + userId;
+					ifModalWindow.src = 'NewSDModal.jsp?date=' + date + '&groupId=' + groupId + '&diaryUserId=' + diaryUserId;
 				}
 				else if(modalType === 'ViewSDModal')
 				{
-					ifModalWindow.src = 'ViewSDModal.jsp?date=' + date + '&groupId=' + groupId + '&userId=' + userId;
+					ifModalWindow.src = 'ViewSDModal.jsp?date=' + date + '&groupId=' + groupId + '&diaryUserId=' + diaryUserId + '&contentId=' + contentId;
 				}
 				else if(modalType === 'ChangeSDModal')
 				{
-					ifModalWindow.src = 'ChangeSDModal.jsp?date=' + date + '&groupId=' + groupId + '&userId=' + userId;
+					ifModalWindow.src = 'ChangeSDModal.jsp?date=' + date + '&groupId=' + groupId + '&diaryUserId=' + diaryUserId + '&contentId=' + contentId;
 				}
 				else if(modalType === 'GroupMemberListModal')
 				{
@@ -94,7 +93,10 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
-	
+	Integer nDiaryUserId	= null;
+	String  sNickname		= null;
+	Integer nContentId		= null;
+	String  sSDContent		= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
@@ -106,6 +108,7 @@
 	sDate		= ComMgr.IsNull(request.getParameter("date"), LocalDate.now().toString());
 	nGroupId	= ComMgr.IsNull(request.getParameter("groupId"), -1);
 	nUserId		= ComMgr.IsNull(request.getParameter("userId"), -1);
+	nContentId	= ComMgr.IsNull(request.getParameter("contentId"), -1);
 	
 	if (nGroupId != -1 && nUserId != -1)
 	{
@@ -160,22 +163,23 @@
 	ShareDiaryDTO.setDate(sDate);
 	ShareDiaryDTO.setGroupId(nGroupId);
 	ShareDiaryDTO.setUserId(nUserId);
+	ShareDiaryDTO.setContentId(nContentId);
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-		// 그룹 내 공유일기 정보 검색
-		if (bContinue == true)
+	// 그룹 내 공유일기 정보 검색
+	if (bContinue == true)
+	{
+		if (this.shareDiaryDAO.ReadShareDiaryInGroupList(ShareDiaryDTO) == true)
 		{
-			if (this.shareDiaryDAO.ReadShareDiaryInGroupList(ShareDiaryDTO) == true)
+			if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
 			{
-				if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
-				{
-					bContinue = true;
-				}
+				bContinue = true;
 			}
 		}
+	}
 %>
 <body>
 	<%----------------------------------------------------------------------
@@ -217,10 +221,16 @@
 			{
 				while (this.shareDiaryDAO.DBMgr.Rs.next() == true)
 				{
+					nDiaryUserId= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getInt("USER_ID"), -1);
+					sNickname	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("NICKNAME"), "No Name");
+					nContentId	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("CONTENT_ID"), -1);
+					sSDContent	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("SD_CONTENT"), "No Content");
 			%>
-				<div class="DiaryPreview" id="diaryPreview" onclick="openModal('ViewSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nUserId %>)">
-					<h3 class="DiaryWriter"><%=this.shareDiaryDAO.DBMgr.Rs.getString("NICKNAME") %></h3>
-					<p class="TextPreview"><%=this.shareDiaryDAO.DBMgr.Rs.getString("SD_CONTENT") %></p>
+				<div class="DiaryPreview" id="diaryPreview" onclick="openModal('ViewSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nDiaryUserId %>, <%=nContentId %>)">
+					<h3 class="DiaryWriter"><%=sNickname %></h3>
+					<input type="text" name="diaryUserId" value="<%=nDiaryUserId %>" style="display: none;"/>
+					<input type="text" name="contentId" value="<%=nContentId %>" style="display: none;"/>
+					<p class="TextPreview"><%=sSDContent %></p>
 					<p class="EditGuide">일기를 조회하거나 수정하려면 클릭하세요.</p>
 				</div>
 			<%

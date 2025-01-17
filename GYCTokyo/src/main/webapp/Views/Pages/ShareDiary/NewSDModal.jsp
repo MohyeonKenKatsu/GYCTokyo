@@ -1,3 +1,4 @@
+<%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@page import="Common.ComMgr"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8");%>
@@ -51,7 +52,8 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-
+	// 그룹 내 공유일기 저장용 DAO 객체
+	public ShareDiaryDAO shareDiaryDAO = new ShareDiaryDAO();	
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -63,9 +65,13 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	String 	sDate		= null;
-	Integer nGroupId	= null;
-	Integer nUserId		= null;
+	Boolean bJobProcess		= null;
+	String  sJobStatus		= null;
+
+	String 	sDate			= null;
+	Integer nGroupId		= null;
+	Integer nDiaryUserId	= null;
+	String	sSDContent		= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
@@ -73,16 +79,27 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-
+	Boolean bContinue 	= false;
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
+	bJobProcess = ComMgr.IsNull(request.getParameter("jobProcess"), false);
+	sJobStatus = ComMgr.IsNull(request.getParameter("jobStatus"), "INSERT");
+	
 	sDate = ComMgr.IsNull(request.getParameter("date"), "날짜 없음");
-	nGroupId = ComMgr.IsNull(request.getParameter("group_id"), -1);
-	nUserId = ComMgr.IsNull(request.getParameter("user_id"), -1);	
+	nGroupId = ComMgr.IsNull(request.getParameter("groupId"), -1);
+	nDiaryUserId = ComMgr.IsNull(request.getParameter("diaryUserId"), -1);
+	sSDContent = ComMgr.IsNull("sdContent", "");
+
+	if (nGroupId != -1 && nDiaryUserId != -1)
+	{
+		bContinue = true;
+	}
+	
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
+
 	// ---------------------------------------------------------------------
 %>
 	<%--------------------------------------------------------------------------
@@ -92,9 +109,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
 							: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	------------------------------------------------------------------------
-	<jsp:useBean id="HelloDTO" class="Hello.HelloDTO" scope="request"></jsp:useBean>
-	--%>
+	--------------------------------------------------------------------------%>
+	<jsp:useBean id="ShareDiaryDTO" class="BeansShareDiary.ShareDiaryDTO" scope="request"></jsp:useBean>
+	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -125,15 +142,38 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	// HelloDTO.setData1(request.getParameter("data1"));
+	// JobStatus 작업처리 허용인 경우 INSERT 처리를 위한 파라미터 값을 DTO에 넣기
+	if (bJobProcess == true)
+	{
+		switch (sJobStatus)
+		{
+			case "INSERT":
+				ShareDiaryDTO.setJobStatus(sJobStatus);
+				ShareDiaryDTO.setDate(sDate);
+				ShareDiaryDTO.setGroupId(nGroupId);
+				ShareDiaryDTO.setUserId(nDiaryUserId);
+				ShareDiaryDTO.setSdcontent(sSDContent);
+				
+			break;
+		}
+	}	
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-
+	if(bJobProcess == true)
+	{
+		if (this.shareDiaryDAO.SaveShareDiary(ShareDiaryDTO) == true)
+		{
+			bContinue = true;
+		}
+	}
 %>
 <body>
+<form name="form1" action="" method="post">
+	<input type="hidden" name="jobProcess" value="true">
+	<input type="hidden" name="jobStatus" value="INSERT">
 	<!-- 모달 배경 -->
 	<div class="NewSDModal" id="newSDModal">
 	
@@ -152,12 +192,12 @@
       		</div>
       		
         	<div class="ModalBody">
-				<textarea class="InputDiary" placeholder="오늘 어떤 하루를 보내셨나요? 친구들에게 나의 하루를 공유해 볼까요?"></textarea>
+				<textarea class="InputDiary" name="sdContent" placeholder="오늘 어떤 하루를 보내셨나요? 친구들에게 나의 하루를 공유해 볼까요?"></textarea>
         	</div>
         	
 			<div class="ModalTail">
-				<button class="NewDiaryCancel">취소</button>
-				<button class="NewDiarySave">저장</button>
+				<button type="button" class="NewDiaryCancel">취소</button>
+				<button type="submit" class="NewDiarySave">등록</button>
 			</div>
         
 		</div>
@@ -175,5 +215,6 @@
 		// -----------------------------------------------------------------
 		// -----------------------------------------------------------------
 	</script>
+</form>
 </body>
 </html>

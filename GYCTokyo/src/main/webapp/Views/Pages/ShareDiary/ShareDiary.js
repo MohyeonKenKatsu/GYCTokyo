@@ -38,10 +38,10 @@ document.addEventListener("DOMContentLoaded", function () {
 				});
 			}
 			
-			// "글쓰기 저장" 버튼 클릭 시 동작 추가 (옵션)
+			// "글쓰기 등록" 버튼 클릭 시 동작 추가 (옵션)
 			if (NewDiarySave) {
 			    NewDiarySave.addEventListener("click", function () {
-			        alert("일기가 저장되었습니다!");
+			        alert("일기가 등록되었습니다!");
 			        divModalFrame.style.display = "none"; // 모달창 숨기기
 			    });
 			}
