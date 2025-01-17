@@ -93,6 +93,9 @@ body {
     color: white;
     font-size: 40px;
     font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 선택 메뉴 스타일 */

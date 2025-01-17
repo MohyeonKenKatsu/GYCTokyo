@@ -189,7 +189,7 @@
         <div class="content-navigation">
             <button class="nav-button prev">&lt;</button>
             <button class="nav-button next">&gt;</button>
-            <button type="button" class="cancel-button" onclick="alert('<%=sHealthDate %>의 기록이 삭제됩니다. 삭제 후에는 복원할 수 없습니다. 진행하시겠습니까?')">기록삭제</button>
+            <button type="button" class="cancel-button" id="deleteRecordButton">기록삭제</button>
         </div>
         <div class="add-record">
             <button class="add-button" type="button">
