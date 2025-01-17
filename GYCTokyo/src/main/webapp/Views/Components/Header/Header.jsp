@@ -40,7 +40,6 @@
 	[HTML Page - 자바스크립트 구현 영역(상단)]
 	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
 	--------------------------------------------------------------------------%>
-	<script type="text/javascript" src="Header.js"></script>
 	<script type="text/javascript">
 		// -----------------------------------------------------------------
 		// [브라우저 갱신 완료 시 호출 할 이벤트 핸들러 연결 - 필수]
