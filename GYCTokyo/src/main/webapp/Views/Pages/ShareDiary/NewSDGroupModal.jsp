@@ -140,7 +140,7 @@ if (bJobProcess == true)
 			메인 페이지
 		----------------------------------------------------------------------%>
 		<!-- 모달 배경 -->
-		<form class="NewGroupModal" id="newGroupModal" name="form2" action="NewSDGroupModal.jsp?jobprocess=true" method="post">
+		<form class="NewGroupModal" id="newGroupModal" name="form1" action="NewSDGroupModal.jsp?jobprocess=true" method="post">
 		
 			<!-- 모달 창 -->
 			<div class="ModalContent">

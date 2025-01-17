@@ -42,7 +42,8 @@ document.addEventListener("DOMContentLoaded", function () {
 			if (NewDiarySave) {
 			    NewDiarySave.addEventListener("click", function () {
 			        alert("일기가 등록되었습니다!");
-			        divModalFrame.style.display = "none"; // 모달창 숨기기
+					divModalFrame.style.display = "none"; // 모달창 숨기기
+			        setTimeout(function () {location.reload(true);}, 300);
 			    });
 			}
 			
@@ -87,9 +88,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			    ChangeDiarySave.addEventListener("click", function () {
 			        alert("일기가 수정되었습니다!");
 			        divModalFrame.style.display = "none"; // 모달창 숨기기
+					setTimeout(function () {location.reload(true);}, 500);
 			    });
 			}
-			
 	}
 
 		// 모달 외부 클릭 시 모달 닫기

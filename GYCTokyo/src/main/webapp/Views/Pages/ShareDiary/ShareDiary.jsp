@@ -34,7 +34,7 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		function openModal(modalType, date, groupId, diaryUserId, contentId)
+		function openModal(modalType, date, groupId, diaryUserId, contentId, sdContent)
 		{
 			let ifModalWindow = document.getElementById('ifModalWindow');
 			let divModalFrame = document.getElementById('divModalFrame');
@@ -52,7 +52,7 @@
 				}
 				else if(modalType === 'ChangeSDModal')
 				{
-					ifModalWindow.src = 'ChangeSDModal.jsp?date=' + date + '&groupId=' + groupId + '&diaryUserId=' + diaryUserId + '&contentId=' + contentId;
+					ifModalWindow.src = 'ChangeSDModal.jsp?date=' + date + '&groupId=' + groupId + '&diaryUserId=' + diaryUserId + '&contentId=' + contentId + '&sdContent=' + sdContent;
 				}
 				else if(modalType === 'GroupMemberListModal')
 				{

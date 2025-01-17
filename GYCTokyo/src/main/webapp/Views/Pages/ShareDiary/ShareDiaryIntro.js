@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		    NewGroupButton.addEventListener("click", function () {
 		        alert("그룹이 생성되었습니다!");
 		        divModalFrame.style.display = "none"; // 모달창 숨기기
+				setTimeout(function () {location.reload(true);}, 850);
 		    });
 		}
 		

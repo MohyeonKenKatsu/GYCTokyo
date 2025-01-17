@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@page import="Common.ComMgr"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -79,23 +80,22 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	Boolean bContinue 	= false;
+	Boolean bSuccess = false;
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
 	bJobProcess = ComMgr.IsNull(request.getParameter("jobProcess"), false);
 	sJobStatus = ComMgr.IsNull(request.getParameter("jobStatus"), "INSERT");
 	
-	sDate = ComMgr.IsNull(request.getParameter("date"), "날짜 없음");
+	sDate = ComMgr.IsNull(request.getParameter("date"), LocalDate.now().toString());
 	nGroupId = ComMgr.IsNull(request.getParameter("groupId"), -1);
 	nDiaryUserId = ComMgr.IsNull(request.getParameter("diaryUserId"), -1);
-	sSDContent = ComMgr.IsNull("sdContent", "");
+	sSDContent = ComMgr.IsNull(request.getParameter("sdContent"), "");
 
 	if (nGroupId != -1 && nDiaryUserId != -1)
 	{
-		bContinue = true;
+		bSuccess = true;
 	}
-	
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -166,17 +166,17 @@
 	{
 		if (this.shareDiaryDAO.SaveShareDiary(ShareDiaryDTO) == true)
 		{
-			bContinue = true;
+			bSuccess = true;
 		}
 	}
 %>
 <body>
-<form name="form1" action="" method="post">
-	<input type="hidden" name="jobProcess" value="true">
-	<input type="hidden" name="jobStatus" value="INSERT">
+	<form name="form1" action="NewSDModal.jsp?jobProcess=true&jobStatus=INSERT" method="post">
+	<input type="hidden" name="date" value="<%=sDate %>">
+	<input type="hidden" name="groupId" value="<%=nGroupId %>">
+	<input type="hidden" name="diaryUserId" value="<%=nDiaryUserId %>">
 	<!-- 모달 배경 -->
 	<div class="NewSDModal" id="newSDModal">
-	
 		<!-- 모달 창 -->
 		<div class="ModalContent">
 		
@@ -197,7 +197,7 @@
         	
 			<div class="ModalTail">
 				<button type="button" class="NewDiaryCancel">취소</button>
-				<button type="submit" class="NewDiarySave">등록</button>
+				<button type="submit" class="NewDiarySave" id="newDiarySave">등록</button>
 			</div>
         
 		</div>
@@ -213,6 +213,7 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
+		
 		// -----------------------------------------------------------------
 	</script>
 </form>

@@ -130,7 +130,7 @@ public class ShareDiaryDAO
 			if (this.DBMgr.DbConnect() == true)
 			{
 				// 공유일기 리스트 읽기
-				sSql = "BEGIN SP_SHAREDAIRY_R(?,?,?,?,?); END;";
+				sSql = "BEGIN SP_SHAREDIARY_R(?,?,?,?,?); END;";
 				// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
 				
 				// IN 파라미터 만큼만 할당
@@ -175,7 +175,7 @@ public class ShareDiaryDAO
 			if (this.DBMgr.DbConnect() == true)
 			{
 				// 공유일기 리스트 읽기
-				sSql = "BEGIN SP_SHAREDAIRY_R(?,?,?,?,?); END;";
+				sSql = "BEGIN SP_SHAREDIARY_R(?,?,?,?,?); END;";
 				// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
 				
 				// IN 파라미터 만큼만 할당

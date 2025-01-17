@@ -190,7 +190,7 @@
 					if (nUserId == nDiaryUserId)
 					{
 				%>
-					<button class="ViewDiaryChange" type="button" onclick="parent.openModal('ChangeSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nDiaryUserId %>)">수정</button>
+					<button class="ViewDiaryChange" type="button" onclick="parent.openModal('ChangeSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nDiaryUserId %>, <%=nContentId %>, '<%=ShareDiaryDTO.getSdcontent() %>')">수정</button>
 				<%
 					}
 				%>

@@ -1,3 +1,5 @@
+<%@page import="java.time.LocalDate"%>
+<%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@page import="Common.ComMgr"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8");%>
@@ -51,7 +53,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	
+	public ShareDiaryDAO shareDiaryDAO = new ShareDiaryDAO();
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -63,10 +65,14 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
+	Boolean bJobProcess		= null;
+	String  sJobStatus		= null;
+	
 	String 	sDate			= null;
 	Integer nGroupId		= null;
 	Integer nDiaryUserId	= null;
 	Integer nContentId		= null;
+	String	sSDContent		= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
@@ -74,14 +80,23 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	Boolean bSuccess = false;	
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	sDate = ComMgr.IsNull(request.getParameter("date"), "날짜 없음");
+	bJobProcess = ComMgr.IsNull(request.getParameter("jobProcess"), false);
+	sJobStatus = ComMgr.IsNull(request.getParameter("jobStatus"), "UPDATE");	
+	
+	sDate = ComMgr.IsNull(request.getParameter("date"), LocalDate.now().toString());
 	nGroupId = ComMgr.IsNull(request.getParameter("groupId"), -1);
 	nDiaryUserId = ComMgr.IsNull(request.getParameter("diaryUserId"), -1);	
 	nContentId   = ComMgr.IsNull(request.getParameter("contentId"), -1);
+	sSDContent = ComMgr.IsNull(request.getParameter("sdContent"), "내용 없음");
+	
+	if (nGroupId != -1 && nDiaryUserId != -1 && nDiaryUserId != -1 && nContentId != -1)
+	{
+		bSuccess = true;
+	}
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -95,9 +110,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	------------------------------------------------------------------------
-	<jsp:useBean id="HelloDTO" class="Hello.HelloDTO" scope="request"></jsp:useBean>
-	--%>
+	--------------------------------------------------------------------------%>
+	<jsp:useBean id="ShareDiaryDTO" class="BeansShareDiary.ShareDiaryDTO" scope="request"></jsp:useBean>
+	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -128,16 +143,40 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	// HelloDTO.setData1(request.getParameter("data1"));
+// JobStatus 작업처리 허용인 경우 UPDATE 처리를 위한 파라미터 값을 DTO에 넣기
+if (bJobProcess == true)
+{
+	switch (sJobStatus)
+	{
+		case "UPDATE":
+			ShareDiaryDTO.setJobStatus(sJobStatus);
+			ShareDiaryDTO.setDate(sDate);
+			ShareDiaryDTO.setGroupId(nGroupId);
+			ShareDiaryDTO.setUserId(nDiaryUserId);
+			ShareDiaryDTO.setContentId(nContentId);			
+			ShareDiaryDTO.setSdcontent(sSDContent);
+		break;
+	}
+}	
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-
+	if(bJobProcess == true)
+	{
+		if (this.shareDiaryDAO.SaveShareDiary(ShareDiaryDTO) == true)
+		{
+			bSuccess = true;
+		}
+	}
 %>
 <body>
-<form name="form1" action="" method="post">
+	<form name="form1" action="ChangeSDModal.jsp?jobProcess=true&jobStatus=UPDATE" method="post">
+	<input type="hidden" name="date" value="<%=sDate %>">
+	<input type="hidden" name="groupId" value="<%=nGroupId %>">
+	<input type="hidden" name="diaryUserId" value="<%=nDiaryUserId %>">
+	<input type="hidden" name="contentId" value="<%=nContentId %>">
 	<!-- 모달 배경 -->
 	<div class="ChangeSDModal" id="changeSDModal">
 	
@@ -156,13 +195,13 @@
       		</div>
       		
         	<div class="ModalBody">
-				<textarea class="ChangeDiary">오늘은 GYC 친구들과 같이 마라탕을 먹으러 갔다. 서연이가 좋아하는 마라장룡 마라탕. 서연이는 이걸 왜 좋아하는 걸까? 맛있기는 한데 매일 먹을 수는 없을 것 같다...</textarea>
+				<textarea class="ChangeDiary" name="sdContent"><%=sSDContent %></textarea>
         	</div>
         	
 			<div class="ModalTail">
-				<button class="ChangeDiaryCancel">취소</button>
-				<button class="ChangeDiaryDelete">삭제</button>
-				<button class="ChangeDiarySave">저장</button>
+				<button type="button" class="ChangeDiaryCancel">취소</button>
+				<button type="button" class="ChangeDiaryDelete">삭제</button>
+				<button type="submit" class="ChangeDiarySave" id="changeDiarySave">저장</button>
 			</div>
         
 		</div>
