@@ -76,6 +76,8 @@
 				shortMessage.style.display="none";
 			}
 		}
+		
+		
 		function SameCheck(id1, id2)
 		{
 			const val1 = document.getElementById(id1).value;
@@ -90,6 +92,13 @@
 			{
 				shortMessage.style.display="block";
 			}
+		}
+		
+		
+		function DuplicateCheck(obj)
+		{
+			const inputContent = document.getElementById(obj).value;
+			window.location.href='DupCheck.jsp?obj=' + obj + '&content=' + inputContent;
 		}
 		// -----------------------------------------------------------------
 	</script>
@@ -234,8 +243,8 @@
 					
 					<tr>
 						<td><label for="nickname">닉네임</label></td>
-						<td class="inputform"><input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요."  maxlength="8" value="<%= sNICKNAME %>" required></td>
-						<td><button type="button" id="checkNickName" class="check-btn">중복확인</button></td> 
+						<td><input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." maxlength="8" value="<%= sNICKNAME %>" required></td>
+						<td><button type="button" id="checkNickName" class="check-btn" onclick="DuplicateCheck('nickname')">중복확인</button></td> 
 					</tr>
 					
 					<tr>

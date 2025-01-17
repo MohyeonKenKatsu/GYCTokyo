@@ -351,6 +351,84 @@ public class UsersDAO
 		
 		return bResult;
 	}
+	/***********************************************************************
+	 * DuplicateEmail()	: 오라클 데이터베이스에서 중복되는 아이디(이메일)값이 있는지 확인
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean DuplicateEmail(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_DUPLICATE(?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[2];
+				
+				oPaValue[0] = "EMAIL";
+				oPaValue[1] = usersdto.getEmail();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
+				{
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * DuplicateNickname()	: 오라클 데이터베이스에서 중복되는 닉네임 값이 있는지 확인
+	 * @param usersdto		: 회원 정보 저장용 DTO 객체
+	 * @return boolean		: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean DuplicateNickname(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_DUPLICATE(?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[2];
+				
+				oPaValue[0] = "NICKNAME";
+				oPaValue[1] = usersdto.getNickname();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
+				{
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
 	// —————————————————————————————————————————————————————————————————————————————————————
 }
 //#################################################################################################

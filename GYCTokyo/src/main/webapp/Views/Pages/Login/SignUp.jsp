@@ -77,6 +77,8 @@
 				shortMessage.style.display="none";
 			}
 		}
+		
+		
 		function SameCheck(id1, id2)
 		{
 			const val1 = document.getElementById(id1).value;
@@ -91,6 +93,13 @@
 			{
 				shortMessage.style.display="block";
 			}
+		}
+		
+		
+		function DuplicateCheck(obj)
+		{
+			const inputContent = document.getElementById(obj).value;
+			window.location.href='DupCheck.jsp?obj=' + obj + '&content=' + inputContent;
 		}
 		// -----------------------------------------------------------------
 	</script>
@@ -220,7 +229,7 @@
 					<tr>
 						<td><label for="email">이메일</label></td>
 						<td><input type="email" id="email" name="email" placeholder="이메일을 입력하세요." value="<%= sEMAIL %>" required></td>
-						<td><button type="button" id="checkEmail" class="check-btn" onclick="window.location.href='SignUpCheck.jsp?obj=email&value='">중복확인</button></td>
+						<td><button type="button" id="checkEmail" class="check-btn" onclick="DuplicateCheck('email')">중복확인</button></td>
 					</tr>
 					
 					<tr>
@@ -250,7 +259,7 @@
 					<tr>
 						<td><label for="nickname">닉네임</label></td>
 						<td><input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." maxlength="8" value="<%= sNICKNAME %>" required></td>
-						<td><button type="button" id="checkNickName" class="check-btn" onclick="window.location.href='SignUpCheck.jsp?obj=nickname&value='">중복확인</button></td> 
+						<td><button type="button" id="checkNickName" class="check-btn" onclick="DuplicateCheck('nickname')">중복확인</button></td> 
 					</tr>
 					
 					<tr>

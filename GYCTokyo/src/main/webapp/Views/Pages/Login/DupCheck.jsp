@@ -19,7 +19,7 @@
     <meta name="keywords" content="검색 엔진을 위해 웹 페이지와 관련된 키워드 목록을 콤마로 구분해서 명시"/>
     <meta name="Author" content="문서의 저자를 명시"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>Sign Up</title>
+	<title>Duplicate Check</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
@@ -84,6 +84,8 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
+	String  sObj			= null;		// 파라미터 : 중복확인할 대상
+	String  sContent		= null;		// 파라미터 : 중복확인할 대상
 	String  sEMAIL			= null;		// 파라미터 : 이메일
 	String  sPASSWORD		= null;		// 파라미터 : 비밀번호
 	String 	sNICKNAME 		= null;		// 파라미터 : 닉네임
@@ -97,16 +99,18 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	Boolean bDuplicate = null;			// 중복 데이터 존재
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	sEMAIL		= ComMgr.IsNull(request.getParameter("email"), "");				// 파라미터 : 이메일
-	sPASSWORD	= ComMgr.IsNull(request.getParameter("password"), "");			// 파라미터 : 이메일
-	sNICKNAME	= ComMgr.IsNull(request.getParameter("nickname"), "");			// 파라미터 : 이메일
-	iCOURSE		= ComMgr.IsNull(request.getParameter("course"), 0);				// 파라미터 : 이메일
-	sBIRTHDAY	= ComMgr.IsNull(request.getParameter("birthday"), "");			// 파라미터 : 이메일
-	sTEL		= ComMgr.IsNull(request.getParameter("tel"), "");				// 파라미터 : 이메일
+	sObj		= ComMgr.IsNull(request.getParameter("obj"), "");
+	sContent	= ComMgr.IsNull(request.getParameter("content"), "");
+	sEMAIL		= ComMgr.IsNull(request.getParameter("email"), "");
+	sPASSWORD	= ComMgr.IsNull(request.getParameter("password"), "");
+	sNICKNAME	= ComMgr.IsNull(request.getParameter("nickname"), "");
+	iCOURSE		= ComMgr.IsNull(request.getParameter("course"), 0);
+	sBIRTHDAY	= ComMgr.IsNull(request.getParameter("birthday"), "");
+	sTEL		= ComMgr.IsNull(request.getParameter("tel"), "");
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -137,30 +141,52 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	// 회원가입 시도중일 경우
-	if (bJobProcess == true)
+	usersDTO = new UsersDTO();
+	
+
+	// 이메일 중복확인
+	if (sObj.equals("email"))
 	{
-		// 입력받은 값을 DTO에 저장
-		usersDTO = new UsersDTO();
+		usersDTO.setEmail(sContent);
 		
-		usersDTO.setEmail(sEMAIL);
-		usersDTO.setPassword(sPASSWORD);
-		usersDTO.setNickname(sNICKNAME);
-		usersDTO.setBirthday(sBIRTHDAY);
-		usersDTO.setTel(sTEL);
-		usersDTO.setCourse(iCOURSE);
-		
-		// 회원가입에 성공했을 경우
-		if (this.usersDAO.Signup(usersDTO) == true)
-		{
-			bSignupSuccess = true;
+		if (this.usersDAO.DuplicateEmail(usersDTO) == true)
+		{	
+			// 이메일 검색결과가 있는지 확인
+			if (this.usersDAO.DBMgr.Rs.next() == true)
+			{
+				bDuplicate = true;
+			}
+			else bDuplicate = false;
 		}
-		else bSignupSuccess = false;
+	}
+
+	// 닉네임 중복확인
+	if (sObj.equals("nickname"))
+	{
+		usersDTO.setNickname(sContent);
+		
+		if (this.usersDAO.DuplicateNickname(usersDTO) == true)
+		{
+			// 닉네임 검색결과가 있는지 확인
+			if (this.usersDAO.DBMgr.Rs.next() == true)
+			{
+				bDuplicate = true;
+			}
+			else bDuplicate = false;
+		}
 	}
 %>
 
 <body>
-
+	<form>
+		<input type="hidden" id="jobprocess" name="jobprocess" value="true">
+		
+		
+		<!-- bDuplicate가 true이면 중복 데이터 있음, false이면 중복 데이터 없음 -->
+		
+		
+	</form>
+	
 	<%------------------------------------------------------------------
 	[JSP 페이지에서 바로 이동(바이패스)]
 	----------------------------------------------------------------------%>
@@ -209,9 +235,9 @@
 		//				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
 		//				: 브라우저의 Url 주소는 sUrl 페이지로 변경 됨
 		// -----------------------------------------------------------------
-		String sUrl = "SignUp.jsp";
-		
-		response.sendRedirect(sUrl);
+		//String sUrl = "SignUp.jsp";
+
+		//response.sendRedirect(sUrl);
 		// -----------------------------------------------------------------
 	%>
 </body>
