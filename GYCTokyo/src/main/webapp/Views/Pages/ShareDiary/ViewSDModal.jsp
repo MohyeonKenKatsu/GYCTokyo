@@ -1,3 +1,4 @@
+<%@page import="Common.ComMgr"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="ko">
@@ -63,9 +64,9 @@
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	String selectedDate = request.getParameter("date");
-	String group_id = request.getParameter("group_id");
-	String user_id = request.getParameter("user_id");
+	String sDate = request.getParameter("date");
+	Integer nGroupId = ComMgr.IsNull(request.getParameter("group_id"), -1);
+	Integer nUserId = ComMgr.IsNull(request.getParameter("user_id"), -1);
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -125,7 +126,7 @@
 		
 			<div class="ModalHeader">
 				<h2 class="Header">공유일기</h2>
-				<input type="date" class="DatePicker" id="date" name="date" value="<%= selectedDate %>" required>
+				<div class="Date" id="date"><%=sDate %></div>
 				<table class="ViewWriter">
 					<tr>
 						<td class="Writer">작성자</td>

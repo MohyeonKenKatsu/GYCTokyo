@@ -181,16 +181,16 @@
 			<div class="Header">
 			<h1 class="Title">공유일기</h1>
 			<input type="date" class="Date" id="date" name="date" value="<%=sDate %>" required>
-			<input type="submit" class="" id="submit" name="submit" value="검색">
+			<input type="submit" class="Submit" id="submit" name="submit" value="검색"/>
 			</div>
 			<!-- 우측 메뉴 -->
 			<table class="RightMenu">
 				<tr>
 					<td>
-				    	<button class="MemberListButton" id="memberListButton" onclick="openModal('GroupMemberListModal')">그룹원</button>
+				    	<input type="button" class="MemberListButton" id="memberListButton" onclick="openModal('GroupMemberListModal')" value="그룹원"/>
 					</td>
 					<td>
-				    	<button class="WriteButton" id="writeButton" onclick="openModal('NewSDModal')">글쓰기</button>
+				    	<input type="button" class="WriteButton" id="writeButton" onclick="openModal('NewSDModal')" value="글쓰기"/>
 					</td>
 					<td>
 					    <div class="Sort">☰</div>
