@@ -319,3 +319,11 @@ body {
     color: #666;
     margin-top: 10px;
 }
+
+.health-record {
+    background-color: #E0E0E0;
+    padding: 25px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    ;
+}

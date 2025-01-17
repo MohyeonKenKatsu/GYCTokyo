@@ -28,6 +28,10 @@ public class HealthDTO
 	// —————————————————————————————————————————————————————————————————————————————————————
 	// 전역변수 관리 - 필수영역(인스턴스변수)
 	// —————————————————————————————————————————————————————————————————————————————————————
+	
+	// 현재 작업상태
+	private String jobstatus				= null;
+
 	// 건강기록 날짜
 	private String health_date 				= null;
 	
@@ -84,6 +88,15 @@ public class HealthDTO
 	// —————————————————————————————————————————————————————————————————————————————————————
 	// 전역함수 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
+	
+	public String getJobstatus() {
+		return jobstatus;
+	}
+
+	public void setJobstatus(String jobstatus) {
+		this.jobstatus = jobstatus;
+	}
+	
 	public String getHealth_date() {
 		return health_date;
 	}

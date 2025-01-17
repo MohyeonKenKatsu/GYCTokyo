@@ -567,9 +567,9 @@ public class ComMgr
 		
 	    try
 	    {
-	    	nResult = (CheckValue != null) ? (Integer)CheckValue : DefaultValue;
+	    	nResult = (CheckValue != null) ? (Integer) CheckValue : DefaultValue;
 	    	
-	    	nResult = (nResult.toString().trim().length() > 0) ? nResult : DefaultValue;
+
 	    }
 	    catch (Exception Ex)
 	    {
