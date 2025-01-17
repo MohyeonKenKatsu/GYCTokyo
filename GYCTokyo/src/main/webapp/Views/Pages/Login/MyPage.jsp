@@ -1,3 +1,5 @@
+<%@page import="HeaderFlagMapping.HeaderFlagHash"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="BeansUsers.UsersDTO"%>
 <%@page import="BeansUsers.UsersDAO"%>
 <%@page import="Common.ComMgr"%>
@@ -19,12 +21,12 @@
     <meta name="keywords" content="검색 엔진을 위해 웹 페이지와 관련된 키워드 목록을 콤마로 구분해서 명시"/>
     <meta name="Author" content="문서의 저자를 명시"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>GYC, 그 해 우리는</title>
+    <title>데이터 중복 확인</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
-    <link rel="stylesheet" href="Login.css">
+    <link rel="stylesheet" href="MyPage.css">
 	<style type="text/css">
 		/* -----------------------------------------------------------------
 			HTML Page 스타일시트
@@ -60,6 +62,44 @@
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
 		
+		function LengthLimit(id)
+		{
+			const len = document.getElementById(id).value.length;
+			let shortMessage = document.getElementById("short");
+	
+			if (len > 0 && len < 8)
+			{
+				shortMessage.style.display="block";
+			}
+			else 
+			{
+				shortMessage.style.display="none";
+			}
+		}
+		
+		
+		function SameCheck(id1, id2)
+		{
+			const val1 = document.getElementById(id1).value;
+			const val2 = document.getElementById(id2).value;
+			let shortMessage = document.getElementById("notsame");
+	
+			if (val1 == val2)
+			{
+				shortMessage.style.display="none";
+			}
+			else 
+			{
+				shortMessage.style.display="block";
+			}
+		}
+		
+		
+		function DuplicateCheck(obj)
+		{
+			const inputContent = document.getElementById(obj).value;
+			window.location.href='DupCheck.jsp?obj=' + obj + '&content=' + inputContent;
+		}
 		// -----------------------------------------------------------------
 	</script>
 </head>
@@ -85,29 +125,35 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	Boolean bJobProcess		= null;		// 파라미터 : 작업처리 - DB 접속 여부
-	String  sEMAIL			= null;		// 파라미터 : 이메일
+	Integer iUSERID 		= null;		// 파라미터 : 사용자 아이디
+	String  sNICKNAME		= null;		// 파라미터 : 비밀번호
+	Integer iCOURSE			= null;		// 파라미터 : 교육과정
+	String  sTEL			= null;		// 파라미터 : 전화번호 뒤 4자리
 	String  sPASSWORD		= null;		// 파라미터 : 비밀번호
-	Boolean bLoginSuccess	= null;		// 파라미터 : 로그인 성공여부
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
 	UsersDTO usersDTO = null;
-	Integer[] USER_ID_DATA = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	Boolean bJobProcess 	= null;				// 파라미터 : 수정 버튼을 눌렀을 때
+	Boolean bEditSuccess	= null;				// 파라미터 : 회원정보 수정에 성공했을 때
+	HashMap<Integer, String> courseMap = null;	// 교육과정 동적 생성용 Hash Map
+	String sSelectedCourse	= null;				// 파라미터 : 기존 교육과정 선택용 변수
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
 	bJobProcess	= ComMgr.IsNull(request.getParameter("jobprocess"), false);		// 파라미터 : 작업처리 : null 확인(false : 아무동작 없음)
-	sEMAIL		= ComMgr.IsNull(request.getParameter("email"), "");				// 파라미터 : 이메일
 	sPASSWORD	= ComMgr.IsNull(request.getParameter("password"), "");			// 파라미터 : 이메일
+	sNICKNAME	= ComMgr.IsNull(request.getParameter("nickname"), "");			// 파라미터 : 이메일
+	iCOURSE		= ComMgr.IsNull(request.getParameter("course"), 0);				// 파라미터 : 이메일
+	sTEL		= ComMgr.IsNull(request.getParameter("tel"), "");				// 파라미터 : 이메일
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	USER_ID_DATA = new Integer[1];	// 사용자 아이디, 닉네임, 교육과정을 전달
+	iUSERID = ComMgr.IsNull(session.getAttribute("USER_ID"), 0);
+	courseMap = HeaderFlagHash.gethashCourse();
 	// ---------------------------------------------------------------------
 %>
 
@@ -134,148 +180,125 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	// bJobProcess 작업처리 허용인 경우
+	usersDTO = new UsersDTO();
+	
+	if (bJobProcess == false)
+	{
+		if (this.usersDAO.ReadMyPageData(iUSERID, usersDTO) == true)
+		{
+			sNICKNAME = usersDTO.getNickname();
+			iCOURSE = usersDTO.getCourse();
+			sTEL = usersDTO.getTel();
+			sPASSWORD = usersDTO.getPassword();
+		}
+	}
+	
 	if (bJobProcess == true)
 	{
-		usersDTO = new UsersDTO();
-		usersDTO.setEmail(sEMAIL);
+		usersDTO.setUser_id(iUSERID);
+		usersDTO.setNickname(sNICKNAME);
 		usersDTO.setPassword(sPASSWORD);
+		usersDTO.setCourse(iCOURSE);
+		usersDTO.setTel(sTEL);
 		
-		// 로그인 정보가 사용자 테이블에 있을 경우 = 로그인 성공
-		if (this.usersDAO.Login(usersDTO, USER_ID_DATA) == true)
+		if (this.usersDAO.EditUserData(usersDTO))
 		{
-			bLoginSuccess = true;
+			bEditSuccess = true;
 		}
-		// 로그인 정보가 사용자 테이블에 없을 경우 = 로그인 실패
-		else {
-			bLoginSuccess = false;
-		}
+		else bEditSuccess = false;
 	}
 %>
 
 <body>
-	<%----------------------------------------------------------------------
-	[HTML Page - FORM 디자인 영역]
-	--------------------------------------------------------------------------%>
-	<!-- 로그인 영역 -->
-	<div class="form-container">
-	
-		<!-- 페이지 제목 영역 -->
-        <h1 class="login-title">SIGN IN</h1>
-        
-        <!-- 입력 양식 영역 -->
-        <form name="loginform" action="" method="post">
-        	
-        	<!-- 이메일 입력 칸 -->
-	        <div class="input-container">
-	            <input type="email" id="email" name="email" placeholder="이메일" value="<%= sEMAIL %>" required>
-	        </div>
-	        
-			<!-- 비밀번호 입력 칸 -->
-	        <div class="input-container">
-	            <input type="password" id="password" name="password" placeholder="비밀번호" required>
-	        </div>
-	        
-	        <div class="FindButton-container">
-	        	&nbsp;
-		        <a class="FindButton" href="SearchEmail.jsp">아이디 찾기</a>
-		        &nbsp;&nbsp;·&nbsp;&nbsp;
-		        <a class="FindButton" href="SearchPassword.jsp">비밀번호 찾기</a>
-	        </div>
-	        
-			<!-- DB 접속 제어 변수 -->
-	       	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
-	       	
-			<!-- 버튼 영역 -->
-	        <div class="button-container">
-	        	<!-- 로그인 버튼 -->
-	            <button type="submit" class="signin-btn">SIGN IN</button>
-	            <!-- 회원가입 버튼 -->
-	            <button type="button" class="signup-btn" onclick="window.location.href='SignUp.jsp'">SIGN UP</button>
-	        
-	        </div>
-		</form>
-	</div>
-	<%----------------------------------------------------------------------
-	[HTML Page - END]
-	--------------------------------------------------------------------------%>
-	
-	<%----------------------------------------------------------------------
-	[HTML Page - 자바스크립트 구현 영역(하단)]
-	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
-	--------------------------------------------------------------------------%>
-	<script type="text/javascript">
-		// -----------------------------------------------------------------
-		// [사용자 함수 및 로직 구현]
-		// -----------------------------------------------------------------
-		
-		// 로그인 결과처리
-		
-		// 로그인 성공시 사용자 아이디를 세션에 저장하고 캘린더/일정 페이지로 이동
-		if (<%= bLoginSuccess %> == true)
-		{
-	        <% session.setAttribute("USER_ID", USER_ID_DATA[0]); %>
-	        location.href="../Calendar/index.jsp";
-		}
-		// 로그인 실패 시 경고창 출력
-		if (<%= bLoginSuccess %> == false)
-		{
-			DocumentInit('로그인에 실패했습니다.');
-		}
-		// -----------------------------------------------------------------
-	</script>
-	<%------------------------------------------------------------------
-	[JSP 페이지에서 바로 이동(바이패스)]
-	----------------------------------------------------------------------%>
-	<%------------------------------------------------------------------
-	바이패스 방법1	: JSP forward 액션을 사용 한 페이지 이동
-				:-------------------------------------------------------
-				: page	- 이동 할 새로운 페이지 주소
-				: name	- page 쪽에 전달 할 파라미터 명칭
-				: value	- page 쪽에 전달 할 파라미터 데이터
-				:		- page 쪽에서 request.getParameter("name1")로 읽음
-				:-------------------------------------------------------
-				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
-				: 브라우저 Url 주소는 현재 페이지로 유지 됨
-	--------------------------------------------------------------------
-	<jsp:forward page="Hello.jsp">
-		<jsp:param name="name1" value='value1'/>
-		<jsp:param name="name2" value='value2'/>
-	</jsp:forward>
-	--%>
-	<%
-		// -----------------------------------------------------------------
-		//	바이패스 방법2	: RequestDispatcher을 사용 한 페이지 이동
-		//				:---------------------------------------------------
-		//				: sUrl	- 이동 할 새로운 페이지 주소
-		//				:		- sUrl 페이지 주소에 GET 파라미터 전달 가능
-		//				:		- sUrl 페이지가 갱신됨 즉,
-		//				:		- sUrl 페이지 주소에 GET 파라미터 유무에 상관없이
-		//				:		- sUrl 페이지 쪽에서 request.getParameter() 사용가능
-		//				:-------------------------------------------------------
-		//				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
-		//				: 브라우저 Url 주소는 현재 페이지로 유지 됨
-		// -----------------------------------------------------------------
-		// String sUrl = "Hello.jsp?name1=value1&name2=value2";
-		//
-		// RequestDispatcher dispatcher = request.getRequestDispatcher(sUrl);
-		// dispatcher.forward(request, response);
-		// -----------------------------------------------------------------
-		//	바이패스 방법3	: response.sendRedirect을 사용 한 페이지 이동
-		//				:---------------------------------------------------
-		//				: sUrl	- 이동 할 새로운 페이지 주소
-		//				:		- sUrl 페이지에 GET 파라미터만 전달 가능
-		//				:		- sUrl 페이지 갱신 없음 즉,
-		//				:		- sUrl 페이지 주소에 GET 파라미터 있는 경우만
-		//				:		- sUrl 페이지 쪽에서 request.getParameter() 사용가능
-		//				:-------------------------------------------------------
-		//				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
-		//				: 브라우저의 Url 주소는 sUrl 페이지로 변경 됨
-		// -----------------------------------------------------------------
-		//String sUrl = "Hello.jsp?name1=value1&name2=value2";
-		//
-		//response.sendRedirect(sUrl);
-		// -----------------------------------------------------------------
-	%>
+	<div class="container">
+		<div class="form-container">
+			<h1 class="signup-title">My Page</h1>
+			<form action="" method="post">
+				<table class="form-table">
+				
+					<tr>
+						<td><label for="password">비밀번호</label></td>
+						<td class="inputform"><input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" maxlength="12"
+						value="<%= sPASSWORD %>"
+						oninput="LengthLimit('password')"
+						required></td>
+					</tr>
+					
+					<tr>
+						<td></td>
+						<td class="inputform"><p class="pwtext" id="short" style="display:none;">&nbsp;&nbsp;&nbsp;비밀번호의 길이는 8글자 이상 12글자 미만이어야 합니다.</p></td>
+					</tr>
+					
+					<tr>
+						<td><label for="confirmpassword">비밀번호 확인</label></td>
+						<td class="inputform"><input type="password" id="confirmpassword" name="confirmpassword" placeholder="비밀번호를 한 번 더 입력하세요." maxlength="12"
+						oninput="SameCheck('password', 'confirmpassword')"
+						required></td>
+					</tr>
+					
+					<tr>
+						<td></td>
+						<td class="inputform"><p class="pwtext" id="notsame" style="display:none;">&nbsp;&nbsp;&nbsp;비밀번호가 다릅니다.</p></td>
+					</tr>
+					
+					<tr>
+						<td><label for="nickname">닉네임</label></td>
+						<td><input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." maxlength="8" value="<%= sNICKNAME %>" required></td>
+						<td><button type="button" id="checkNickName" class="check-btn" onclick="DuplicateCheck('nickname')">중복확인</button></td> 
+					</tr>
+					
+					<tr>
+						<td><label for="course">과정선택</label></td>
+						<td class="inputform">
+							<select id="course" name="course" required>
+								<option value="0">선택하세요</option>
+								<%
+								for (int i : courseMap.keySet())
+								{
+									sSelectedCourse = (i == iCOURSE) ? "SELECTED" : "";
+									
+									out.println(String.format("<option value='%d'%s>%s</option>",
+																			  i, sSelectedCourse, courseMap.get(i) ));
+								}
+								%>
+							</select>
+						</td>
+					</tr>
+					
+					<tr>
+						<td><label for="tel">전화번호 뒤 4자리</label></td>
+						<td class="inputform"><input type="text" id="tel" name="tel" placeholder="전화번호 뒤 4자리를 입력하세요" maxlength="4"
+						oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');"
+						value="<%= sTEL %>" required></td>
+					</tr>
+				</table>
+				
+				<!-- DB 접속 제어 변수 -->
+	    	   	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
+	    	   	
+				<div class = button-container>
+					<button type="reset" class="reset-btn" onclick="history.back()">취소</button>
+					<button type="submit" class="signup-btn">등록</button>
+				</div>
+				
+			</form>
+		</div>
+	</div>	
 </body>
+
+<script type="text/javascript">
+	// 회원정보 수정에 성공했을 경우
+	if (<%= bEditSuccess %> == true)
+	{
+		DocumentInit("개인정보 수정에 성공했습니다.");
+		location.href="<%= request.getContextPath() %>/Views/Pages/Calendar/index.jsp";
+	}
+	// 회원정보 수정에 실패했을 경우
+	if (<%= bEditSuccess %> == false)
+	{
+		DocumentInit("개인정보 수정 시도 중 오류가 발생했습니다.");
+		location.href="history.back()";
+	}
+</script>
+
 </html>
