@@ -40,6 +40,7 @@
 	[HTML Page - 자바스크립트 구현 영역(상단)]
 	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
 	--------------------------------------------------------------------------%>
+	<script type="text/javascript" src="Header.js"></script>
 	<script type="text/javascript">
 		// -----------------------------------------------------------------
 		// [브라우저 갱신 완료 시 호출 할 이벤트 핸들러 연결 - 필수]
@@ -103,13 +104,11 @@
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	iUSERID = (Integer)session.getAttribute("USER_ID");
 	iUSERID = ComMgr.IsNull(session.getAttribute("USER_ID"), 0);
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
 	userDTO = new UsersDTO();
-	sNICKNAME = "[서버접속실패]";
 	// null일때 임시용
 	sFlagSrc = request.getContextPath() + "/Views/resources/images/japanFlag.svg";
 	// ---------------------------------------------------------------------
@@ -163,8 +162,6 @@
 		sNICKNAME = userDTO.getNickname();
 		iCOURSE = userDTO.getCourse();
 	}
-	out.println("<script>console.log('" + sNICKNAME +"')</script>");
-	out.println("<script>console.log('" + iCOURSE +"')</script>");
 	
 	if (iCOURSE != null)
 	{
@@ -181,27 +178,26 @@
     <header class="header">
     	
         <div class="logo">
-	        <a href="../../Pages/Calendar/index.jsp">
+	        <a href="<%= request.getContextPath() %>/Views/Pages/Calendar/index.jsp">
             <img src="<%= request.getContextPath() %>/Views/resources/images/LOGO.png" alt="로고" class="logo">
             </a>
         </div>
-
+        
         <div class="user-info">
         	<button type="button" class="signup-btn" onclick="gotologin()">로그인 화면 (임시버튼)</button>
             <span><%= sNICKNAME %> 님</span>
-
-			<a href=''>
+            
+			<a href="<%= request.getContextPath() %>/Views/Pages/Login/MyPage.jsp">
             <img src=<%= sFlagSrc %> alt="국기" class="flag">
             </a>
         </div>
-	
+        
     </header>
-    
     
 	<script type="text/javascript">
 		function gotologin()
 		{
-    		location.href="../../Pages/Login/Login.jsp";
+    		location.href="<%= request.getContextPath() %>/Views/Pages/Login/Login.jsp";
     	}
     </script>
 </body>
