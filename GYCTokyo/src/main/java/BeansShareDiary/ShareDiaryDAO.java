@@ -111,8 +111,51 @@ public class ShareDiaryDAO
 	}
 	
 	/***********************************************************************
+	 * ReadShareDiaryGroupMember()	: 오라클 데이터베이스에서 현재 들어온 그룹의 그룹원 조회
+	 * @param shareDiaryDTO			: 공유일기 DTO(결과 반환용)
+	 * @return boolean				: 공유일기 그룹 검색 처리 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean ReadShareDiaryGroupMember(ShareDiaryDTO shareDiaryDTO) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+	    	// -----------------------------------------------------------------------------
+			// 사원정보 읽기
+	    	// -----------------------------------------------------------------------------
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 공유일기 리스트 읽기
+				sSql = "BEGIN SP_SHAREGROUPMEMBER_R(?,?); END;";
+				// sSql = "{call SP_MAN_R(?,?,?,?,?,?)}";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[1];
+				
+				oPaValue[0] = shareDiaryDTO.getGroupId();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 2, true) == true)
+				{		
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	
+	/***********************************************************************
 	 * ReadShareDiaryInGroupList()	: 오라클 데이터베이스에서 공유일기 게시글 목록 읽기
-	 * @param shareDiaryDTO			: 공유일기 DTO(조건용)
+	 * @param shareDiaryDTO			: 공유일기 DTO(결과 반환용)
 	 * @return boolean				: 공유일기 리스트 검색 처리 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/

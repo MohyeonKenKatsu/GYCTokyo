@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			    NewDiarySave.addEventListener("click", function () {
 			        alert("일기가 등록되었습니다!");
 					divModalFrame.style.display = "none"; // 모달창 숨기기
-			        setTimeout(function () {location.reload(true);}, 300);
+			        setTimeout(function () {location.reload(true);}, 500);
 			    });
 			}
 			

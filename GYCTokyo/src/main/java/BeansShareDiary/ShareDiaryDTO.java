@@ -36,6 +36,7 @@ public class ShareDiaryDTO
 	private String groupname = null;	// 그룹 이름
 	private String sdcontent = null;	// 내용
 	private String jobStatus = null;	// 작업상태
+	private String email = null;		// 이메일
 	// —————————————————————————————————————————————————————————————————————————————————————
 	// 생성자 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
@@ -143,6 +144,16 @@ public class ShareDiaryDTO
 	public void setJobStatus(String jobStatus)
 	{
 		this.jobStatus = jobStatus;
+	}
+
+	public String getEmail()
+	{
+		return email;
+	}
+
+	public void setEmail(String email)
+	{
+		this.email = email;
 	}
 	
 	// —————————————————————————————————————————————————————————————————————————————————————

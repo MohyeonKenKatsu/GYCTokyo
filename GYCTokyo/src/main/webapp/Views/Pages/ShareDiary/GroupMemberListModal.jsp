@@ -1,3 +1,5 @@
+<%@page import="Common.ComMgr"%>
+<%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
@@ -50,7 +52,8 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	
+	// 그룹 내 공유일기 그룹원 검색용 DAO 객체
+	public ShareDiaryDAO shareDiaryDAO = new ShareDiaryDAO();	
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -62,23 +65,24 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-
+	Integer nGroupId		= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
-	
+	String sNickname		= null;
+	String sEmail			= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	Boolean bContinue = true;	// 공유일기 그룹 목록 검색 유무
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	
+	nGroupId	= ComMgr.IsNull(request.getParameter("groupId"), -1);	
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-
+	
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -88,9 +92,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	------------------------------------------------------------------------
-	<jsp:useBean id="HelloDTO" class="Hello.HelloDTO" scope="request"></jsp:useBean>
-	--%>
+	--------------------------------------------------------------------------%>
+<jsp:useBean id="ShareDiaryDTO" class="BeansShareDiary.ShareDiaryDTO" scope="request"></jsp:useBean>
+	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -121,15 +125,26 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	// HelloDTO.setData1(request.getParameter("data1"));
+	ShareDiaryDTO.setGroupId(nGroupId);
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-
+//공유일기 그룹 목록 검색
+if (bContinue == true)
+{
+	if (this.shareDiaryDAO.ReadShareDiaryGroupMember(ShareDiaryDTO) == true)
+	{
+		if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
+		{
+			bContinue = true;
+		}
+	}
+}
 %>
 <body>
+<form name="form1" action="" method="post">
 	<!-- 모달 배경 -->
 	<div class="GroupMemberListModal" id="groupMemberListModal">
 	
@@ -143,15 +158,20 @@
         	<div class="GMLModalBody">
 				<div class="GroupMemberList">
 					<%
-						for(int i=0; i<10; i++)
+					if(bContinue == true)
+					{
+						while (this.shareDiaryDAO.DBMgr.Rs.next() == true)
 						{
+							sNickname	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("NICKNAME"), "No Nickname");
+							sEmail		= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("EMAIL"), "No Email");
 					%>
 						<div class="GroupMemberCard">
-							<h3 class="MemberNickname" id="memberNickname<%=i %>">세니<%=i %></h3>
-							<p class="MemberEmail" id="memberEmail<%=i %>">oio3121<%=i %>@naver.com</p>
+							<h3 class="MemberNickname" id="memberNickname"><%=sNickname %></h3>
+							<p class="MemberEmail" id="memberEmail"><%=sEmail %></p>
 						</div>
 					<%
 						}
+					}	
 					%>
 				</div>
         	</div>
@@ -175,5 +195,6 @@
 		// -----------------------------------------------------------------
 		// -----------------------------------------------------------------
 	</script>	
+</form>
 </body>
 </html>

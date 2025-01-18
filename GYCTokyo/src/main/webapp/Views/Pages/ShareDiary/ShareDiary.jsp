@@ -56,7 +56,7 @@
 				}
 				else if(modalType === 'GroupMemberListModal')
 				{
-					ifModalWindow.src = 'GroupMemberListModal.jsp';
+					ifModalWindow.src = 'GroupMemberListModal.jsp?groupId=' + groupId;
 				}
 			}
 		}
@@ -206,7 +206,7 @@
 			<table class="RightMenu">
 				<tr>
 					<td>
-				    	<input type="button" class="MemberListButton" id="memberListButton" onclick="openModal('GroupMemberListModal')" value="그룹원"/>
+				    	<input type="button" class="MemberListButton" id="memberListButton" onclick="openModal('GroupMemberListModal', '', <%=nGroupId %>)" value="그룹원"/>
 					</td>
 					<td>
 				    	<input type="button" class="WriteButton" id="writeButton" onclick="openModal('NewSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nUserId %>)" value="글쓰기"/>
