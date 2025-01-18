@@ -66,7 +66,10 @@
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
 	sGroupName	= ComMgr.IsNull(request.getParameter("inputgroupname"), "");
-	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), 1);
+	
+	session.setAttribute("USER_ID", 1);
+	
+	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), -1);
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------

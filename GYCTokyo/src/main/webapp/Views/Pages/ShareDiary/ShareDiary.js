@@ -78,8 +78,13 @@ document.addEventListener("DOMContentLoaded", function () {
 			// "게시글 수정 삭제" 버튼 클릭 시 동작 추가 (옵션)
 			if (ChangeDiaryDelete) {
 			    ChangeDiaryDelete.addEventListener("click", function () {
+					if (confirm('정말로 삭제하시겠습니까? 삭제시 복구할 수 없습니다.')) {
+					iframeDoc.forms['form2'].action = "ChangeSDModal.jsp?jobProcess=true&jobStatus=DELETE";
+					iframeDoc.forms['form2'].submit();						
+					}
 			        alert("일기가 삭제되었습니다!");
 			        divModalFrame.style.display = "none"; // 모달창 숨기기
+					setTimeout(function () {location.reload(true);}, 500);
 			    });
 			}
 			

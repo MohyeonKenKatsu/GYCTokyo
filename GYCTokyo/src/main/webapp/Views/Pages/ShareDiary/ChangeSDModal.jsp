@@ -85,7 +85,7 @@
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
 	bJobProcess = ComMgr.IsNull(request.getParameter("jobProcess"), false);
-	sJobStatus = ComMgr.IsNull(request.getParameter("jobStatus"), "UPDATE");	
+	sJobStatus = ComMgr.IsNull(request.getParameter("jobStatus"), "SELECT");	
 	
 	sDate = ComMgr.IsNull(request.getParameter("date"), LocalDate.now().toString());
 	nGroupId = ComMgr.IsNull(request.getParameter("groupId"), -1);
@@ -156,6 +156,15 @@ if (bJobProcess == true)
 			ShareDiaryDTO.setContentId(nContentId);			
 			ShareDiaryDTO.setSdcontent(sSDContent);
 		break;
+		
+		case "DELETE":
+			ShareDiaryDTO.setJobStatus(sJobStatus);
+			ShareDiaryDTO.setDate(sDate);
+			ShareDiaryDTO.setGroupId(nGroupId);
+			ShareDiaryDTO.setUserId(nDiaryUserId);
+			ShareDiaryDTO.setContentId(nContentId);
+			
+			break;		
 	}
 }	
 %>
@@ -172,7 +181,7 @@ if (bJobProcess == true)
 	}
 %>
 <body>
-	<form name="form1" action="ChangeSDModal.jsp?jobProcess=true&jobStatus=UPDATE" method="post">
+	<form name="form2" action="ChangeSDModal.jsp?jobProcess=true&jobStatus=UPDATE" method="post">
 	<input type="hidden" name="date" value="<%=sDate %>">
 	<input type="hidden" name="groupId" value="<%=nGroupId %>">
 	<input type="hidden" name="diaryUserId" value="<%=nDiaryUserId %>">
@@ -219,6 +228,61 @@ if (bJobProcess == true)
 		// -----------------------------------------------------------------
 		// -----------------------------------------------------------------
 	</script>
-</form>
+	<%------------------------------------------------------------------
+	[JSP 페이지에서 바로 이동(바이패스)]
+	----------------------------------------------------------------------%>
+	<%------------------------------------------------------------------
+	바이패스 방법1	: JSP forward 액션을 사용 한 페이지 이동
+				:-------------------------------------------------------
+				: page	- 이동 할 새로운 페이지 주소
+				: name	- page 쪽에 전달 할 파라미터 명칭
+				: value	- page 쪽에 전달 할 파라미터 데이터
+				:		- page 쪽에서 request.getParameter("name1")로 읽음
+				:-------------------------------------------------------
+				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
+				: 브라우저 Url 주소는 현재 페이지로 유지 됨
+	--------------------------------------------------------------------
+	<jsp:forward page="Hello.jsp">
+		<jsp:param name="name1" value='value1'/>
+		<jsp:param name="name2" value='value2'/>
+	</jsp:forward>
+	--%>
+	<%
+		// -----------------------------------------------------------------
+		//	바이패스 방법2	: RequestDispatcher을 사용 한 페이지 이동
+		//				:---------------------------------------------------
+		//				: sUrl	- 이동 할 새로운 페이지 주소
+		//				:		- sUrl 페이지 주소에 GET 파라미터 전달 가능
+		//				:		- sUrl 페이지가 갱신됨 즉,
+		//				:		- sUrl 페이지 주소에 GET 파라미터 유무에 상관없이
+		//				:		- sUrl 페이지 쪽에서 request.getParameter() 사용가능
+		//				:-------------------------------------------------------
+		//				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
+		//				: 브라우저 Url 주소는 현재 페이지로 유지 됨
+		// -----------------------------------------------------------------
+		// String sUrl = "Hello.jsp?name1=value1&name2=value2";
+		//
+		// RequestDispatcher dispatcher = request.getRequestDispatcher(sUrl);
+		// dispatcher.forward(request, response);
+		// -----------------------------------------------------------------
+		//	바이패스 방법3	: response.sendRedirect을 사용 한 페이지 이동
+		//				:---------------------------------------------------
+		//				: sUrl	- 이동 할 새로운 페이지 주소
+		//				:		- sUrl 페이지에 GET 파라미터만 전달 가능
+		//				:		- sUrl 페이지 갱신 없음 즉,
+		//				:		- sUrl 페이지 주소에 GET 파라미터 있는 경우만
+		//				:		- sUrl 페이지 쪽에서 request.getParameter() 사용가능
+		//				:-------------------------------------------------------
+		//				: 이 방법은 기다리지 않고 바로 이동하기 때문에 현재 화면이 표시되지 않음
+		//				: 브라우저의 Url 주소는 sUrl 페이지로 변경 됨
+		// -----------------------------------------------------------------
+		if (sJobStatus.equals("DELETE"))
+		{
+			String sUrl = "ChangeSDModal.jsp?jobProcess=true&jobStatus=DELETE";
+		
+			response.sendRedirect(sUrl);
+		}
+		// -----------------------------------------------------------------
+	%></form>
 </body>
 </html>
