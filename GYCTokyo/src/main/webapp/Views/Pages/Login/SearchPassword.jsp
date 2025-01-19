@@ -132,7 +132,7 @@
 	<div class="container">
 		<div id="divModalParent" class="form-container">
 			<h1 class="signup-title">SEARCH PASSWORD</h1>
-			<form action="SearchEmailResult.jsp" method="post">
+			<form action="SearchPasswordResult.jsp" method="post">
 				<table class="form-table">
 					
 					<tr>
