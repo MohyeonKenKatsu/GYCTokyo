@@ -151,9 +151,9 @@
         				<td>
         					<select class="GroupPicker" id="groupPicker" name="GroupPicker">
         						<option value="default" disabled selected>초대할 그룹을 선택하세요.</option>
-        						<option value="option1">사랑비 내리는 켄카츠</option>
-        						<option value="option2">당고링고</option>
-        						<option value="option3">칵코모에</option>
+        						<option value="1">사랑비 내리는 켄카츠</option>
+        						<option value="2">당고링고</option>
+        						<option value="3">칵코모에</option>
         					</select>
         				</td>
         			</tr>
