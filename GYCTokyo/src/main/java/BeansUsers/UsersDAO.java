@@ -99,6 +99,7 @@ public class UsersDAO
 					if (this.DBMgr.Rs.next() == true) {
 						USER_ID_DATA[0] = this.DBMgr.Rs.getInt("USER_ID");
 						USER_ID_DATA[1] = this.DBMgr.Rs.getString("NICKNAME");
+						USER_ID_DATA[2] = this.DBMgr.Rs.getInt("COURSE");
 						bResult = true;
 					}
 					else {
