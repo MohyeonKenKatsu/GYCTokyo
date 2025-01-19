@@ -60,6 +60,40 @@
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
 		
+		function LengthLimit(id)
+		{
+			const len = document.getElementById(id).value.length;
+			let shortMessage = document.getElementById("short");
+	
+			if (len > 0 && len < 8)
+			{
+				shortMessage.style.display="block";
+			}
+			else 
+			{
+				shortMessage.style.display="none";
+			}
+		}
+		
+		
+		function SameCheck(id1, id2)
+		{
+			const val1 = document.getElementById(id1).value;
+			const val2 = document.getElementById(id2).value;
+			let shortMessage = document.getElementById("notsame");
+			var submitButton = document.getElementById('submitbtn');
+			
+			if (val1 == val2)
+			{
+				shortMessage.style.display="none";
+				submitButton.disabled = false;
+			}
+			else 
+			{
+				shortMessage.style.display="block";
+				submitButton.disabled = true;
+			}
+		}
 		// -----------------------------------------------------------------
 	</script>
 </head>
@@ -85,7 +119,9 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
+	String  sJobProcess		= null;		// 파라미터 : DB 접속 여부
 	String  sEMAIL			= null;		// 파라미터 : 이메일
+	String  sPASSWORD		= null;		// 파라미터 : 비밀번호
 	String 	sBIRTHDAY		= null;		// 파라미터 : 생일
 	String	sTEL	 		= null;		// 파라미터 : 전화번호
 	// ---------------------------------------------------------------------
@@ -95,12 +131,16 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	Boolean bNone = null;		// 검색 결과 없음
+	Boolean bNone = null;			// 검색 결과 없음
+	Boolean bSuccess = null;		// 비밀번호 수정 성공
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	sBIRTHDAY	= ComMgr.IsNull(request.getParameter("birthday"), "");			// 파라미터 : 이메일
-	sTEL		= ComMgr.IsNull(request.getParameter("tel"), "");				// 파라미터 : 이메일
+	sJobProcess	= ComMgr.IsNull(request.getParameter("jobprocess"), "");	// 파라미터 : DB 접속 여부
+	sEMAIL		= ComMgr.IsNull(request.getParameter("email"), "");			// 파라미터 : 이메일
+	sPASSWORD	= ComMgr.IsNull(request.getParameter("password"), "");		// 파라미터 : 이메일
+	sBIRTHDAY	= ComMgr.IsNull(request.getParameter("birthday"), "");		// 파라미터 : 생일
+	sTEL		= ComMgr.IsNull(request.getParameter("tel"), "");			// 파라미터 : 전화번호 뒤 4자리
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -125,33 +165,84 @@
 						:---------------------------------------------------
 	주의사항				: HTML 태그의 name 속성 값은 소문자로 시작!
 						: HTML 태그에서 데이터 입력 없는 경우 null 입력 됨!
-	--------------------------------------------------------------------------%>	
-	<jsp:setProperty name="UsersDTO" property="*"/>
+	------------------------------------------------------------------------
+	<jsp:setProperty name="SawonDTO" property="*"/>
+	--%>
+	<%----------------------------------------------------------------------
+	Beans 속성 지정 방법2	: Beans Property에 HTML 태그 name 사용
+						:---------------------------------------------------
+						: name		- <jsp:useBean>의 id
+						: property	- HTML 태그 입력양식 객체 name
+						:---------------------------------------------------
+	주의사항				: HTML 태그의 name 속성 값은 소문자로 시작!
+						: HTML 태그에서 데이터 입력 없는 경우 null 입력 됨!
+						: Property를 각각 지정 해야 함!
+	------------------------------------------------------------------------
+	<jsp:setProperty name="HelloDTO" property="data1"/>
+	<jsp:setProperty name="HelloDTO" property="data2"/>
+	--%>
+	<%----------------------------------------------------------------------
+	Beans 속성 지정 방법3	: Beans 메서드 직접 호출
+						:---------------------------------------------------
+						: Beans 메서드를 각각 직접 호출 해야함!
+	--------------------------------------------------------------------------%>
+	<%
+		UsersDTO.setEmail(sEMAIL);
+		UsersDTO.setPassword(sPASSWORD);
+		UsersDTO.setBirthday(sBIRTHDAY);
+		UsersDTO.setTel(sTEL);
+	%>
+	
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	// 입력받은 값을 DTO에 저장
-	usersDTO = new UsersDTO();
-	
-	usersDTO.setBirthday(sBIRTHDAY);
-	usersDTO.setTel(sTEL);
-	
-	// 회원가입에 성공했을 경우
-	if (this.usersDAO.SearchEmail(usersDTO) == true)
+	// DB 저장 중일 때
+	if (sJobProcess.equals("true") == true)
 	{
-		bNone = false;
+		if (this.usersDAO.ResetPassword(UsersDTO) == true)
+		{
+			bSuccess = true;
+		}
+		else bSuccess = false;
 	}
-	else bNone = true;
+	else
+	{
+		// DB 저장 중이 아니고, 사용자 검색 중일 때
+		if (this.usersDAO.SearchPassword(UsersDTO) == true)
+		{
+			bNone = false;
+		}
+		else bNone = true;
+	}
 %>
 
 <script type="text/javascript">
-	// 회원가입에 성공했을 경우
-	if (<%= bNone %> == true)
+
+	// 비밀번호 수정에 성공했을 경우
+	if (<%= bSuccess %> == true)
 	{
-		DocumentInit("검색 결과가 없습니다.");
+		// DocumentInit("비밀번호 수정에 성공했습니다.");
+		alert("비밀번호 수정에 성공했습니다.");
 		location.href="Login.jsp";
 	}
+	
+	// 비밀번호 수정에 실패했을 경우
+	if (<%= bSuccess %> == false)
+	{
+		// DocumentInit("비밀번호 수정에 실패했습니다.");
+		alert("비밀번호 수정에 실패했습니다.");
+		location.href="SearchPassword.jsp";
+	}
+	
+	// 비밀번호 수정에 성공했을 경우
+	if (<%= bNone %> == true)
+	{
+		// DocumentInit("검색 결과가 없습니다.");
+		alert("검색 결과가 없습니다.");
+		location.href="SearchPassword.jsp";
+	}
+
 </script>
 
 <body>
@@ -160,29 +251,42 @@
 			<h1 class="signup-title">RESET PASSWORD</h1>
 			<form action="" method="post">
 				<table class="form-table">
-				
 					<tr>
 						<td><label for="password">비밀번호</label></td>
-						<td><input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" maxlength="12" required></td>
+						<td class="inputform"><input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" maxlength="12"
+						oninput="LengthLimit('password')"
+						required></td>
+					</tr>
+					
+					<tr>
+						<td></td>
+						<td class="inputform"><p class="pwtext" id="short" style="display:none;">&nbsp;&nbsp;&nbsp;비밀번호의 길이는 8글자 이상 12글자 미만이어야 합니다.</p></td>
 					</tr>
 					
 					<tr>
 						<td><label for="confirmpassword">비밀번호 확인</label></td>
-						<td><input type="password" id="confirmpassword" name="confirmpassword" placeholder="비밀번호를 한 번 더 입력하세요." maxlength="12" required></td>
+						<td class="inputform"><input type="password" id="confirmpassword" name="confirmpassword" placeholder="비밀번호를 한 번 더 입력하세요." maxlength="12"
+						oninput="SameCheck('password', 'confirmpassword')"
+						required></td>
+					</tr>
+					
+					<tr>
+						<td></td>
+						<td class="inputform"><p class="pwtext" id="notsame" style="display:none;">&nbsp;&nbsp;&nbsp;비밀번호가 다릅니다.</p></td>
 					</tr>
 					
 				</table>
 
 				<!-- DB 접속 제어 변수 -->
 	    	   	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
+	    	   	<input type="hidden" id="email" name="email" value="<%= UsersDTO.getEmail() %>">
 	    	   	
 				<div class = button-container>
 					<button type="reset" class="reset-btn" onclick="window.location.href='Login.jsp'">취소</button>
-					<button type="submit" class="signup-btn">등록</button>
+					<button type="submit" id="submitbtn" class="signup-btn">등록</button>
 				</div>
 			</form>
 		</div>
-		
 	</div>
 	
 	<%------------------------------------------------------------------
