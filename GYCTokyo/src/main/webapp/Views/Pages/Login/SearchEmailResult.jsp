@@ -95,6 +95,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
+	String stempEmail = null;	// 이메일 결과 저장용 임시 변수
 	Boolean bNone = null;		// 검색 결과 없음
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
@@ -149,7 +150,8 @@
 	// 회원가입에 성공했을 경우
 	if (<%= bNone %> == true)
 	{
-		DocumentInit("검색 결과가 없습니다.");
+		//DocumentInit("검색 결과가 없습니다.");
+		alert("검색 결과가 없습니다.");
 		location.href="Login.jsp";
 	}
 </script>
@@ -164,13 +166,14 @@
 					<%
 					while (this.usersDAO.DBMgr.Rs.next() == true)
 					{
+						stempEmail = this.usersDAO.DBMgr.Rs.getString("EMAIL");
 					%>
-							<tr>
-								<td></td>
-								<td><a href=""><%= this.usersDAO.DBMgr.Rs.getString("EMAIL") %></a></td>
-								<td></td>
-							</tr>
-					<%
+						<tr>
+							<td></td>
+							<td><a href="Login.jsp?email=<%= stempEmail %>"><%= this.usersDAO.DBMgr.Rs.getString("EMAIL") %></a></td>
+							<td></td>
+						</tr>
+					<%	
 					}
 					%>
 					

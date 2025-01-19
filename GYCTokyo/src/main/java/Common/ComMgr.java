@@ -538,6 +538,29 @@ public class ComMgr
 	 * IsNull()				: null 확인
 	 * @param CheckValue	: 확인 할 값
 	 * @param DefaultValue	: null인 경우 반환 할 기본값
+	 * @return Integer		: null이 아닌 정수값 반환
+	 ***********************************************************************/
+	public static String IsNull(Object CheckValue, String DefaultValue)
+	{
+		String nResult = null;
+		
+	    try
+	    {
+	    	nResult = (CheckValue != null) ? (String)CheckValue : DefaultValue;
+	    	
+	    	nResult = (nResult.toString().trim().length() > 0) ? nResult : DefaultValue;
+	    }
+	    catch (Exception Ex)
+	    {
+	    	nResult = DefaultValue;
+	    }
+	    
+	    return nResult;
+	}
+	/***********************************************************************
+	 * IsNull()				: null 확인
+	 * @param CheckValue	: 확인 할 값
+	 * @param DefaultValue	: null인 경우 반환 할 기본값
 	 * @return String		: null이 아닌 문자열 반환
 	 ***********************************************************************/
 	public static String IsNull(String CheckValue, String DefaultValue)

@@ -83,22 +83,48 @@
 			const val1 = document.getElementById(id1).value;
 			const val2 = document.getElementById(id2).value;
 			let shortMessage = document.getElementById("notsame");
-	
+			var submitButton = document.getElementById('submitbtn');
+			
 			if (val1 == val2)
 			{
 				shortMessage.style.display="none";
+				submitButton.disabled = false;
 			}
 			else 
 			{
 				shortMessage.style.display="block";
+				submitButton.disabled = true;
 			}
 		}
 		
 		
-		function DuplicateCheck(obj)
+		function changeProcess(objname, DupNickname)
 		{
-			const inputContent = document.getElementById(obj).value;
-			window.location.href='DupCheck.jsp?obj=' + obj + '&content=' + inputContent;
+			const objContent = document.getElementById(objname);
+			
+			// 닉네임 중복확인일 때
+			if (objContent != null)
+			{
+				// 빈 칸일 때는 alert만 내보내고 submit하지 않음
+				if (objContent.value == '')
+				{
+					alert('닉네임을 입력해주세요.');
+					
+					objContent.focus();
+				}
+				// 값이 있으면 submit
+				else
+				{
+					document.getElementById('jobprocess').value = objname;
+					document.form1.submit();
+				}
+			}
+			// 저장일 때
+			else
+			{
+				if (DupNickname) document.getElementById('jobprocess').value = objname;
+				else alert('닉네임 중복 확인을 진행해주세요.');
+			}
 		}
 		// -----------------------------------------------------------------
 	</script>
@@ -112,6 +138,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
+	public Boolean DupNickname = false;
 	// 사원정보 검색용 DAO 객체
 	public UsersDAO usersDAO = new UsersDAO();
 	// ---------------------------------------------------------------------
@@ -137,14 +164,15 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	Boolean bJobProcess 	= null;				// 파라미터 : 수정 버튼을 눌렀을 때
+	String 	sJobProcess 	= null;				// 파라미터 : 수정 버튼을 눌렀을 때
 	Boolean bEditSuccess	= null;				// 파라미터 : 회원정보 수정에 성공했을 때
+	String 	sDupNickname		= null; 			// 파라미터 : 닉네임이 중복될 때
 	HashMap<Integer, String> courseMap = null;	// 교육과정 동적 생성용 Hash Map
-	String sSelectedCourse	= null;				// 파라미터 : 기존 교육과정 선택용 변수
+	String 	sSelectedCourse	= null;				// 파라미터 : 기존 교육과정 선택용 변수
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	bJobProcess	= ComMgr.IsNull(request.getParameter("jobprocess"), false);		// 파라미터 : 작업처리 : null 확인(false : 아무동작 없음)
+	sJobProcess	= ComMgr.IsNull(request.getParameter("jobprocess"), "read");	// 파라미터 : 작업처리 : null 확인(false : 아무동작 없음)
 	sPASSWORD	= ComMgr.IsNull(request.getParameter("password"), "");			// 파라미터 : 이메일
 	sNICKNAME	= ComMgr.IsNull(request.getParameter("nickname"), "");			// 파라미터 : 이메일
 	iCOURSE		= ComMgr.IsNull(request.getParameter("course"), 0);				// 파라미터 : 이메일
@@ -182,38 +210,63 @@
 <%
 	usersDTO = new UsersDTO();
 	
-	if (bJobProcess == false)
+	switch (sJobProcess)
 	{
-		if (this.usersDAO.ReadMyPageData(iUSERID, usersDTO) == true)
-		{
-			sNICKNAME = usersDTO.getNickname();
-			iCOURSE = usersDTO.getCourse();
-			sTEL = usersDTO.getTel();
-			sPASSWORD = usersDTO.getPassword();
-		}
-	}
-	
-	if (bJobProcess == true)
-	{
-		usersDTO.setUser_id(iUSERID);
-		usersDTO.setNickname(sNICKNAME);
-		usersDTO.setPassword(sPASSWORD);
-		usersDTO.setCourse(iCOURSE);
-		usersDTO.setTel(sTEL);
+		case("read"):
+			if (this.usersDAO.ReadMyPageData(iUSERID, usersDTO) == true)
+			{
+				sNICKNAME = usersDTO.getNickname();
+				iCOURSE = usersDTO.getCourse();
+				sTEL = usersDTO.getTel();
+				sPASSWORD = usersDTO.getPassword();
+			}
+			break;
 		
-		if (this.usersDAO.EditUserData(usersDTO))
-		{
-			bEditSuccess = true;
-		}
-		else bEditSuccess = false;
+		case ("save"):
+			usersDTO.setUser_id(iUSERID);
+			usersDTO.setNickname(sNICKNAME);
+			usersDTO.setPassword(sPASSWORD);
+			usersDTO.setCourse(iCOURSE);
+			usersDTO.setTel(sTEL);
+			
+			if (this.usersDAO.EditUserData(usersDTO))
+			{
+				bEditSuccess = true;
+			}
+			else bEditSuccess = false;
+			break;
+			
+		case("nickname"):
+			usersDTO.setNickname(sNICKNAME);
+			
+			if (this.usersDAO.DuplicateNickname(UsersDTO) == true)
+			{
+				// 닉네임 검색결과가 있는지 확인
+				if (this.usersDAO.DBMgr.Rs.next())
+				{
+					if (this.usersDAO.DBMgr.Rs.getInt("NICKNAME") > 0)	{ sDupNickname = "사용 중인 닉네임입니다.";		this.DupNickname = false;  }
+					else												{ sDupNickname = "사용할 수 있는 닉네임입니다.";	this.DupNickname = true; }
+				}
+			}
+			
+			break;
 	}
 %>
+
+<script type="text/javascript">
+	//중복된 닉네임이 존재할 경우
+	if (<%= sDupNickname != null %>)
+	{
+		// console.log("<1%=sDupNickname %>");
+		alert('<%=sDupNickname %>');
+	}
+</script>
 
 <body>
 	<div class="container">
 		<div class="form-container">
 			<h1 class="signup-title">My Page</h1>
-			<form action="" method="post">
+			<form name="form1" action="" method="post">
 				<table class="form-table">
 				
 					<tr>
@@ -244,7 +297,7 @@
 					<tr>
 						<td><label for="nickname">닉네임</label></td>
 						<td><input type="text" id="nickname" name="nickname" placeholder="닉네임을 입력하세요." maxlength="8" value="<%= sNICKNAME %>" required></td>
-						<td><button type="button" id="checkNickName" class="check-btn" onclick="DuplicateCheck('nickname')">중복확인</button></td> 
+						<td><button type="button" id="checkNickName" class="check-btn" onclick="changeProcess('nickname')">중복확인</button></td> 
 					</tr>
 					
 					<tr>
@@ -277,8 +330,10 @@
 	    	   	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
 	    	   	
 				<div class = button-container>
+					<button type="button" class="reset-btn" onclick="gotologin()">로그아웃</button>
+				
 					<button type="reset" class="reset-btn" onclick="history.back()">취소</button>
-					<button type="submit" class="signup-btn">등록</button>
+					<button type="submit" id="submitbtn" class="signup-btn" onclick="changeProcess('save', <%=this.DupNickname %>)">수정</button>
 				</div>
 				
 			</form>
@@ -291,6 +346,8 @@
 	if (<%= bEditSuccess %> == true)
 	{
 		DocumentInit("개인정보 수정에 성공했습니다.");
+        <% session.setAttribute("NICKNAME", sNICKNAME); %>
+        <% session.setAttribute("COURSE", iCOURSE); %>
 		location.href="<%= request.getContextPath() %>/Views/Pages/Calendar/index.jsp";
 	}
 	// 회원정보 수정에 실패했을 경우
@@ -299,6 +356,17 @@
 		DocumentInit("개인정보 수정 시도 중 오류가 발생했습니다.");
 		location.href="history.back()";
 	}
+	
+	function gotologin()
+	{
+		   if (!confirm("정말로 로그아웃하시겠습니까?")) {
+		        // 취소(아니오) 버튼 클릭 시 이벤트
+		    } else {
+		        // 확인(예) 버튼 클릭 시 이벤트
+				location.href="<%= request.getContextPath() %>/Views/Pages/Login/Login.jsp";
+		    }
+	}
+
 </script>
 
 </html>
