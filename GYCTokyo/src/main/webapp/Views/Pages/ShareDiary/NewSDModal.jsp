@@ -146,21 +146,20 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	// JobStatus 작업처리 허용인 경우 INSERT 처리를 위한 파라미터 값을 DTO에 넣기
-	if (bJobProcess == true)
+if (bJobProcess == true)
+{
+	switch (sJobStatus)
 	{
-		switch (sJobStatus)
-		{
-			case "INSERT":
-				ShareDiaryDTO.setJobStatus(sJobStatus);
-				ShareDiaryDTO.setDate(sDate);
-				ShareDiaryDTO.setGroupId(nGroupId);
-				ShareDiaryDTO.setUserId(nDiaryUserId);
-				ShareDiaryDTO.setSdcontent(sSDContent);
-				
-			break;
-		}
-	}	
+		case "INSERT":
+			ShareDiaryDTO.setJobStatus(sJobStatus);
+			ShareDiaryDTO.setDate(sDate);
+			ShareDiaryDTO.setGroupId(nGroupId);
+			ShareDiaryDTO.setUserId(nDiaryUserId);
+			ShareDiaryDTO.setSdcontent(sSDContent);
+			
+		break;
+	}
+}		
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]

@@ -1,3 +1,6 @@
+<%@page import="BeansShareDiary.ShareDiaryDTO"%>
+<%@page import="Common.ComMgr"%>
+<%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
@@ -50,7 +53,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	
+	public ShareDiaryDAO shareDiaryDAO = new ShareDiaryDAO();
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -62,19 +65,29 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-
+	Boolean bJobProcess	 = null;
+	Integer nUserId 	 = null;
+	String sPickGroupId	 = null;
+	String sEmail		 = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
-	
+	String sGroupname	= null;
+	Integer nGroupId 	= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	Boolean bContinue	= true;	// 공유일기 그룹 목록 검색 유무	
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
+	bJobProcess = ComMgr.IsNull(request.getParameter("jobProcess"), false);
+	nGroupId= ComMgr.IsNull(request.getParameter("grouppicker"), -1);
+	sEmail = ComMgr.IsNull(request.getParameter("inviteemail"), "No Email");
 	
+	session.setAttribute("USER_ID", 1);
+	
+	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), -1);
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -88,9 +101,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	------------------------------------------------------------------------
-	<jsp:useBean id="HelloDTO" class="Hello.HelloDTO" scope="request"></jsp:useBean>
-	--%>
+	--------------------------------------------------------------------------%>
+	<jsp:useBean id="ShareDiaryDTO" class="BeansShareDiary.ShareDiaryDTO" scope="request"></jsp:useBean>
+	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -121,18 +134,48 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	// HelloDTO.setData1(request.getParameter("data1"));
+if (bContinue == true)
+{
+	ShareDiaryDTO.setUserId(nUserId);
+}
+
+//JobProcess가 true인 경우 INSERT/UPDATE 처리를 위한 파라미터 값을 DTO에 넣기
+if (bJobProcess == true)
+{
+	ShareDiaryDTO.setGroupId(nGroupId);
+	ShareDiaryDTO.setEmail(sEmail);
+}		
+
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
+//공유일기 그룹 목록 검색
+if (bContinue == true)
+{
+	if (this.shareDiaryDAO.ReadMyGroupList(ShareDiaryDTO) == true)
+	{
+		if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
+		{
+			bContinue = true;
+		}
+	}
+}
 
+if(bJobProcess == true)
+{
+	if (this.shareDiaryDAO.InviteShareDiaryGroup(ShareDiaryDTO) == true)
+	{
+		bContinue = true;
+	}
+}
+	
 %>
 <body>
+	<form name="form1" action="InviteGroupMemberModal.jsp?jobProcess=true" method="post">
 	<!-- 모달 배경 -->
 	<div class="InviteGroupModal" id="inviteGroupModal">
-	
 		<!-- 모달 창 -->
 		<div class="ModalContent">
 		
@@ -149,11 +192,21 @@
         			</tr>
         			<tr>
         				<td>
-        					<select class="GroupPicker" id="groupPicker" name="GroupPicker">
+        					<select class="GroupPicker" id="groupPicker" name="grouppicker">
         						<option value="default" disabled selected>초대할 그룹을 선택하세요.</option>
-        						<option value="1">사랑비 내리는 켄카츠</option>
-        						<option value="2">당고링고</option>
-        						<option value="3">칵코모에</option>
+					 			<%
+								if(bContinue == true)
+								{
+									while (this.shareDiaryDAO.DBMgr.Rs.next() == true)
+									{
+										nGroupId	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getInt("GROUP_ID"), -1);
+										sGroupname	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("GROUPNAME"), "No Group Name");
+								%>
+        							<option value="<%=nGroupId %>"><%=sGroupname %></option>
+								<%
+									}
+								}
+								%>
         					</select>
         				</td>
         			</tr>
@@ -164,19 +217,20 @@
         			</tr>
         			<tr>
         				<td>
-        					<textarea class="InputEmail" maxlength="15" placeholder="ex: kenkatsu@gyc.com"></textarea>
+        					<textarea class="InputEmail" name="inviteemail" placeholder="ex: kenkatsu@gyc.com"></textarea>
         				</td>
         			</tr>
         		</table>
         	</div>
         	
 			<div class="InviteGMModalTail">
-				<button class="InviteGroupCancel">취소</button>
-				<button class="InviteGroupButton">초대</button>
+				<button type="button" class="InviteGroupCancel">취소</button>
+				<button type="submit" class="InviteGroupButton">초대</button>
 			</div>
         
 		</div>
 	</div>
+	</form>	
     <%----------------------------------------------------------------------
 	[HTML Page - END]
 	--------------------------------------------------------------------------%>
