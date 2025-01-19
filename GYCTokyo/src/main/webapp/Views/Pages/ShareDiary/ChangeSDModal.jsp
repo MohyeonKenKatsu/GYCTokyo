@@ -103,7 +103,7 @@
 	// ---------------------------------------------------------------------
 	session.setAttribute("NICKNAME", "태우");
 	
-	sNickname = ComMgr.IsNull(session.getAttribute("NICKNAME"), "태우");
+	sNickname = ComMgr.IsNull(session.getAttribute("NICKNAME"), "No Name");
 
 	// ---------------------------------------------------------------------
 %>
