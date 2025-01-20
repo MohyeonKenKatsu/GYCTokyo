@@ -181,13 +181,13 @@
       		</div>
       		
         	<div class="ModalBody">
-				<textarea class="ViewDiary" readonly><%=ShareDiaryDTO.getSdcontent() %></textarea>
+				<textarea class="ViewDiary" readonly><%=ShareDiaryDTO.getSdcontent().replace("<br>", "\r\n") %></textarea>
         	</div>
         	
 			<div class="ModalTail">
 				<button class="ViewDiaryCancel">취소</button>
 				<%
-					if (nUserId == nDiaryUserId)
+					if (nUserId-nDiaryUserId==0)
 					{
 				%>
 					<button class="ViewDiaryChange" type="button" onclick="parent.openModal('ChangeSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nDiaryUserId %>, <%=nContentId %>, '<%=ShareDiaryDTO.getSdcontent() %>')">수정</button>

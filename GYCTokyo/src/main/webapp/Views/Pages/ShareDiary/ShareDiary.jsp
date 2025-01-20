@@ -52,6 +52,7 @@
 				}
 				else if(modalType === 'ChangeSDModal')
 				{
+					//sdContent = sdContent.replaceAll('<br>', '\r\n')+'^^';
 					ifModalWindow.src = 'ChangeSDModal.jsp?date=' + date + '&groupId=' + groupId + '&diaryUserId=' + diaryUserId + '&contentId=' + contentId + '&sdContent=' + sdContent;
 				}
 				else if(modalType === 'GroupMemberListModal')
@@ -225,6 +226,8 @@
 					sNickname	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("NICKNAME"), "No Name");
 					nContentId	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("CONTENT_ID"), -1);
 					sSDContent	= ComMgr.IsNull(this.shareDiaryDAO.DBMgr.Rs.getString("SD_CONTENT"), "No Content");
+					
+					sSDContent = sSDContent.replace("<br>", "&nbsp;").replace("\n", "&nbsp;");
 			%>
 				<div class="DiaryPreview" id="diaryPreview" onclick="openModal('ViewSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nDiaryUserId %>, <%=nContentId %>)">
 					<h3 class="DiaryWriter"><%=sNickname %></h3>
