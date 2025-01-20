@@ -265,7 +265,7 @@
 <body>
 	<div class="container">
 		<div class="form-container">
-			<h1 class="signup-title">My Page</h1>
+			<h1 class="signup-title">MY PAGE</h1>
 			<form name="form1" action="" method="post">
 				<table class="form-table">
 				
@@ -342,19 +342,22 @@
 </body>
 
 <script type="text/javascript">
-	// 회원정보 수정에 성공했을 경우
-	if (<%= bEditSuccess %> == true)
+	if (<%= bEditSuccess != null %>)
 	{
-		DocumentInit("개인정보 수정에 성공했습니다.");
-        <% session.setAttribute("NICKNAME", sNICKNAME); %>
-        <% session.setAttribute("COURSE", iCOURSE); %>
-		location.href="<%= request.getContextPath() %>/Views/Pages/Calendar/index.jsp";
-	}
-	// 회원정보 수정에 실패했을 경우
-	if (<%= bEditSuccess %> == false)
-	{
-		DocumentInit("개인정보 수정 시도 중 오류가 발생했습니다.");
-		location.href="history.back()";
+		// 회원정보 수정에 성공했을 경우
+		if (<%= bEditSuccess %> == true)
+		{
+			DocumentInit("개인정보 수정에 성공했습니다.");
+	        <% session.setAttribute("NICKNAME", sNICKNAME); %>
+	        <% session.setAttribute("COURSE", iCOURSE); %>
+			location.href="<%= request.getContextPath() %>/Views/Pages/Calendar/index.jsp";
+		}
+		// 회원정보 수정에 실패했을 경우
+		if (<%= bEditSuccess %> == false)
+		{
+			DocumentInit("개인정보 수정 시도 중 오류가 발생했습니다.");
+			location.href="history.back()";
+		}
 	}
 	
 	function gotologin()

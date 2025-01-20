@@ -195,13 +195,35 @@
                 </div>
             </div>
 
-            <div class="add-entry">
-                <button class="add-button" id="openModalButton">
-                    <span class="plus-icon">+</span>
-                </button>
-            </div>
-        </section>
-    </div>
+           <div class="add-entry"></div>
+		    <button class="add-button" id="openModalButton">
+		        <span class="plus-icon">+</span>
+		    </button>
+		
+		<!-- 일기 카드 리스트 -->
+
+			<%@ page import="BeansPrivateDiary.PrivateDiaryDTO" %>
+			<%@ page import="BeansPrivateDiary.PrivateDiaryDAO" %>
+			<%@ page import="java.util.List" %>
+			
+			<%
+			    PrivateDiaryDAO diaryDAO = new PrivateDiaryDAO();
+			    List<PrivateDiaryDTO> diaryList = diaryDAO.getAllPrivateDiaries();
+			%>
+			
+			<div class="diary-entries">
+		    <h2>모든 마음일기</h2>
+		    <% for (PrivateDiaryDTO diary : diaryList) { %>
+		        <div class="diary-entry" >
+		            <!-- 날짜만 표시 -->
+		            <h3><%= diary.getPd_date().split(" ")[0] %></h3>
+		            <p><strong>날씨:</strong> <%= diary.getEmoji() %></p>
+		            <p><strong>내용:</strong> <%= diary.getPd_content() %></p>
+		        </div>
+		    <% } %>
+			</div>
+
+    	
 
     <!-- 모달창 -->
     <form action="PrivateDiary.jsp?JobProcess=true" method="post">
@@ -217,7 +239,7 @@
 	            <div class="cloud-icon" data-weather="흐림">☁️</div>
 	            <div class="snow-icon" data-weather="눈">❄️</div><br>
 	            <span class="selected-weather-icon" id="selectedWeatherIcon">선택없음</span>
-	            <input type="text" id="weather" name="weather">
+	            <input type="hidden" id="weather" name="weather">
 	        </div>
 	        <div class="modal-body">
 	            <textarea id="content" name="content" placeholder="오늘 하루는 어땠나요? 마음일기를 자유롭게 작성해주세요."></textarea>
@@ -317,23 +339,22 @@
             icon.style.color = '#007bff'; // 선택된 아이콘 강조
         });
     });
+    
+	// 일기 조회 페이지로 이동 
+    const viewDiaryButton = document.getElementById('PrivateDiaryButton');
 
- /*  // 저장 버튼 클릭 시 성공 알림창 표시
-    const saveButton = document.querySelector('.save-button');
-    saveButton.addEventListener('click', () => {
-        // 일기 저장 로직 (백엔드 API 호출 등)을 여기 추가 가능
-        // 예: await saveDiaryToBackend();
+    viewDiaryButton.addEventListener('click', () => {
+        
+        window.location.href = '/GYCTokyo/Views/Pages/PrivateDiary/ViewPrivateDiary.jsp';
+    });
+    
+ 	// 20자 이상인 내용은 '...'으로 처리
+    document.querySelectorAll('.diary-content').forEach((content) => {
+        const text = content.textContent.trim();
+        if (text.length > 20) {
+            content.textContent = text.slice(0, 20) + '...'; // 20자 이후는 '...' 추가
+        }
+    });
 
-        modal.style.display = 'none'; // 작성 모달 닫기
-
-        // 성공 알림창 모달 표시
-        successModal.style.display = 'block';
-
-        // 성공 알림창 닫기 버튼
-        closeSuccessModalButton.addEventListener('click', () => {
-            successModal.style.display = 'none';
-        });
-    });*/
+	 
 </script>
-
-
