@@ -190,9 +190,9 @@
         <!-- 메인 콘텐츠 -->
         <section class="diary-content">
             <div class="diary-header">
-                <h2 class="diary-title">마음일기</h2>
+                <h1 class="diary-title">마음일기</h1>
                 <div class="date-display">
-                    <span id="currentDate"></span>
+                    오늘은 <span id="currentDate"></span> 입니다.
                 </div>
             </div>
 
