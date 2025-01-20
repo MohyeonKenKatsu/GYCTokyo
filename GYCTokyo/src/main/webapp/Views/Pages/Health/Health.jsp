@@ -183,7 +183,6 @@
             <div class="date-display">
                 <input type="date" id="textdate" name="textdate" value="<%=sHealthDate%>" onchange="document.form1.submit()">
                 <input type="hidden" id="textuserid" name="textuserid" value="<%=nUserId%>">
-                
             </div>
         </div>
         <div class="content-navigation">

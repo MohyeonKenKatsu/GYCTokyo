@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	const userId = document.getElementById('textuserid').value;
 
 	deleteButton.addEventListener('click', () => {
-	    if (confirm(`${textDate}의 기록을 삭제하시겠습니까?`)) {
+	    if (confirm(`[${textDate}]의 기록을 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다.`)) {
 	        fetch('DeleteHealthRecord.jsp', {
 	            method: 'POST',
 	            headers: {
