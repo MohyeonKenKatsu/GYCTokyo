@@ -35,6 +35,7 @@
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Sider/Sider.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/Gathering/Gathering.css">
 	<style type="text/css">
+
 		/* -----------------------------------------------------------------
 			HTML Page 스타일시트
 		   ----------------------------------------------------------------- */
@@ -275,6 +276,7 @@ if ("DELETE".equalsIgnoreCase(jobStatus)) {
             <!-- 소모임 -->
             <%@ include file="/Views/Pages/Gathering/Gathering.jsp" %>
 
+		</div>
         </main>
     </div>
 </body>

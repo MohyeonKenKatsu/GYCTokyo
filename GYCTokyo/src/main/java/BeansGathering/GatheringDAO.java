@@ -309,10 +309,12 @@ public class GatheringDAO
 	    String sSql = null;
 
 	    try {
+
 	        if (this.DBMgr.DbConnect() == true) {
 	            // 전체 소모임 정보 가져오는 SQL 작성
 	        	sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
 	        		       "FROM TB_GATHERING " +
+	 	                   "WHERE TO_DATE(FINISH_DATE, 'YYYY-MM-DD') >= TO_DATE(SYSDATE, 'YYYY-MM-DD') " + // Filter based on current date
 	        		       "ORDER BY GROUP_ID DESC";
 
 	            if (this.DBMgr.RunQuery(sSql, null, 0, true) == true) {
@@ -481,8 +483,42 @@ public class GatheringDAO
 
 	    return count;
 	}
-	
-	
+	/***********************************************************************
+	 * getFinishedGatherings() 	: 끝난 모임
+	 * @return list 				: 참가한 사용자 수
+	 ***********************************************************************/
+	public List<GatheringDTO> getFinishedGatherings() throws Exception {
+	    List<GatheringDTO> gatheringList = new ArrayList<>();
+	    String sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
+	                  "FROM TB_GATHERING " +
+	                  "WHERE FINISH_DATE < SYSDATE " + // Filter based on current date
+	                  "ORDER BY FINISH_DATE DESC";
+
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            if (this.DBMgr.RunQuery(sSql, null, 0, true)) {
+	                while (this.DBMgr.Rs.next()) {
+	                    GatheringDTO dto = new GatheringDTO();
+	                    dto.setGroup_id(this.DBMgr.Rs.getInt("GROUP_ID"));
+	                    dto.setUser_id(this.DBMgr.Rs.getInt("USER_ID"));
+	                    dto.setTitle(this.DBMgr.Rs.getString("TITLE"));
+	                    dto.setStart_date(this.DBMgr.Rs.getString("START_DATE"));
+	                    dto.setFinish_date(this.DBMgr.Rs.getString("FINISH_DATE"));
+	                    dto.setActivity_date(this.DBMgr.Rs.getString("ACTIVITY_DAY"));
+	                    dto.setNumber_limit(this.DBMgr.Rs.getInt("NUMBER_LIMIT"));
+	                    dto.setContent(this.DBMgr.Rs.getString("CONTENT"));
+	                    gatheringList.add(dto);
+	                }
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex);
+	    }
+
+	    return gatheringList;
+	}
+
 	
 	
 }
