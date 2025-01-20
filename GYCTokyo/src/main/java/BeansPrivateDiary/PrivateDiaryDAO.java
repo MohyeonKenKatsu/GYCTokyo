@@ -198,7 +198,7 @@ public class PrivateDiaryDAO
      * getAllPrivateDiaries : 모든 개인 다이어리 데이터 가져오기
      * @return List<PrivateDiaryDTO> : 개인 다이어리 목록
      ***********************************************************************/
-    public List<PrivateDiaryDTO> getAllPrivateDiaries() throws Exception {
+    public List<PrivateDiaryDTO> getAllPrivateDiaries(Integer user_id) throws Exception {
         List<PrivateDiaryDTO> diaryList = new ArrayList<>();
         String sSql = null;
 
@@ -207,6 +207,7 @@ public class PrivateDiaryDAO
                 // 개인 다이어리 데이터 가져오는 SQL 작성
                 sSql = "SELECT USER_ID, PD_DATE, PD_CONTENT, EMOJI " +
                        "FROM TB_PRIVATEDIARY " +
+                       "WHERE USER_ID = " + Integer.toString(user_id) +
                        "ORDER BY PD_DATE DESC";
 
                 if (this.DBMgr.RunQuery(sSql, null, 0, true) == true) {

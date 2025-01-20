@@ -1,3 +1,4 @@
+<%@page import="java.time.LocalDate"%>
 <%@page import="BeansPrivateDiary.PrivateDiaryDTO"%>
 <%@page import="BeansPrivateDiary.PrivateDiaryDAO"%>
 <%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
@@ -105,7 +106,7 @@
 	bJobProcess = ComMgr.IsNull(request.getParameter("JobProcess"), false); // 작업 진행 여부
 	
 	// 작업상태 파라미터 확인
-	user_id = ComMgr.IsNull(session.getAttribute("USER_ID"), 123); // 작성자 ID
+	user_id = ComMgr.IsNull(session.getAttribute("USER_ID"), -1); // 작성자 ID
     pd_date = ComMgr.IsNull(request.getParameter("today"), ""); // 개인 일기 날짜
     pd_content = ComMgr.IsNull(request.getParameter("content"), ""); // 일기 내용
     emoji = ComMgr.IsNull(request.getParameter("weather"), ""); // 이모지
@@ -208,7 +209,7 @@
 			
 			<%
 			    PrivateDiaryDAO diaryDAO = new PrivateDiaryDAO();
-			    List<PrivateDiaryDTO> diaryList = diaryDAO.getAllPrivateDiaries();
+			    List<PrivateDiaryDTO> diaryList = diaryDAO.getAllPrivateDiaries(user_id);
 			%>
 			
 			<div class="diary-entries">
@@ -216,6 +217,7 @@
 		    <% for (PrivateDiaryDTO diary : diaryList) { %>
 		        <div class="diary-entry" >
 		            <!-- 날짜만 표시 -->
+		            <input type="hidden" <%=diary.getUser_id()%>>
 		            <h3><%= diary.getPd_date().split(" ")[0] %></h3>
 		            <p><strong>날씨:</strong> <%= diary.getEmoji() %></p>
 		            <p><strong>내용:</strong> <%= diary.getPd_content() %></p>
