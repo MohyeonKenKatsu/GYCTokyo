@@ -101,7 +101,7 @@
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	session.setAttribute("NICKNAME", "태우");
+	//session.setAttribute("NICKNAME", "태우");
 	
 	sNickname = ComMgr.IsNull(session.getAttribute("NICKNAME"), "No Name");
 

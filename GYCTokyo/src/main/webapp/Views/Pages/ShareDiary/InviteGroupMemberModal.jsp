@@ -85,7 +85,7 @@
 	nGroupId= ComMgr.IsNull(request.getParameter("grouppicker"), -1);
 	sEmail = ComMgr.IsNull(request.getParameter("inviteemail"), "No Email");
 	
-	session.setAttribute("USER_ID", 1);
+	//session.setAttribute("USER_ID", 1);
 	
 	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), -1);
 	// ---------------------------------------------------------------------

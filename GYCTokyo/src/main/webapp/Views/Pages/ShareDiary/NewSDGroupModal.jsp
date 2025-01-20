@@ -67,7 +67,7 @@
 	// ---------------------------------------------------------------------
 	sGroupName	= ComMgr.IsNull(request.getParameter("inputgroupname"), "");
 	
-	session.setAttribute("USER_ID", 1);
+	//session.setAttribute("USER_ID", 1);
 	
 	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), -1);
 	// ---------------------------------------------------------------------
