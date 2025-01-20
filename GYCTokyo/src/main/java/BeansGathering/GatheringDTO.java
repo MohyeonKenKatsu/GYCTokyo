@@ -48,6 +48,9 @@ public class GatheringDTO {
 	private Integer number_limit = 0;
 	/** content				: Beans 모임만들기 모달창 상세내용 (JSP 입력 객체와 1:1 대응, 소문자로 시작)*/
 	private String content = null;
+	/** nickname				: Beans 사용자 닉네임 (JSP 입력 객체와 1:1 대응, 소문자로 시작)*/
+	private String nickname = null;
+
 	// —————————————————————————————————————————————————————————————————————————————————————
     // 생성자 관리 - 필수영역(인스턴스함수)
 	// —————————————————————————————————————————————————————————————————————————————————————
@@ -132,6 +135,13 @@ public class GatheringDTO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 	// —————————————————————————————————————————————————————————————————————————————————————
 }

@@ -18,7 +18,16 @@
         <div class="main-content">
             <header>
                 <h1 class="title">소모임</h1>
-                <p class="date">2024.12.09</p>
+                <p class="date">
+				    <%
+					    java.util.Date currentDate = new java.util.Date();
+				        java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("yyyy.MM.dd");
+				        String formattedDate = dateFormat.format(currentDate);
+				
+				        // 포맷팅된 날짜를 출력
+				        out.print(formattedDate);
+				    %>
+				</p>
             </header>
 
             <section class="event-header">

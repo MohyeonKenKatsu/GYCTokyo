@@ -1,18 +1,41 @@
-@charset "UTF-8";
+.modal-content {
+    background-color: white;
+    width: 500px; /* 크기 조정 */
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    text-align: left;
+    position: relative; /* 자식 요소의 위치 기준 */
+}
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+.button-group {
+    display: flex;
+    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
+    gap: 10px; /* 버튼 간 간격 */
+    position: absolute; /* 부모 요소의 기준으로 위치 설정 */
+    bottom: 20px; /* 부모 요소의 하단에서의 거리 */
+    right: 20px; /* 부모 요소의 오른쪽에서의 거리 */
+}
+
+.comment-section {
+    margin-bottom: 60px; /* 버튼과 댓글 섹션 사이의 거리 */
+}
+
+input::placeholder, 
+textarea::placeholder {
+    font-family: Pretendard, Arial, sans-serif;
+    color: #aaa;
+    font-size: 14px;
 }
 
 body {
-    font-family: Pretendard, sans-serif;
+    font-family: Pretendard, Arial, sans-serif;
     background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    overflow: hidden; /* 화면 넘침 방지 */
 }
 
 .modal {
@@ -23,129 +46,65 @@ body {
     height: 100%;
 }
 
-.modal-content {
-    background-color: white;
-    width: 500px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    text-align: left;
-}
-
-.modal-content h2 {
-    font-size: 22px;
+.title-input {
+    width: 100%;
+    font-size: 18px;
     color: #444;
-    margin-bottom: 20px;
+    border: none;
+    outline: none;
+    margin-bottom: 10px;
+    padding: 10px 0;
+    background-color: transparent;
     font-weight: bold;
 }
 
-.form-group p {
-    font-size: 16px;
-    margin-bottom: 10px;
-    color: #555;
+.title-input::placeholder {
+    color: #bbb;
+    font-size: 18px;
+    font-weight: normal;
 }
 
-.section-line {
+.modal-content hr {
+    margin: 10px 0;
     border: none;
     border-top: 1px solid #ccc;
-    margin: 15px 0;
 }
 
-/* 댓글 섹션 */
-.comment-section {
-    margin-top: 20px;
+.form-group {
+    margin-bottom: 20px;
 }
 
-.comment-header {
+.flex-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
 }
 
-.comment-header h3 {
-    font-size: 18px;
+.flex-row label {
+    width: 40%;
+    font-size: 14px;
     color: #444;
-    margin-right: 10px;
 }
 
-/* 댓글 입력 칸 */
-.comment-input-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex: 1;
+.flex-row input, .flex-row select {
+    width: 55%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
 }
 
-.comment-input-container input {
-    flex: 1;
+textarea {
+    resize: none;
+    width: 100%;
+    height: 120px;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
 }
 
-.comment-input-container button {
-    background-color: #0353a4;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    font-size: 14px;
-    cursor: pointer;
-}
-
-.comment-input-container button:hover {
-    background-color: #024c8c;
-}
-
-/* 댓글 목록 */
-.comments {
-    margin-top: 10px;
-    border-top: 1px solid #eee;
-    padding-top: 10px;
-}
-
-.comment-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.username {
-    font-weight: bold;
-    color: #444;
-    margin-right: 10px;
-    flex: 0 0 80px;
-    font-size: 14px;
-}
-
-.comment-text {
-    flex: 1;
-    color: #555;
-    font-size: 14px;
-    margin-right: 10px;
-    word-break: break-word;
-}
-
-.time {
-    font-size: 12px;
-    color: #888;
-    white-space: nowrap;
-}
-
-/* 하단 버튼 */
-.button-group {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-    gap: 10px;
-}
-
 .reset-btn, .submit-btn {
-    padding: 10px 15px;
+    padding: 10px 20px;
     font-size: 14px;
     border: none;
     border-radius: 5px;
@@ -169,3 +128,29 @@ body {
 .submit-btn:hover {
     background-color: #024c8c;
 }
+
+.participant-info {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.participant-list {
+    margin: 10px 0 0 0;
+    padding: 0;
+    list-style-type: none;
+}
+
+.participant-list li {
+    padding: 5px 0;
+    font-size: 14px;
+    color: #444;
+    border-bottom: 1px solid #eee;
+}
+
+.participant-list li:last-child {
+    border-bottom: none;
+}
+
