@@ -2,7 +2,7 @@
 
 	
 	.diary-content {
-           padding: 40px; /* 내부 여백 설정 */
+           padding: 50px; /* 내부 여백 설정 */
            box-sizing: border-box; /* 패딩 포함된 박스 크기 계산 */
        }
 
