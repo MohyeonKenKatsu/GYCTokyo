@@ -401,6 +401,7 @@ public class ShareDiaryDAO
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
 		boolean bResult = false;
+		String sSdcontent = null;
 		
 		try
 		{
@@ -419,7 +420,13 @@ public class ShareDiaryDAO
 				oPaValue[2] = shareDiaryDTO.getGroupId();
 				oPaValue[3] = shareDiaryDTO.getUserId();
 				oPaValue[4] = ComMgr.IsNull(shareDiaryDTO.getContentId(), 0);
-				oPaValue[5] = ComMgr.IsNull(shareDiaryDTO.getSdcontent(), "");
+				
+				sSdcontent = ComMgr.IsNull(shareDiaryDTO.getSdcontent(), "");
+				sSdcontent = sSdcontent.replace("<br>", "\r\n");
+				
+				oPaValue[5] = sSdcontent;
+				
+
 				
 				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
 				{
