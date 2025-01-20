@@ -3,7 +3,6 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: 'Pretendard', sans-serif;
 }
 
@@ -67,17 +66,6 @@ header .Date {
 	color: white;
 }
 
-.Sort {
-	color: #242424;
-	font-size: 24px;
-	cursor: pointer;
-	margin-left: 10px;
-}
-
-.Sort:hover {
-	color: #0353a4; 
-}
-
 .GroupPlusButton {
 	font-size: 60px; 
     color: #7d7d7d; 
@@ -102,7 +90,7 @@ header .Date {
  	border: 1px solid #0353a4; 
  	color: #0353a4;
     border-radius: 4px; 
-    padding: 20px 40px; 
+    padding: 20px;
     font-size: 16px;
     cursor: pointer;
 }
@@ -118,7 +106,7 @@ header .Date {
 	Modal 창 스타일시트
    ----------------------------------------------------------------- */
 .Modal-Frame {
-	background-color: rgba(0,0,0,0.3);				/* 배경 흐릿하게 처리 */
+	background-color: rgba(0,0,0,0.3);			/* 배경 흐릿하게 처리 */
 	display: none;									/* 기본적으로 숨김 */
     height: 100%;									/* 브라우저 전체 높이 */
 	left: 0; top: 0;								/* 모달창 프레임 좌측, 상단 위치 */

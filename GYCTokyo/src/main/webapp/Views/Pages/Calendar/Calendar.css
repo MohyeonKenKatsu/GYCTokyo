@@ -1,6 +1,5 @@
 /* 캘린더 컨테이너 */
 #calendarContainer {
-    padding: 20px;
     position: relative;
 }
 
@@ -26,3 +25,8 @@
 .openModalButton:hover {
     background-color: #1e4a90;
 }
+
+/* full Calendar css */
+ .fc-event {
+    border: none !important;
+ }

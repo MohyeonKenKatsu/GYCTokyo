@@ -66,17 +66,20 @@
 
                 // 이벤트 데이터 URL로 전달
                 const modalUrl =
-                    contextPath +
-                    "/Views/Pages/Calendar/CalendarViewModal.jsp?plan=" +
-                    encodeURIComponent(event.title) +
-                    "&calendar_date=" +
-                    encodeURIComponent(event.startStr) +
-                    "&category=" +
-                    encodeURIComponent(event.extendedProps.category || '') +
-                    "&memo=" +
-                    encodeURIComponent(event.extendedProps.memo || '');
+			        contextPath +
+			        "/Views/Pages/Calendar/CalendarViewModal.jsp?calendar_id=" +
+			        encodeURIComponent(event.id) +
+			        "&plan=" +
+			        encodeURIComponent(event.title) +
+			        "&calendar_date=" +
+			        encodeURIComponent(event.startStr) +
+			        "&category=" +
+			        encodeURIComponent(event.extendedProps.category || '') +
+			        "&memo=" +
+			        encodeURIComponent(event.extendedProps.memo || '');
 
-                // 새 창이 아닌 모달로 열기
+
+                // 새 창으로 열기
                 const modalWindow = window.open(modalUrl, "Modal", "width=600,height=400");
                 modalWindow.focus();
             },
