@@ -11,6 +11,10 @@
     margin-bottom: 10px;
 }
 
+h1 {
+	color: #0353a4;
+}
+
 /* 일정 추가 버튼 */
 .openModalButton {
     background-color: #2a5db0;
