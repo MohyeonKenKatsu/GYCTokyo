@@ -208,7 +208,7 @@ if (bJobProcess == true)
       		</div>
       		
         	<div class="ModalBody">
-				<textarea class="ChangeDiary" name="sdContent"><%=sSDContent %></textarea>
+				<textarea class="ChangeDiary" name="sdContent"><%=sSDContent.replace("<br>", "\r\n") %></textarea>
         	</div>
         	
 			<div class="ModalTail">
