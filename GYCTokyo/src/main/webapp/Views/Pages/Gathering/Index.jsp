@@ -31,7 +31,7 @@
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/Gathering/Index.css">
-  <%--   <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Gathering/Header.css"> --%>
+  	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Header/Header.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Sider/Sider.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/Gathering/Gathering.css">
 	<style type="text/css">
@@ -185,7 +185,21 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	GatheringDTO.setUser_id(123);
+    // 세션에서 USER_ID 가져오기
+    Integer userId = (Integer) session.getAttribute("USER_ID");
+	// USER_ID가 세션에 없으면 로그인 페이지로 리다이렉트
+	if (userId == null) {
+	    out.println("<script>");
+	    out.println("alert('로그인 후 이용해주세요.');");
+	    out.println("location.href='" + request.getContextPath() + "/Views/Pages/Login/Login.jsp';");
+	    out.println("</script>");
+	    return; // JSP 처리를 중단합니다.
+	}
+
+%>
+
+<%
+	GatheringDTO.setUser_id(userId);
 
 	if (bJobProcess == true && "INSERT".equalsIgnoreCase(sJobStatus)) {
     // 소모임 기본 정보 설정
@@ -199,13 +213,36 @@
 
     boolean result = gatheringDAO.GatheringSave("INSERT", 1, GatheringDTO);
     if (result) {
-       out.println("<script>alert('등록 성공'); location.href='Index.jsp';</script>");
+       out.println("<script>alert('등록에 성공했습니다.'); location.href='Index.jsp';</script>");
     } else {
-       out.println("<script>alert('등록 실패'); history.back();</script>");
+       out.println("<script>alert('등록에 실패했습니다.'); history.back();</script>");
     }
 }
 %>
 
+<%
+String jobStatus = request.getParameter("jobStatus");
+if ("DELETE".equalsIgnoreCase(jobStatus)) {
+    String groupIdParam = request.getParameter("group_id");
+    if (groupIdParam != null) {
+        try {
+            int groupId = Integer.parseInt(groupIdParam);
+            GatheringDAO gatheringDAO = new GatheringDAO();
+            boolean isDeleted = gatheringDAO.GatheringDetailDelete(groupId);
+            if (isDeleted) {
+                out.println("<script>alert('모임이 삭제되었습니다.'); location.href='Index.jsp';</script>");
+            } else {
+                out.println("<script>alert('모임 삭제에 실패했습니다.'); history.back();</script>");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            out.println("<script>alert('잘못된 요청입니다.'); history.back();</script>");
+        }
+    } else {
+        out.println("<script>alert('유효하지 않은 요청입니다.'); history.back();</script>");
+    }
+}
+%>
 
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]

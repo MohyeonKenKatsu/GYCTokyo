@@ -94,7 +94,8 @@ public class GatheringDAO
 					
 					break;
 				case "DELETE":
-					//bResult = GatheringDetailDelete(GatheringId);				// 모집글 삭제
+					
+					bResult = GatheringDetailDelete(GatheringId);				// 모집글 삭제
 					
 					break;
 			}
@@ -231,58 +232,27 @@ public class GatheringDAO
 	}
 	/***********************************************************************
 	 * GatheringDetailDelete()	: 모집글을 오라클 데이터베이스에서 삭제(Delete)
-	 * @param GatheringId		: 모집글 Id
-	 * @return boolean		: true | false
+	 * @param GroupId			: 모집글 Id
+	 * @return boolean			: true | false
 	 ***********************************************************************/
-	public boolean GatheringDetailDelete(int GatheringId)
-	{
-		String sSql = null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 모집글 삭제
-	    	// -----------------------------------------------------------------------------
-			if (this.DBMgr.DbConnect() == true)
-			{
-				// 모집글 삭제
-				sSql = "BEGIN SP_GATHERING_CUD(?,?); END;";
-				
-				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[2];
-				
-				oPaValue[0] = "DELETE";
-				oPaValue[1] = GatheringId;
-				
-				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
-				{
-					
-					// IN 파라미터 만큼만 할당
-					oPaValue = new Object[2];
-					
-					oPaValue[0] = "DELETE";
-					oPaValue[1] = GatheringId;
-					
-					if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
-					{
-						this.DBMgr.DbCommit();
-					
-						bResult = true;
-					}
-				}
-				
-				this.DBMgr.DbDisConnect();
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
+	public boolean GatheringDetailDelete(int groupId) {
+	    String sSql = "BEGIN SP_GATHERING_CUD('DELETE', ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL); END;";
+	    Object[] oPaValue = { groupId }; // Group_id만 전달
+	    boolean bResult = false;
+
+	    try {
+	        if (this.DBMgr.DbConnect() == true) {
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false)) {
+	                this.DBMgr.DbCommit();
+	                bResult = true; // 삭제 성공
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception ex) {
+	        Common.ExceptionMgr.DisplayException(ex);
+	    }
+
+	    return bResult;
 	}
 	/***********************************************************************
 	 * ReadGatheringById() : 특정 GROUP_ID에 해당하는 모임 정보 가져오기
@@ -299,9 +269,11 @@ public class GatheringDAO
 	        // DB 연결 확인
 	        if (this.DBMgr.DbConnect() == true) {
 	            // SQL 쿼리 작성
-	            sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT "
-	                 + "FROM TB_GATHERING "
-	                 + "WHERE GROUP_ID = ?";
+	            sSql = "SELECT g.GROUP_ID, g.USER_ID, g.TITLE, g.START_DATE, g.FINISH_DATE, " +
+	                    "g.ACTIVITY_DAY, g.NUMBER_LIMIT, g.CONTENT, u.NICKNAME " +
+	                    "FROM TB_GATHERING g " +
+	                    "JOIN TB_USERS u ON g.USER_ID = u.USER_ID " +
+	                    "WHERE g.GROUP_ID = ?";
 
 	            Object[] oPaValue = { groupId };
 
@@ -317,6 +289,7 @@ public class GatheringDAO
 	                    dto.setActivity_date(this.DBMgr.Rs.getString("ACTIVITY_DAY"));
 	                    dto.setNumber_limit(this.DBMgr.Rs.getInt("NUMBER_LIMIT"));
 	                    dto.setContent(this.DBMgr.Rs.getString("CONTENT"));
+	                    dto.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
 	                }
 	            }
 	            this.DBMgr.DbDisConnect();
@@ -364,6 +337,154 @@ public class GatheringDAO
 
 	    return gatheringList;
 	}
+
+
+	/***********************************************************************
+	 * JoinGathering()			: 모임 참여 정보를 오라클 데이터베이스에 등록(Insert)
+	 * @param groupId			: 그룹 ID
+	 * @param userId			: 유저 ID
+	 * @return boolean			: true | false
+	 ***********************************************************************/
+	public boolean JoinGathering(int groupId, int userId) {
+	    String sSql = null; // SQL 문장
+	    Object[] oPaValue = null; // SQL 파라미터
+	    boolean bResult = false;
+
+	    try {
+	        // DB 연결
+	        if (this.DBMgr.DbConnect()) {
+	            // 소모임 참가 INSERT 쿼리
+	            sSql = "INSERT INTO TB_GATHERING_JOINED (GROUP_ID, USER_ID) VALUES (?, ?)";
+
+	            // 파라미터 설정
+	            oPaValue = new Object[2];
+	            oPaValue[0] = groupId; // GROUP_ID
+	            oPaValue[1] = userId;  // USER_ID
+
+	            // 쿼리 실행
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false)) {
+	                this.DBMgr.DbCommit();
+	                bResult = true; // 성공
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex); // 예외 처리
+	    }
+
+	    return bResult;
+	}
+	
+	/***********************************************************************
+	 * CancelJoinGathering()	: 참가정보를 오라클 데이터베이스에서 삭제(Delete)
+	 * @param groupId			: 모집글 Id
+	 * @param userId			: 유저 Id
+	 * @return boolean			: true | false
+	 ***********************************************************************/
+	public boolean CancelJoinGathering(int groupId, int userId) {
+	    String sSql = "DELETE FROM TB_GATHERING_JOINED WHERE GROUP_ID = ? AND USER_ID = ?";
+	    Object[] oPaValue = { groupId, userId };
+	    boolean bResult = false;
+
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false)) {
+	                this.DBMgr.DbCommit();
+	                bResult = true;
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex);
+	    }
+
+	    return bResult;
+	}
+	
+	/***********************************************************************
+	 * IsUserJoined() 			: User가 참가하고 있는지 조회하기
+	 * @param groupId    		: 그룹 Id
+	 * @param userId     		: 사용자 Id
+	 * @return boolean			: true | false
+	 ***********************************************************************/
+	public boolean IsUserJoined(int groupId, int userId) {
+	    String sSql = "SELECT 1 FROM TB_GATHERING_JOINED WHERE GROUP_ID = ? AND USER_ID = ?";
+	    Object[] oPaValue = { groupId, userId };
+	    boolean isJoined = false;
+
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, true)) {
+	                isJoined = this.DBMgr.Rs.next();
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex);
+	    }
+
+	    return isJoined;
+	}
+	
+	/***********************************************************************
+	 * GetParticipants() : 특정 그룹의 참가자 닉네임 목록 조회
+	 * @param groupId : 그룹 Id
+	 * @return List<String> : 참가자의 닉네임 목록
+	 ***********************************************************************/
+	public List<String> GetParticipants(int groupId) {
+	    List<String> participants = new ArrayList<>();
+	    String sSql = "SELECT u.NICKNAME " +
+	                  "FROM TB_GATHERING_JOINED j " +
+	                  "JOIN TB_USERS u ON j.USER_ID = u.USER_ID " +
+	                  "WHERE j.GROUP_ID = ?";
+	    Object[] oPaValue = { groupId };
+
+	    try {
+	        if (this.DBMgr.DbConnect() == true) {
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, true) == true) {
+	                while (this.DBMgr.Rs.next()) {
+	                    participants.add(this.DBMgr.Rs.getString("NICKNAME"));
+	                }
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex);
+	    }
+
+	    return participants;
+	}
+	/***********************************************************************
+	 * GetParticipantCount() 	: 특정 그룹에 참가한 사용자 수 조회
+	 * @param groupId 			: 그룹 Id
+	 * @return int 				: 참가한 사용자 수
+	 ***********************************************************************/
+	public int GetParticipantCount(int groupId) {
+	    String sSql = "SELECT COUNT(*) + 1 AS PARTICIPANT_COUNT " +
+	                  "FROM TB_GATHERING_JOINED " +
+	                  "WHERE GROUP_ID = ?";
+	    Object[] oPaValue = { groupId };
+	    int count = 0;
+
+	    try {
+	        if (this.DBMgr.DbConnect() == true) {
+	            if (this.DBMgr.RunQuery(sSql, oPaValue, 0, true) == true) {
+	                if (this.DBMgr.Rs.next()) {
+	                    count = this.DBMgr.Rs.getInt("PARTICIPANT_COUNT");
+	                }
+	            }
+	            this.DBMgr.DbDisConnect();
+	        }
+	    } catch (Exception Ex) {
+	        Common.ExceptionMgr.DisplayException(Ex);
+	    }
+
+	    return count;
+	}
+	
+	
+	
+	
 }
 	//#################################################################################################
 //<END>
