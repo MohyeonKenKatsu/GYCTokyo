@@ -93,7 +93,7 @@
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
 	UsersDTO usersDTO = null;
-	Integer[] USER_ID_DATA = null;
+	Object[] USER_ID_DATA = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
@@ -107,7 +107,7 @@
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	USER_ID_DATA = new Integer[1];	// 사용자 아이디, 닉네임, 교육과정을 전달
+	USER_ID_DATA = new Object[3];	// 사용자 아이디, 닉네임, 교육과정을 전달
 	// ---------------------------------------------------------------------
 %>
 
@@ -178,9 +178,9 @@
 	        
 	        <div class="FindButton-container">
 	        	&nbsp;
-		        <a class="FindButton" href="FindEmail.jsp">아이디 찾기</a>
+		        <a class="FindButton" href="SearchEmail.jsp">아이디 찾기</a>
 		        &nbsp;&nbsp;·&nbsp;&nbsp;
-		        <a class="FindButton" href="FindPassword.jsp">비밀번호 찾기</a>
+		        <a class="FindButton" href="SearchPassword.jsp">비밀번호 찾기</a>
 	        </div>
 	        
 			<!-- DB 접속 제어 변수 -->
@@ -215,6 +215,8 @@
 		if (<%= bLoginSuccess %> == true)
 		{
 	        <% session.setAttribute("USER_ID", USER_ID_DATA[0]); %>
+	        <% session.setAttribute("NICKNAME", USER_ID_DATA[1]); %>
+	        <% session.setAttribute("COURSE", USER_ID_DATA[2]); %>
 	        location.href="../Calendar/index.jsp";
 		}
 		// 로그인 실패 시 경고창 출력

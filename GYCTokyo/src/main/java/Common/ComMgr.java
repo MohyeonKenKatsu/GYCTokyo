@@ -515,27 +515,6 @@ public class ComMgr
 	 * IsNull()				: null 확인
 	 * @param CheckValue	: 확인 할 값
 	 * @param DefaultValue	: null인 경우 반환 할 기본값
-	 * @return String		: null이 아닌 문자열 반환
-	 ***********************************************************************/
-	public static String IsNull(String CheckValue, String DefaultValue)
-	{
-		String sResult = null;
-		
-	    try
-	    {
-	    	sResult = (CheckValue != null) ? CheckValue : DefaultValue;
-	    }
-	    catch (Exception Ex)
-	    {
-	    	sResult = DefaultValue;
-	    }
-	    
-	    return sResult;
-	}
-	/***********************************************************************
-	 * IsNull()				: null 확인
-	 * @param CheckValue	: 확인 할 값
-	 * @param DefaultValue	: null인 경우 반환 할 기본값
 	 * @return Integer		: null이 아닌 정수값 반환
 	 ***********************************************************************/
 	public static Integer IsNull(Object CheckValue, Integer DefaultValue)
@@ -554,6 +533,48 @@ public class ComMgr
 	    }
 	    
 	    return nResult;
+	}
+	/***********************************************************************
+	 * IsNull()				: null 확인
+	 * @param CheckValue	: 확인 할 값
+	 * @param DefaultValue	: null인 경우 반환 할 기본값
+	 * @return Integer		: null이 아닌 정수값 반환
+	 ***********************************************************************/
+	public static String IsNull(Object CheckValue, String DefaultValue)
+	{
+		String sResult = null;
+		
+	    try
+	    {
+	    	sResult = (CheckValue != null) ? (String)CheckValue : DefaultValue;
+	    }
+	    catch (Exception Ex)
+	    {
+	    	sResult = DefaultValue;
+	    }
+	    
+	    return sResult;
+	}
+	/***********************************************************************
+	 * IsNull()				: null 확인
+	 * @param CheckValue	: 확인 할 값
+	 * @param DefaultValue	: null인 경우 반환 할 기본값
+	 * @return String		: null이 아닌 문자열 반환
+	 ***********************************************************************/
+	public static String IsNull(String CheckValue, String DefaultValue)
+	{
+		String sResult = null;
+		
+	    try
+	    {
+	    	sResult = (CheckValue != null) ? CheckValue : DefaultValue;
+	    }
+	    catch (Exception Ex)
+	    {
+	    	sResult = DefaultValue;
+	    }
+	    
+	    return sResult;
 	}
 	/***********************************************************************
 	 * MakeString()		: Size 만큼 RepeatStr을 반복해서 문자열 만들기

@@ -1,24 +1,40 @@
+<%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@page import="Common.ComMgr"%>
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<%----------------------------------------------------------------------
 	[HTML Page - 헤드 영역]
 	--------------------------------------------------------------------------%>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<%--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--%>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+	<meta http-equiv="Expires" content="0"/>
+	<meta http-equiv="pragma" content="no-cache"/>
+    <meta name="Description" content="검색 엔진을 위해 웹 페이지에 대한 설명을 명시"/>
+    <meta name="keywords" content="검색 엔진을 위해 웹 페이지와 관련된 키워드 목록을 콤마로 구분해서 명시"/>
+    <meta name="Author" content="문서의 저자를 명시"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>공유일기 조회 모달창</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
+		<style type="text/css">
+		/* -----------------------------------------------------------------
+			HTML Page 스타일시트
+		   ----------------------------------------------------------------- */
+			
+        /* ----------------------------------------------------------------- */
+	</style>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ViewSDModal.css">
 	<%----------------------------------------------------------------------
 	[HTML Page - 자바스크립트 구현 영역(상단)]
 	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
 	--------------------------------------------------------------------------%>
-	<script type="text/javascript" src="ShareDiary.js"></script>
 	<script type="text/javascript">
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
@@ -36,7 +52,8 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	
+	// 그룹 내 공유일기 검색용 DAO 객체
+	public ShareDiaryDAO shareDiaryDAO = new ShareDiaryDAO();	
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -48,7 +65,10 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	
+	String 	sDate			= null;
+	Integer nGroupId		= null;
+	Integer nDiaryUserId	= null;
+	Integer nContentId		= null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
@@ -56,17 +76,28 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	Integer nUserId		= null;
+	Boolean bContinue 	= false;						// 공유일기 게시글 검색 유무
+
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
+	sDate		= ComMgr.IsNull(request.getParameter("date"),"날짜 없음");
+	nGroupId	= ComMgr.IsNull(request.getParameter("groupId"), -1);
+	nDiaryUserId= ComMgr.IsNull(request.getParameter("diaryUserId"), -1);
+	nContentId	= ComMgr.IsNull(request.getParameter("contentId"), -1);
+	
+	if (nGroupId != -1 && nDiaryUserId != -1 && nContentId != -1)
+	{
+		bContinue = true;
+	}
 	
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	String sDate = request.getParameter("date");
-	Integer nGroupId = ComMgr.IsNull(request.getParameter("group_id"), -1);
-	Integer nUserId = ComMgr.IsNull(request.getParameter("user_id"), -1);
+	//session.setAttribute("USER_ID", 1);
+	
+	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), -1);
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -76,9 +107,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	------------------------------------------------------------------------
-	<jsp:useBean id="HelloDTO" class="Hello.HelloDTO" scope="request"></jsp:useBean>
-	--%>
+	--------------------------------------------------------------------------%>
+	<jsp:useBean id="ShareDiaryDTO" class="BeansShareDiary.ShareDiaryDTO" scope="request"></jsp:useBean>
+	
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -109,15 +140,29 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	// HelloDTO.setData1(request.getParameter("data1"));
+	ShareDiaryDTO.setDate(sDate);
+	ShareDiaryDTO.setGroupId(nGroupId);
+	ShareDiaryDTO.setUserId(nDiaryUserId);
+	ShareDiaryDTO.setContentId(nContentId);
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-
+	// 그룹 내 공유일기 정보 검색
+	if (bContinue == true)
+	{
+		if (this.shareDiaryDAO.ReadShareDiaryView(ShareDiaryDTO) == true)
+		{
+			if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
+			{
+				bContinue = true;
+			}
+		}
+	}	
 %>
 <body>
+<form name="form1" action="" method="post">
 	<!-- 모달 배경 -->
 	<div class="ViewSDModal" id="viewSDModal">
 	
@@ -130,18 +175,25 @@
 				<table class="ViewWriter">
 					<tr>
 						<td class="Writer">작성자</td>
-						<td class="Nickname">세니</td>
+						<td class="Nickname"><%=ShareDiaryDTO.getNickname() %></td>
 					</tr>
 				</table>
       		</div>
       		
         	<div class="ModalBody">
-				<textarea class="ViewDiary" readonly>오늘은 GYC 친구들과 같이 마라탕을 먹으러 갔다. 서연이가 좋아하는 마라장룡 마라탕. 서연이는 이걸 왜 좋아하는 걸까? 맛있기는 한데 매일 먹을 수는 없을 것 같다...</textarea>
+				<textarea class="ViewDiary" readonly><%=ShareDiaryDTO.getSdcontent() %></textarea>
         	</div>
         	
 			<div class="ModalTail">
 				<button class="ViewDiaryCancel">취소</button>
-				<button class="ViewDiaryChange" onclick="parent.openModal('ChangeSDModal')">수정</button>
+				<%
+					if (nUserId == nDiaryUserId)
+					{
+				%>
+					<button class="ViewDiaryChange" type="button" onclick="parent.openModal('ChangeSDModal', '<%=sDate %>', <%=nGroupId %>, <%=nDiaryUserId %>, <%=nContentId %>, '<%=ShareDiaryDTO.getSdcontent() %>')">수정</button>
+				<%
+					}
+				%>
 			</div>
         
 		</div>
@@ -159,5 +211,6 @@
 		// -----------------------------------------------------------------
 		// -----------------------------------------------------------------
 	</script>
+</form>
 </body>
 </html>

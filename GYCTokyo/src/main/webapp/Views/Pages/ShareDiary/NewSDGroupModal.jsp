@@ -1,49 +1,193 @@
+<%@page import="Common.ComMgr"%>
+<%@page import="BeansShareDiary.ShareDiaryDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
 	<%----------------------------------------------------------------------
 	[HTML Page - 헤드 영역]
 	--------------------------------------------------------------------------%>
+	<%--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--%>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>공유일기 그룹 생성 모달창</title>
+	<%----------------------------------------------------------------------
+	[HTML Page - 스타일쉬트 구현 영역]
+	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
+	--------------------------------------------------------------------------%>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/NewSDGroupModal.css">
-	<script type="text/javascript" src="ShareDiaryIntro.js"></script>
-
-</head>
-<body>
-	<!-- 모달 배경 -->
-	<div class="NewGroupModal" id="newGroupModal">
-	
-		<!-- 모달 창 -->
-		<div class="ModalContent">
+	<%----------------------------------------------------------------------
+	[HTML Page - 자바스크립트 구현 영역(상단)]
+	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
+	--------------------------------------------------------------------------%>
+	<script type="text/javascript">
+		// -----------------------------------------------------------------
+		// [사용자 함수 및 로직 구현]
+		// -----------------------------------------------------------------
 		
-			<div class="SDGroupModalHeader">
-				<h2 class="Header">새 그룹 생성</h2>
-      		</div>
-      		
-        	<div class="SDGroupModalBody">
-        		<table class="GroupNameTool">
-        			<tr>
-        				<td>
-        					<label class="GroupName" for="InputGroupName">그룹명</label>
-        				</td>
-        			</tr>
-        			<tr>
-        				<td>
-        					<textarea class="InputGroupName" maxlength="15" placeholder="최대 글자수 15자(공백 포함)"></textarea>
-        				</td>
-        			</tr>
-        		</table>
-        	</div>
-        	
-			<div class="SDGroupModalTail">
-				<button class="NewGroupCancel">취소</button>
-				<button class="NewGroupButton">생성</button>
+		// -----------------------------------------------------------------
+	</script>
+</head>
+<%--------------------------------------------------------------------------
+[JSP 전역 변수/함수 선언 영역 - 선언문 영역]
+	- this 로 접근 가능 : 같은 페이지가 여러번 갱신 되더라도 변수/함수 유지 됨
+	- 즉 현재 페이지가 여러번 갱신 되는 경우 선언문은 한번만 실행 됨
+------------------------------------------------------------------------------%>
+<%!
+	// ---------------------------------------------------------------------
+	// [JSP 전역 변수/함수 선언]
+	// ---------------------------------------------------------------------
+	// 그룹 내 공유일기 검색용 DAO 객체
+	public ShareDiaryDAO shareDiaryDAO = new ShareDiaryDAO();
+	// ---------------------------------------------------------------------
+%>
+<%--------------------------------------------------------------------------
+[JSP 지역 변수 선언 및 로직 구현 영역 - 스크립트릿 영역]
+	- this 로 접근 불가 : 같은 페이지가 여러번 갱신되면 변수/함수 유지 안 됨
+	- 즉 현재 페이지가 여러번 갱신 될 때마다 스크립트릿 영역이 다시 실행되어 모두 초기화 됨
+------------------------------------------------------------------------------%>
+<%
+	// ---------------------------------------------------------------------
+	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
+	// ---------------------------------------------------------------------
+	Boolean bJobProcess = ComMgr.IsNull(request.getParameter("jobprocess"), false);
+	String sGroupName	= null; 
+	Integer nUserId		= null;	
+	// ---------------------------------------------------------------------
+	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
+	// ---------------------------------------------------------------------
+	
+	// ---------------------------------------------------------------------
+	// [JSP 지역 변수 선언 : 일반 변수]
+	// ---------------------------------------------------------------------
+	Boolean bSuccess = false;
+	// ---------------------------------------------------------------------
+	// [웹 페이지 get/post 파라미터 조건 필터링]
+	// ---------------------------------------------------------------------
+	sGroupName	= ComMgr.IsNull(request.getParameter("inputgroupname"), "");
+	
+	//session.setAttribute("USER_ID", 1);
+	
+	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), -1);
+	// ---------------------------------------------------------------------
+	// [일반 변수 조건 필터링]
+	// ---------------------------------------------------------------------
+	
+	// ---------------------------------------------------------------------
+%>
+<%--------------------------------------------------------------------------
+[Beans/DTO 선언 및 속성 지정 영역]
+------------------------------------------------------------------------------%>
+	<%----------------------------------------------------------------------
+	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
+						: class	- Beans 클래스 명
+ 						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
+	--------------------------------------------------------------------------%>
+	<jsp:useBean id="ShareDiaryDTO" class="BeansShareDiary.ShareDiaryDTO" scope="request"></jsp:useBean>
+	
+	<%----------------------------------------------------------------------
+	Beans 속성 지정 방법1	: Beans Property에 * 사용
+						:---------------------------------------------------
+						: name		- <jsp:useBean>의 id
+						: property	- HTML 태그 입력양식 객체 전체
+						:---------------------------------------------------
+	주의사항				: HTML 태그의 name 속성 값은 소문자로 시작!
+						: HTML 태그에서 데이터 입력 없는 경우 null 입력 됨!
+	--------------------------------------------------------------------------%>
+	<jsp:setProperty name="ShareDiaryDTO" property="*"/>
+	
+	<%----------------------------------------------------------------------
+	Beans 속성 지정 방법2	: Beans Property에 HTML 태그 name 사용
+						:---------------------------------------------------
+						: name		- <jsp:useBean>의 id
+						: property	- HTML 태그 입력양식 객체 name
+						:---------------------------------------------------
+	주의사항				: HTML 태그의 name 속성 값은 소문자로 시작!
+						: HTML 태그에서 데이터 입력 없는 경우 null 입력 됨!
+						: Property를 각각 지정 해야 함!
+	------------------------------------------------------------------------
+	<jsp:setProperty name="HelloDTO" property="data1"/>
+	<jsp:setProperty name="HelloDTO" property="data2"/>
+	--%>
+	<%----------------------------------------------------------------------
+	Beans 속성 지정 방법3	: Beans 메서드 직접 호출
+						:---------------------------------------------------
+						: Beans 메서드를 각각 직접 호출 해야함!
+	--------------------------------------------------------------------------%>
+<%
+	if(bJobProcess == true)
+	{
+		ShareDiaryDTO.setGroupname(sGroupName);
+		ShareDiaryDTO.setUserId(nUserId);
+	}
+%>
+<%--------------------------------------------------------------------------
+[Beans DTO 읽기 및 로직 구현 영역]
+------------------------------------------------------------------------------%>
+<%
+// JobStatus 작업처리 허용
+if (bJobProcess == true)
+{
+	if (this.shareDiaryDAO.SaveShareDiaryNewGroup(ShareDiaryDTO) == true)
+	{
+		bSuccess = true;
+	}
+}
+%>
+<body>
+	<%----------------------------------------------------------------------
+	[HTML Page - FORM 디자인 영역]
+	--------------------------------------------------------------------------%>
+		<%------------------------------------------------------------------
+			메인 페이지
+		----------------------------------------------------------------------%>
+		<!-- 모달 배경 -->
+		<form class="NewGroupModal" id="newGroupModal" name="form1" action="NewSDGroupModal.jsp?jobprocess=true" method="post">
+		
+			<!-- 모달 창 -->
+			<div class="ModalContent">
+			
+				<div class="SDGroupModalHeader">
+					<h2 class="Header">새 그룹 생성</h2>
+	      		</div>
+	      		
+	        	<div class="SDGroupModalBody">
+	        		<table class="GroupNameTool">
+	        			<tr>
+	        				<td>
+	        					<label class="GroupName" for="InputGroupName">그룹명</label>
+	        				</td>
+	        			</tr>
+	        			<tr>
+	        				<td>
+	        					<textarea class="InputGroupName" name="inputgroupname" maxlength="15" placeholder="최대 글자수 15자(공백 포함)"></textarea>
+	        				</td>
+	        			</tr>
+	        		</table>
+	        	</div>
+	        	
+				<div class="SDGroupModalTail">
+					<button type="button" class="NewGroupCancel">취소</button>
+					<input type="submit" class="NewGroupButton" id="newGroupButton" value="생성"/>
+				</div>
+	        
 			</div>
-        
-		</div>
-	</div>
+		</form>
+    <%----------------------------------------------------------------------
+	[HTML Page - END]
+	--------------------------------------------------------------------------%>
+	<%----------------------------------------------------------------------
+	[HTML Page - 자바스크립트 구현 영역(하단)]
+	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
+	--------------------------------------------------------------------------%>
+	<script type="text/javascript">
+		// -----------------------------------------------------------------
+		// [사용자 함수 및 로직 구현]
+		// -----------------------------------------------------------------
+
+		// -----------------------------------------------------------------
+	</script>
+	
 </body>
 </html>

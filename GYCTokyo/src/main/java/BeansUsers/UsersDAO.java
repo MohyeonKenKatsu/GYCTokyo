@@ -75,7 +75,7 @@ public class UsersDAO
 	 * @return boolean	: 로그인 성공 여부(true | false)
 	 * @throws Exception 
 	 ***********************************************************************/
-	public boolean Login(UsersDTO usersDTO, Integer[] USER_ID_DATA) throws Exception
+	public boolean Login(UsersDTO usersDTO, Object[] USER_ID_DATA) throws Exception
 	{
 		String sSql = null;						// DML 문장
 		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
@@ -98,6 +98,8 @@ public class UsersDAO
 				{
 					if (this.DBMgr.Rs.next() == true) {
 						USER_ID_DATA[0] = this.DBMgr.Rs.getInt("USER_ID");
+						USER_ID_DATA[1] = this.DBMgr.Rs.getString("NICKNAME");
+						USER_ID_DATA[2] = this.DBMgr.Rs.getInt("COURSE");
 						bResult = true;
 					}
 					else {
@@ -131,7 +133,7 @@ public class UsersDAO
 			if (this.DBMgr.DbConnect() == true)
 			{
 				// 사원정보 읽기
-				sSql = "BEGIN SP_USERS_SIGNUP(?,?,?,?,?,?,?,?); END;";
+				sSql = "BEGIN SP_USERS_CUD(?,?,?,?,?,?,?,?); END;";
 				
 				// IN 파라미터 만큼만 할당
 				oPaValue = new Object[8];
@@ -200,6 +202,309 @@ public class UsersDAO
 						
 						bResult = true;
 					}
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * ReadMyPageData()	: 오라클 데이터베이스에서 마이페이지 회원정보 조회
+	 * @param iUSERID	: 회원 정보 조회를 위한 사용자 아이디
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean ReadMyPageData(Integer iUSERID, UsersDTO usersDTO) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+	    	// -----------------------------------------------------------------------------
+			// 사원정보 읽기
+	    	// -----------------------------------------------------------------------------
+			if (iUSERID != null)
+			{
+				if (this.DBMgr.DbConnect() == true)
+				{
+					// 사원정보 읽기
+					sSql = "BEGIN SP_USERS_MYPAGEDATA(?,?); END;";
+					
+					// IN 파라미터 만큼만 할당
+					oPaValue = new Object[1];
+					oPaValue[0] = iUSERID;
+					
+					if (this.DBMgr.RunQuery(sSql, oPaValue, 2, true) == true)
+					{
+						while(this.DBMgr.Rs.next() == true)
+						{
+							usersDTO.setNickname(this.DBMgr.Rs.getString("NICKNAME"));
+							usersDTO.setCourse(this.DBMgr.Rs.getInt("COURSE"));
+							usersDTO.setTel(this.DBMgr.Rs.getString("TEL"));
+							usersDTO.setPassword(this.DBMgr.Rs.getString("PASSWORD"));
+						}
+						
+						bResult = true;
+					}
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * EditUserData()	: 오라클 데이터베이스에서 회원정보 수정(마이페이지)
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean EditUserData(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_CUD(?,?,?,?,?,?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[8];
+				
+				oPaValue[0] = "UPDATE";
+				oPaValue[1] = usersdto.getUser_id();
+				oPaValue[2] = "";//usersdto.getEmail();
+				oPaValue[3] = usersdto.getPassword();
+				oPaValue[4] = usersdto.getNickname();
+				oPaValue[5] = "";//usersdto.getBirthday();
+				oPaValue[6] = usersdto.getTel();
+				oPaValue[7] = usersdto.getCourse();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
+				{
+					this.DBMgr.DbCommit();
+					
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * SearchEmail()	: 오라클 데이터베이스에서 아이디(이메일) 찾기
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean SearchEmail(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_SEARCH(?,?,?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[4];
+				
+				oPaValue[0] = "EMAIL";
+				oPaValue[1] = "";//usersdto.getUser_id();
+				oPaValue[2] = usersdto.getBirthday();
+				oPaValue[3] = usersdto.getTel();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 5, true) == true)
+				{
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * SearchPassword()	: 오라클 데이터베이스에서 비밀번호 조회
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean SearchPassword(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_SEARCH(?,?,?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[4];
+				
+				oPaValue[0] = "PASSWORD";
+				oPaValue[1] = usersdto.getEmail();
+				oPaValue[2] = usersdto.getBirthday();
+				oPaValue[3] = usersdto.getTel();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 5, true) == true)
+				{
+					if (this.DBMgr.Rs.next() == true)
+					{
+						bResult = true;
+					}
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * ResetPassword()	: 오라클 데이터베이스에서 비밀번호 수정
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean ResetPassword(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_RESETPWD(?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[2];
+				
+				oPaValue[0] = usersdto.getEmail();
+				oPaValue[1] = usersdto.getPassword();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
+				{
+					this.DBMgr.DbCommit();
+					
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * DuplicateEmail()	: 오라클 데이터베이스에서 중복되는 아이디(이메일)값이 있는지 확인
+	 * @param usersdto	: 회원 정보 저장용 DTO 객체
+	 * @return boolean	: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean DuplicateEmail(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_DUPLICATE(?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[2];
+				
+				oPaValue[0] = "EMAIL";
+				oPaValue[1] = usersdto.getEmail();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
+				{
+					bResult = true;
+				}
+			}
+	    	// -----------------------------------------------------------------------------
+		}
+		catch (Exception Ex)
+		{
+			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
+		}
+		
+		return bResult;
+	}
+	/***********************************************************************
+	 * DuplicateNickname()	: 오라클 데이터베이스에서 중복되는 닉네임 값이 있는지 확인
+	 * @param usersdto		: 회원 정보 저장용 DTO 객체
+	 * @return boolean		: 로그인 성공 여부(true | false)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean DuplicateNickname(UsersDTO usersdto) throws Exception
+	{
+		String sSql = null;						// DML 문장
+		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
+		boolean bResult = false;
+		
+		try
+		{
+			if (this.DBMgr.DbConnect() == true)
+			{
+				// 사원정보 읽기
+				sSql = "BEGIN SP_USERS_DUPLICATE(?,?,?); END;";
+				
+				// IN 파라미터 만큼만 할당
+				oPaValue = new Object[2];
+				
+				oPaValue[0] = "NICKNAME";
+				oPaValue[1] = usersdto.getNickname();
+				
+				if (this.DBMgr.RunQuery(sSql, oPaValue, 3, true) == true)
+				{
+					bResult = true;
 				}
 			}
 	    	// -----------------------------------------------------------------------------

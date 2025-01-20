@@ -76,7 +76,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	public UsersDAO usersDAO = new UsersDAO();
+	// public UsersDAO usersDAO = new UsersDAO();
 %>
 <%--------------------------------------------------------------------------
 [JSP 지역 변수 선언 및 로직 구현 영역 - 스크립트릿 영역]
@@ -91,7 +91,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
-	UsersDTO userDTO = null;
+	// UsersDTO userDTO = null;
 	Integer iUSERID = null;
 	String sNICKNAME = null;
 	Integer iCOURSE = null;
@@ -104,10 +104,12 @@
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
 	iUSERID = ComMgr.IsNull(session.getAttribute("USER_ID"), 0);
+	sNICKNAME = ComMgr.IsNull(session.getAttribute("NICKNAME"), "");
+	iCOURSE = ComMgr.IsNull(session.getAttribute("COURSE"), 0);
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	userDTO = new UsersDTO();
+	// userDTO = new UsersDTO();
 	// null일때 임시용
 	sFlagSrc = request.getContextPath() + "/Views/resources/images/japanFlag.svg";
 	// ---------------------------------------------------------------------
@@ -155,15 +157,7 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	//사원정보 검색
-	if (this.usersDAO.ReadHeaderData(iUSERID, userDTO) == true)
-	{
-		sNICKNAME = userDTO.getNickname();
-		iCOURSE = userDTO.getCourse();
-	}
-	out.println("<script>console.log('" + sNICKNAME +"')</script>");
-	out.println("<script>console.log('" + iCOURSE +"')</script>");
-	
+ 	// 과정별 국기 파일 링크 (flagMap에서 주소 반환)
 	if (iCOURSE != null)
 	{
 		sFlagSrc = request.getContextPath() + "/Views/resources/images/" + flagMap.get(iCOURSE);
@@ -179,43 +173,19 @@
     <header id="divModalParent" class="header">
     	
         <div class="logo">
-	        <a href="../../Pages/Calendar/index.jsp">
+	        <a href="<%= request.getContextPath() %>/Views/Pages/Calendar/index.jsp">
             <img src="<%= request.getContextPath() %>/Views/resources/images/LOGO.png" alt="로고" class="logo">
             </a>
         </div>
-
+        
         <div class="user-info">
-        	<button type="button" class="signup-btn" onclick="gotologin()">로그인 화면 (임시버튼)</button>
             <span><%= sNICKNAME %> 님</span>
             
 			<a href="<%= request.getContextPath() %>/Views/Pages/Login/MyPage.jsp">
-			<!--
-			<a href="#" onclick="ShowModalWindow('<%= request.getContextPath() %>/Views/Pages/Login/MyPage.jsp');">
-             -->
             <img src=<%= sFlagSrc %> alt="국기" class="flag">
             </a>
         </div>
-	
+        
     </header>
-    
-	<%------------------------------------------------------------------
-	[모달 창 페이지 - START]
-	----------------------------------------------------------------------%>
-	<div class="Modal-Frame" id="divModalFrame">
-        <div class="Modal-Content">
-            <span class="Modal-Close" id="btnClose">&times;&nbsp;</span>
-            <iframe class="Modal-Window" id="ifModalWindow"></iframe>
-        </div>
-    </div>
-	<%------------------------------------------------------------------
-	[모달 창 페이지 - END]
-	----------------------------------------------------------------------%>		
-    
-	<script type="text/javascript">
-		function gotologin()
-		{
-    		location.href="../../Pages/Login/Login.jsp";
-    	}
-    </script>
 </body>
 </html>

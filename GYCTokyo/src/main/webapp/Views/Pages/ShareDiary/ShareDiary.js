@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	// 디버깅: 선택된 요소 확인
 	console.log("Clicked Outside Modal");
 		
-// iframe이 로드되었을 때 실행
+	// iframe이 로드되었을 때 실행
 	iframe.onload = function() {
 		const iframeDoc = iframe.contentDocument || iframe.contentWindow.document; // iframe 내부 문서 접근
 		
@@ -38,11 +38,12 @@ document.addEventListener("DOMContentLoaded", function () {
 				});
 			}
 			
-			// "글쓰기 저장" 버튼 클릭 시 동작 추가 (옵션)
+			// "글쓰기 등록" 버튼 클릭 시 동작 추가 (옵션)
 			if (NewDiarySave) {
 			    NewDiarySave.addEventListener("click", function () {
-			        alert("일기가 저장되었습니다!");
-			        divModalFrame.style.display = "none"; // 모달창 숨기기
+			        alert("일기가 등록되었습니다!");
+					divModalFrame.style.display = "none"; // 모달창 숨기기
+			        setTimeout(function () {location.reload(true);}, 500);
 			    });
 			}
 			
@@ -77,8 +78,13 @@ document.addEventListener("DOMContentLoaded", function () {
 			// "게시글 수정 삭제" 버튼 클릭 시 동작 추가 (옵션)
 			if (ChangeDiaryDelete) {
 			    ChangeDiaryDelete.addEventListener("click", function () {
+					if (confirm('정말로 삭제하시겠습니까? 삭제시 복구할 수 없습니다.')) {
+					iframeDoc.forms['form2'].action = "ChangeSDModal.jsp?jobProcess=true&jobStatus=DELETE";
+					iframeDoc.forms['form2'].submit();						
+					}
 			        alert("일기가 삭제되었습니다!");
 			        divModalFrame.style.display = "none"; // 모달창 숨기기
+					setTimeout(function () {location.reload(true);}, 500);
 			    });
 			}
 			
@@ -87,9 +93,9 @@ document.addEventListener("DOMContentLoaded", function () {
 			    ChangeDiarySave.addEventListener("click", function () {
 			        alert("일기가 수정되었습니다!");
 			        divModalFrame.style.display = "none"; // 모달창 숨기기
+					setTimeout(function () {location.reload(true);}, 500);
 			    });
 			}
-			
 	}
 
 		// 모달 외부 클릭 시 모달 닫기
