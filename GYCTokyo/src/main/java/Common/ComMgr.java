@@ -542,20 +542,18 @@ public class ComMgr
 	 ***********************************************************************/
 	public static String IsNull(Object CheckValue, String DefaultValue)
 	{
-		String nResult = null;
+		String sResult = null;
 		
 	    try
 	    {
-	    	nResult = (CheckValue != null) ? (String)CheckValue : DefaultValue;
-	    	
-	    	nResult = (nResult.toString().trim().length() > 0) ? nResult : DefaultValue;
+	    	sResult = (CheckValue != null) ? (String)CheckValue : DefaultValue;
 	    }
 	    catch (Exception Ex)
 	    {
-	    	nResult = DefaultValue;
+	    	sResult = DefaultValue;
 	    }
 	    
-	    return nResult;
+	    return sResult;
 	}
 	/***********************************************************************
 	 * IsNull()				: null 확인

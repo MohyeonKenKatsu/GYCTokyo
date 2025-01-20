@@ -18,7 +18,7 @@
         <%@ include file="/Views/Components/Sider/Sider.jsp" %>
 
         <!-- 메인 콘텐츠 -->
-        <main style="flex: 1; padding: 20px;">
+        <main style="flex: 1; padding: 50px;">
         
             <!-- 건강기록 -->
             <%@ include file="/Views/Pages/Health/Health.jsp" %>

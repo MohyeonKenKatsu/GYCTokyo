@@ -1,0 +1,18 @@
+create or replace PROCEDURE SP_SHAREGROUP_R
+(
+	iUserId		IN	int, 			-- 유저번호
+	oCur		OUT	SYS_REFCURSOR	-- 결과 반환용 커서
+)
+IS
+BEGIN
+	OPEN oCur FOR
+	SELECT a.*, g.GROUPNAME
+	FROM (
+		SELECT b.*
+		FROM TB_GROUPUSERLIST b
+		WHERE b.USER_ID = iUserId
+		)a,
+		TB_GROUPLIST g
+	WHERE a.GROUP_ID = g.GROUP_ID
+	ORDER BY a.GROUP_ID;
+END SP_SHAREGROUP_R;
