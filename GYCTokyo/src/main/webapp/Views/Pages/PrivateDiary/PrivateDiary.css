@@ -6,27 +6,62 @@
            box-sizing: border-box; /* 패딩 포함된 박스 크기 계산 */
        }
 
-	.add-entry {
-	    display: flex;
-	    justify-content: flex-start;
-	    margin-top: 1rem; /* 위쪽에 여백 추가 */
-	}
-
+	/* + 버튼*/
 	.add-button {
-	    width: 60px; /* 크기 조정 */
-	    height: 60px; /* 크기 조정 */
-	    border: none;
-	    border-radius: 50%;
-	    background-color: #0353a4;
+	    background-color: #0353a4; /* 파란색 배경 */
 	    color: white;
-	    font-size: 2rem; /* 크기 조정 */
+	    border: none;
+	    width: 60px; /* 버튼 너비 */
+	    height: 60px; /* 버튼 높이 (동그라미 만들기 위해 너비와 동일) */
+	    font-size: 24px; /* 글씨 크기 */
+	    border-radius: 50%; /* 동그라미 모양 */
 	    cursor: pointer;
-	    transition: background-color 0.3s;
+	    display: flex; /* 안의 +를 중앙 정렬하기 위한 설정 */
+	    justify-content: center;
+	    align-items: center;
 	}
-
+	
 	.add-button:hover {
-	    background-color: #0353a4;
+	    background-color: #0056b3; /* 호버 시 더 짙은 파란색 */
 	}
+	.diary-cards {
+	    display: flex;
+	    flex-direction: column;
+	    gap: 10px; /* 카드 사이 간격 */
+	    padding: 10px;
+	}
+	
+	.diary-card {
+	    background-color: #fff; /* 카드 배경색 */
+	    border: 1px solid #e0e0e0; /* 테두리 */
+	    border-radius: 10px; /* 둥근 모서리 */
+	    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 그림자 */
+	    padding: 15px;
+	    display: flex;
+	    flex-direction: column;
+	    gap: 8px; /* 내부 요소 간격 */
+	    cursor: pointer; /* 클릭 가능하게 */
+	    transition: transform 0.2s, box-shadow 0.2s; /* 호버 효과 */
+	}
+	
+	.diary-card:hover {
+	    transform: translateY(-5px); /* 살짝 위로 이동 */
+	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 증가 */
+	}
+	
+	.diary-title {
+	    font-size: 16px;
+	    font-weight: bold;
+	    color: #333;
+	    margin: 0; /* 제목 위아래 여백 제거 */
+	}
+	
+	.diary-card p {
+	    font-size: 14px;
+	    color: #666;
+	    margin: 0; /* 문장 위아래 여백 제거 */
+	}
+	
 
 
        /* 모달창 스타일 */
@@ -193,4 +228,86 @@
     .success-alert-modal .close-button:hover {
         background: #0056b3;
     }
-
+    
+    
+    /* 전체 컨테이너 */
+	.diary-entries {
+	    margin: 20px auto;
+	    padding: 20px;
+	    max-width: 800px;
+	    background: #f9f9f9;
+	    border: 1px solid #e0e0e0;
+	    border-radius: 12px;
+	    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+	}
+	
+	/* 제목 스타일 */
+	.diary-entries h2 {
+	    font-size: 24px;
+	    font-weight: bold;
+	    margin-bottom: 20px;
+	    text-align: center;
+	    color: #333;
+	}
+	
+	/* 개별 일기 카드 */
+	.diary-entry {
+	    padding: 15px;
+	    margin-bottom: 15px;
+	    background: #ffffff;
+	    border: 1px solid #ddd;
+	    border-radius: 8px;
+	    transition: transform 0.2s, box-shadow 0.2s;
+	}
+	
+	/* 일기 카드 hover 효과 */
+	.diary-entry:hover {
+	    transform: translateY(-5px);
+	    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+	    border-color: #007bff;
+	}
+	
+	/* 날짜 */
+	.diary-entry h3 {
+	    font-size: 18px;
+	    margin-bottom: 10px;
+	    color: #0353a4;
+	}
+	
+	/* 라벨 텍스트 */
+	.diary-entry p {
+	    margin: 5px 0;
+	    font-size: 14px;
+	    line-height: 1.5;
+	    color: #555;
+	}
+	
+	/* 강조 텍스트 */
+	.diary-entry p strong {
+	    color: #333;
+	}
+	
+	/* 날씨 아이콘 */
+	.diary-entry p .weather-icon {
+	    font-size: 16px;
+	    margin-left: 5px;
+	}
+	
+	/* 반응형 설정 */
+	@media (max-width: 768px) {
+	    .diary-entries {
+	        padding: 15px;
+	    }
+	
+	    .diary-entry {
+	        padding: 10px;
+	    }
+	
+	    .diary-entry h3 {
+	        font-size: 16px;
+	    }
+	
+	    .diary-entry p {
+	        font-size: 13px;
+	    }
+	}

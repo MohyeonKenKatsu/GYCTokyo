@@ -128,6 +128,9 @@ public class ShareDiaryDTO
 
 	public String getSdcontent()
 	{
+		if (sdcontent != null)
+			sdcontent = sdcontent.replace("\r\n", "<br>");
+		
 		return sdcontent;
 	}
 

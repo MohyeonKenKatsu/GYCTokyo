@@ -5,6 +5,10 @@
 //외부모듈 영역
 //═════════════════════════════════════════════════════════════════════════════════════════
 package BeansPrivateDiary;
+import java.util.ArrayList;
+
+import java.util.List;
+
 import Common.ComMgr;
 import Common.ExceptionMgr;
 
@@ -189,71 +193,44 @@ public class PrivateDiaryDAO
         return bResult;
     }
 
+   
+    /***********************************************************************
+     * getAllPrivateDiaries : 모든 개인 다이어리 데이터 가져오기
+     * @return List<PrivateDiaryDTO> : 개인 다이어리 목록
+     ***********************************************************************/
+    public List<PrivateDiaryDTO> getAllPrivateDiaries() throws Exception {
+        List<PrivateDiaryDTO> diaryList = new ArrayList<>();
+        String sSql = null;
 
+        try {
+            if (this.DBMgr.DbConnect() == true) {
+                // 개인 다이어리 데이터 가져오는 SQL 작성
+                sSql = "SELECT USER_ID, PD_DATE, PD_CONTENT, EMOJI " +
+                       "FROM TB_PRIVATEDIARY " +
+                       "ORDER BY PD_DATE DESC";
 
-	/***********************************************************************
-	 * GatheringDetailUpdate()	: 모집글을 오라클 데이터베이스에서 수정(Update)
-	 * @param GatheringId		: 모집글 Id
-	 * @param GatheringDTO		: 모집글 DTO 객체
-	 * @return boolean			: true | false
-	 ***********************************************************************/
-/*	public boolean GatheringDetailUpdate(int GatheringId, GatheringDTO gatheringDTO)
-	{
-		String sSql	= null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 모집글 수정
-	    	// -----------------------------------------------------------------------------
-			if (this.DBMgr.DbConnect() == true)
-			{
-				// 모집글 수정
-				sSql = "BEGIN SP_GATHERING_CUD(?,?,?,?,?,?,?,?); END;";
+                if (this.DBMgr.RunQuery(sSql, null, 0, true) == true) {
+                    while (this.DBMgr.Rs.next()) {
+                        PrivateDiaryDTO dto = new PrivateDiaryDTO();
+                        dto.setUser_id(this.DBMgr.Rs.getInt("USER_ID"));
+                        dto.setPd_date(this.DBMgr.Rs.getString("PD_DATE"));
+                        dto.setPd_content(this.DBMgr.Rs.getString("PD_CONTENT"));
+                        dto.setEmoji(this.DBMgr.Rs.getString("EMOJI"));
+                        diaryList.add(dto);
+                    }
+                }
+                this.DBMgr.DbDisConnect();
+            }
+        } catch (Exception Ex) {
+            Common.ExceptionMgr.DisplayException(Ex);
+        }
 
-				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[8];
-				
-				oPaValue[0] = "INSERT";
-				oPaValue[1] = GatheringId;
-				oPaValue[2] = gatheringDTO.getTitle();
-				oPaValue[3] = gatheringDTO.getStart_date();
-				oPaValue[4] = gatheringDTO.getFinish_date();
-				oPaValue[5] = gatheringDTO.getActivity_date();
-				oPaValue[6] = gatheringDTO.getNumber_limit();
-				oPaValue[7] = gatheringDTO.getContent();
-				
-				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
-				{
-					
-					this.DBMgr.DbCommit();
-					
-					bResult = true;
-				}
-				
-				this.DBMgr.DbDisConnect();
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
-	} 
-	***********************************************************************
-	 * GatheringDetailDelete()	: 모집글을 오라클 데이터베이스에서 삭제(Delete)
-	 * @param GatheringId		: 모집글 Id
-	 * @return boolean		: true | false
-	 ***********************************************************************/
+        return diaryList;
+    }
 
-
-
-	// —————————————————————————————————————————————————————————————————————————————————————
 }
+	// —————————————————————————————————————————————————————————————————————————————————————
+
 //#################################################################################################
 //<END>
 //#################################################################################################
