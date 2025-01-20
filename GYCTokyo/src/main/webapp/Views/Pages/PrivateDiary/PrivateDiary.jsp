@@ -201,19 +201,8 @@
 		    </button>
 		
 		<!-- 일기 카드 리스트 -->
-<!-- 		<div class="diary-cards">
-		    <div class="diary-card">
-		        <h3 class="diary-title">2025-01-16</h3>
-		        <p>오늘은 GYC 친구들과 같이 명수당을 갔다. 날씨가 좋아서 기분이 좋았다.</p>
-		    </div>
-		    <div class="diary-card">
-			<h3 class="diary-title">2025-01-16</h3>
-		        <p>오늘은 시험에 100점을 맞아서 뿌듯한 하루였다. 보상으로 마라샹궈 먹어야지!</p>
-		    </div>
-		</div>
-        </section>
-    	</div> -->
-			    	<%@ page import="BeansPrivateDiary.PrivateDiaryDTO" %>
+
+			<%@ page import="BeansPrivateDiary.PrivateDiaryDTO" %>
 			<%@ page import="BeansPrivateDiary.PrivateDiaryDAO" %>
 			<%@ page import="java.util.List" %>
 			
@@ -223,15 +212,17 @@
 			%>
 			
 			<div class="diary-entries">
-			    <h2>모든 마음일기</h2>
-			    <% for (PrivateDiaryDTO diary : diaryList) { %>
-			        <div class="diary-entry">
-			            <h3><%= diary.getPd_date() %></h3>
-			            <p><strong>날씨:</strong> <%= diary.getEmoji() %></p>
-			            <p><strong>내용:</strong> <%= diary.getPd_content() %></p>
-			        </div>
-			    <% } %>
+		    <h2>모든 마음일기</h2>
+		    <% for (PrivateDiaryDTO diary : diaryList) { %>
+		        <div class="diary-entry" >
+		            <!-- 날짜만 표시 -->
+		            <h3><%= diary.getPd_date().split(" ")[0] %></h3>
+		            <p><strong>날씨:</strong> <%= diary.getEmoji() %></p>
+		            <p><strong>내용:</strong> <%= diary.getPd_content() %></p>
+		        </div>
+		    <% } %>
 			</div>
+
     	
 
     <!-- 모달창 -->
@@ -354,10 +345,10 @@
 
     viewDiaryButton.addEventListener('click', () => {
         
-        window.location.href = 'PrivateDiary.jsp';
+        window.location.href = '/GYCTokyo/Views/Pages/PrivateDiary/ViewPrivateDiary.jsp';
     });
     
-	 // 20자 이상인 내용은 '...'으로 처리
+ 	// 20자 이상인 내용은 '...'으로 처리
     document.querySelectorAll('.diary-content').forEach((content) => {
         const text = content.textContent.trim();
         if (text.length > 20) {
@@ -365,6 +356,5 @@
         }
     });
 
+	 
 </script>
-
-

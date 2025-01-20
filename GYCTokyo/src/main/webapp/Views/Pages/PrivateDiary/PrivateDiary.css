@@ -230,27 +230,84 @@
     }
     
     
-    .diary-entries {
-    margin: 20px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background: #f9f9f9;
-}
-
-	.diary-entry {
-	    margin-bottom: 15px;
-	    padding: 10px;
-	    border-bottom: 1px solid #ddd;
+    /* 전체 컨테이너 */
+	.diary-entries {
+	    margin: 20px auto;
+	    padding: 20px;
+	    max-width: 800px;
+	    background: #f9f9f9;
+	    border: 1px solid #e0e0e0;
+	    border-radius: 12px;
+	    box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
 	}
 	
+	/* 제목 스타일 */
+	.diary-entries h2 {
+	    font-size: 24px;
+	    font-weight: bold;
+	    margin-bottom: 20px;
+	    text-align: center;
+	    color: #333;
+	}
+	
+	/* 개별 일기 카드 */
+	.diary-entry {
+	    padding: 15px;
+	    margin-bottom: 15px;
+	    background: #ffffff;
+	    border: 1px solid #ddd;
+	    border-radius: 8px;
+	    transition: transform 0.2s, box-shadow 0.2s;
+	}
+	
+	/* 일기 카드 hover 효과 */
+	.diary-entry:hover {
+	    transform: translateY(-5px);
+	    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+	    border-color: #007bff;
+	}
+	
+	/* 날짜 */
 	.diary-entry h3 {
 	    font-size: 18px;
-	    margin-bottom: 5px;
+	    margin-bottom: 10px;
+	    color: #0353a4;
 	}
 	
+	/* 라벨 텍스트 */
 	.diary-entry p {
-	    margin: 0;
+	    margin: 5px 0;
 	    font-size: 14px;
+	    line-height: 1.5;
+	    color: #555;
 	}
-	    
+	
+	/* 강조 텍스트 */
+	.diary-entry p strong {
+	    color: #333;
+	}
+	
+	/* 날씨 아이콘 */
+	.diary-entry p .weather-icon {
+	    font-size: 16px;
+	    margin-left: 5px;
+	}
+	
+	/* 반응형 설정 */
+	@media (max-width: 768px) {
+	    .diary-entries {
+	        padding: 15px;
+	    }
+	
+	    .diary-entry {
+	        padding: 10px;
+	    }
+	
+	    .diary-entry h3 {
+	        font-size: 16px;
+	    }
+	
+	    .diary-entry p {
+	        font-size: 13px;
+	    }
+	}
