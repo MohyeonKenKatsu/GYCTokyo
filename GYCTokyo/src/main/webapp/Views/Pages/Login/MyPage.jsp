@@ -265,7 +265,7 @@
 <body>
 	<div class="container">
 		<div class="form-container">
-			<h1 class="signup-title">My Page</h1>
+			<h1 class="signup-title">MY PAGE</h1>
 			<form name="form1" action="" method="post">
 				<table class="form-table">
 				
