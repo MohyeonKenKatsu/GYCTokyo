@@ -1,5 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@page import="java.time.LocalDate"%>
+<%@page import="BeansShareDiary.ShareDiaryDAO"%>
+<%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,13 +9,27 @@
 	[HTML Page - 헤드 영역]
 	--------------------------------------------------------------------------%>
 	<%--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">--%>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+	<meta http-equiv="Expires" content="0"/>
+	<meta http-equiv="pragma" content="no-cache"/>
+    <meta name="Description" content="검색 엔진을 위해 웹 페이지에 대한 설명을 명시"/>
+    <meta name="keywords" content="검색 엔진을 위해 웹 페이지와 관련된 키워드 목록을 콤마로 구분해서 명시"/>
+    <meta name="Author" content="문서의 저자를 명시"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>공유일기</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
+		<style type="text/css">
+		/* -----------------------------------------------------------------
+			HTML Page 스타일시트
+		   ----------------------------------------------------------------- */
+			
+        /* ----------------------------------------------------------------- */
+	</style>
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Header/Header.css">
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Components/Sider/Sider.css">
@@ -25,30 +41,34 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		function openShareDiary (group_id, user_id)
+		function openShareDiary (groupId, userId)
 		{
 			let url = 'ShareDiary.jsp'; // 초기 화면에서 선택한 날짜가 메인 화면으로 옮겨감
 			let date = document.getElementById('date').value; // 초기 화면 선택 날짜(기본값: 오늘 날짜)
 			
-			url = url + '?date=' + date + '&group_id=' + group_id + '&user_id=' + user_id;
+			url = url + '?date=' + date + '&groupId=' + groupId + '&userId=' + userId;
 			location.href=url;
 		}
 		
 		function openModal(modalType)
 		{
 			let ifModalWindow = document.getElementById('ifModalWindow');
+			let divModalFrame = document.getElementById('divModalFrame');
 			
-			divModalFrame.style.display = "block";
-			
-			if(modalType === 'NewSDGroupModal')
-				{			
-					ifModalWindow.src = 'NewSDGroupModal.jsp';
-				}
-			
-			if(modalType === 'InviteGroupMemberModal')
-				{
-					ifModalWindow.src = 'InviteGroupMemberModal.jsp';
-				}
+			if (ifModalWindow != null && divModalFrame != null)
+			{
+				divModalFrame.style.display = "block";
+				
+				if(modalType === 'NewSDGroupModal')
+					{			
+						ifModalWindow.src = 'NewSDGroupModal.jsp';
+					}
+				
+				if(modalType === 'InviteGroupMemberModal')
+					{
+						ifModalWindow.src = 'InviteGroupMemberModal.jsp';
+					}
+			}
 		}
 		// -----------------------------------------------------------------
 	</script>
@@ -62,7 +82,8 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	
+	// 공유일기 그룹 검색용 DAO 객체
+	public ShareDiaryDAO shareDiaryDAO = new ShareDiaryDAO();
 	// ---------------------------------------------------------------------
 %>
 <%--------------------------------------------------------------------------
@@ -74,7 +95,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	
+	Integer nUserId = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
@@ -82,11 +103,13 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	Boolean bContinue = true;	// 공유일기 그룹 목록 검색 유무	
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
+	session.setAttribute("USER_ID", 1);
 	
+	nUserId = ComMgr.IsNull(session.getAttribute("USER_ID"), -1);
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
@@ -100,9 +123,9 @@
 	Beans 객체 사용 선언	: id	- 임의의 이름 사용 가능(클래스 명 권장)
 						: class	- Beans 클래스 명
  						: scope	- Beans 사용 기간을 request 단위로 지정 Hello.HelloDTO 
-	------------------------------------------------------------------------
-	<jsp:useBean id="HelloDTO" class="Hello.HelloDTO" scope="request"></jsp:useBean>
-	--%>
+	------------------------------------------------------------------------	--%>
+	<jsp:useBean id="ShareDiaryDTO" class="BeansShareDiary.ShareDiaryDTO" scope="request"></jsp:useBean>
+
 	<%----------------------------------------------------------------------
 	Beans 속성 지정 방법1	: Beans Property에 * 사용
 						:---------------------------------------------------
@@ -133,12 +156,23 @@
 						: Beans 메서드를 각각 직접 호출 해야함!
 	--------------------------------------------------------------------------%>
 <%
-	// HelloDTO.setData1(request.getParameter("data1"));
+	ShareDiaryDTO.setUserId(nUserId);
 %>
 <%--------------------------------------------------------------------------
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
+// 공유일기 그룹 목록 검색
+if (bContinue == true)
+{
+	if (this.shareDiaryDAO.ReadShareDiaryGroupList(ShareDiaryDTO) == true)
+	{
+		if (this.shareDiaryDAO.DBMgr != null && this.shareDiaryDAO.DBMgr.Rs != null)
+		{
+			bContinue = true;
+		}
+	}
+}
 %>
 <body>
 	<%----------------------------------------------------------------------
@@ -159,7 +193,7 @@
 			<!-- 상단 날짜와 제목 -->
 			<header>
 				<h1 class="Title">공유일기</h1>
-				<input type="date" class="Date" id="date" name="date" required>
+				<input type="date" class="Date" id="date" name="date" value="<%=LocalDate.now().toString() %>" required>
 			</header>
 			
 			<!-- 우측 메뉴 -->
@@ -167,9 +201,6 @@
 				<tr>
 					<td>
 				    	<button class="GroupInviteButton" id="groupInviteButton" onclick="openModal('InviteGroupMemberModal')">초대</button>
-					</td>
-					<td>
-				    	<div class="Sort">☰</div>
 					</td>
 				</tr>
 			</table>
@@ -180,13 +211,20 @@
 			<!-- 폴더 아이콘 -->
 			<div class="GroupFolders">
 			<%
-				for(int i=1; i<=3; i++)
+			if(bContinue == true)
+			{
+				int Count = 0;
+				while (this.shareDiaryDAO.DBMgr.Rs.next() == true)
 				{
+					Count++;
 			%>
-					<div class="GroupFolder" id="GroupFolder<%=i %>" onclick="openShareDiary(1, 1)">사내켄<%=i %></div>
+					<div class="GroupFolder" id="GroupFolder<%=Count %>" onclick="openShareDiary(<%=this.shareDiaryDAO.DBMgr.Rs.getInt("GROUP_ID") %>, <%=nUserId %>)">
+					<%=this.shareDiaryDAO.DBMgr.Rs.getString("GROUPNAME") %>
+					</div>
 			<%
 				}
-			%>		
+			}
+			%>
 			</div>
 		<%------------------------------------------------------------------
 		[모달 창 페이지 - START]
@@ -211,7 +249,7 @@
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		document.getElementById('date').value = new Date().toISOString().substring(0, 10);
+
 		// -----------------------------------------------------------------
 	</script>
    		<script src="<%= request.getContextPath() %>/Views/Pages/ShareDiary/ShareDiaryIntro.js" defer></script>

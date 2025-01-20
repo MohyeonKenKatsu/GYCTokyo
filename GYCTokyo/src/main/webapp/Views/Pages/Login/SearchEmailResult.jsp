@@ -19,12 +19,12 @@
     <meta name="keywords" content="검색 엔진을 위해 웹 페이지와 관련된 키워드 목록을 콤마로 구분해서 명시"/>
     <meta name="Author" content="문서의 저자를 명시"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>GYC, 그 해 우리는</title>
+	<title>SEARCH RESULT</title>
 	<%----------------------------------------------------------------------
 	[HTML Page - 스타일쉬트 구현 영역]
 	[외부 스타일쉬트 연결 : <link rel="stylesheet" href="Hello.css?version=1.1"/>]
 	--------------------------------------------------------------------------%>
-    <link rel="stylesheet" href="Login.css">
+	<link rel="stylesheet" href="SearchEmailResult.css">
 	<style type="text/css">
 		/* -----------------------------------------------------------------
 			HTML Page 스타일시트
@@ -72,7 +72,7 @@
 	// ---------------------------------------------------------------------
 	// [JSP 전역 변수/함수 선언]
 	// ---------------------------------------------------------------------
-	// 사원정보 검색용 DAO 객체
+	// 회원가입 처리용 DTO 객체
 	public UsersDAO usersDAO = new UsersDAO();
 	// ---------------------------------------------------------------------
 %>
@@ -85,29 +85,27 @@
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 웹 페이지 get/post 파라미터]
 	// ---------------------------------------------------------------------
-	Boolean bJobProcess		= null;		// 파라미터 : 작업처리 - DB 접속 여부
 	String  sEMAIL			= null;		// 파라미터 : 이메일
-	String  sPASSWORD		= null;		// 파라미터 : 비밀번호
-	Boolean bLoginSuccess	= null;		// 파라미터 : 로그인 성공여부
+	String 	sBIRTHDAY		= null;		// 파라미터 : 생일
+	String	sTEL	 		= null;		// 파라미터 : 전화번호
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 데이터베이스 파라미터]
 	// ---------------------------------------------------------------------
 	UsersDTO usersDTO = null;
-	Object[] USER_ID_DATA = null;
 	// ---------------------------------------------------------------------
 	// [JSP 지역 변수 선언 : 일반 변수]
 	// ---------------------------------------------------------------------
-	
+	String stempEmail = null;	// 이메일 결과 저장용 임시 변수
+	Boolean bNone = null;		// 검색 결과 없음
 	// ---------------------------------------------------------------------
 	// [웹 페이지 get/post 파라미터 조건 필터링]
 	// ---------------------------------------------------------------------
-	bJobProcess	= ComMgr.IsNull(request.getParameter("jobprocess"), false);		// 파라미터 : 작업처리 : null 확인(false : 아무동작 없음)
-	sEMAIL		= ComMgr.IsNull(request.getParameter("email"), "");				// 파라미터 : 이메일
-	sPASSWORD	= ComMgr.IsNull(request.getParameter("password"), "");			// 파라미터 : 이메일
+	sBIRTHDAY	= ComMgr.IsNull(request.getParameter("birthday"), "");			// 파라미터 : 이메일
+	sTEL		= ComMgr.IsNull(request.getParameter("tel"), "");				// 파라미터 : 이메일
 	// ---------------------------------------------------------------------
 	// [일반 변수 조건 필터링]
 	// ---------------------------------------------------------------------
-	USER_ID_DATA = new Object[3];	// 사용자 아이디, 닉네임, 교육과정을 전달
+
 	// ---------------------------------------------------------------------
 %>
 
@@ -134,98 +132,61 @@
 [Beans DTO 읽기 및 로직 구현 영역]
 ------------------------------------------------------------------------------%>
 <%
-	// bJobProcess 작업처리 허용인 경우
-	if (bJobProcess == true)
+	// 입력받은 값을 DTO에 저장
+	usersDTO = new UsersDTO();
+	
+	usersDTO.setBirthday(sBIRTHDAY);
+	usersDTO.setTel(sTEL);
+	
+	// 회원가입에 성공했을 경우
+	if (this.usersDAO.SearchEmail(usersDTO) == true)
 	{
-		usersDTO = new UsersDTO();
-		usersDTO.setEmail(sEMAIL);
-		usersDTO.setPassword(sPASSWORD);
-		
-		// 로그인 정보가 사용자 테이블에 있을 경우 = 로그인 성공
-		if (this.usersDAO.Login(usersDTO, USER_ID_DATA) == true)
-		{
-			bLoginSuccess = true;
-		}
-		// 로그인 정보가 사용자 테이블에 없을 경우 = 로그인 실패
-		else {
-			bLoginSuccess = false;
-		}
+		bNone = false;
 	}
+	else bNone = true;
 %>
 
+<script type="text/javascript">
+	// 회원가입에 성공했을 경우
+	if (<%= bNone %> == true)
+	{
+		//DocumentInit("검색 결과가 없습니다.");
+		alert("검색 결과가 없습니다.");
+		location.href="Login.jsp";
+	}
+</script>
+
 <body>
-	<%----------------------------------------------------------------------
-	[HTML Page - FORM 디자인 영역]
-	--------------------------------------------------------------------------%>
-	<!-- 로그인 영역 -->
-	<div class="form-container">
-	
-		<!-- 페이지 제목 영역 -->
-        <h1 class="login-title">SIGN IN</h1>
-        
-        <!-- 입력 양식 영역 -->
-        <form name="loginform" action="" method="post">
-        	
-        	<!-- 이메일 입력 칸 -->
-	        <div class="input-container">
-	            <input type="email" id="email" name="email" placeholder="이메일" value="<%= sEMAIL %>" required>
-	        </div>
-	        
-			<!-- 비밀번호 입력 칸 -->
-	        <div class="input-container">
-	            <input type="password" id="password" name="password" placeholder="비밀번호" required>
-	        </div>
-	        
-	        <div class="FindButton-container">
-	        	&nbsp;
-		        <a class="FindButton" href="SearchEmail.jsp">아이디 찾기</a>
-		        &nbsp;&nbsp;·&nbsp;&nbsp;
-		        <a class="FindButton" href="SearchPassword.jsp">비밀번호 찾기</a>
-	        </div>
-	        
-			<!-- DB 접속 제어 변수 -->
-	       	<input type="hidden" id="jobprocess" name="jobprocess" value="true">
-	       	
-			<!-- 버튼 영역 -->
-	        <div class="button-container">
-	        	<!-- 로그인 버튼 -->
-	            <button type="submit" class="signin-btn">SIGN IN</button>
-	            <!-- 회원가입 버튼 -->
-	            <button type="button" class="signup-btn" onclick="window.location.href='SignUp.jsp'">SIGN UP</button>
-	        
-	        </div>
-		</form>
+	<div class="container">
+		<div id="divModalParent" class="form-container">
+			<h1 class="signup-title">SEARCH RESULT</h1>
+			<form action="" method="post">
+				<table class="form-table">
+					
+					<%
+					while (this.usersDAO.DBMgr.Rs.next() == true)
+					{
+						stempEmail = this.usersDAO.DBMgr.Rs.getString("EMAIL");
+					%>
+						<tr>
+							<td></td>
+							<td><a href="Login.jsp?email=<%= stempEmail %>"><%= this.usersDAO.DBMgr.Rs.getString("EMAIL") %></a></td>
+							<td></td>
+						</tr>
+					<%	
+					}
+					%>
+					
+				</table>
+
+				<div class = button-container>
+					<button type="reset" class="reset-btn" onclick="window.location.href='Login.jsp'">확인</button>
+				</div>
+			</form>
+		</div>
+		
 	</div>
-	<%----------------------------------------------------------------------
-	[HTML Page - END]
-	--------------------------------------------------------------------------%>
 	
-	<%----------------------------------------------------------------------
-	[HTML Page - 자바스크립트 구현 영역(하단)]
-	[외부 자바스크립트 연결(각각) : <script type="text/javascript" src="Hello.js"></script>]
-	--------------------------------------------------------------------------%>
-	<script type="text/javascript">
-		// -----------------------------------------------------------------
-		// [사용자 함수 및 로직 구현]
-		// -----------------------------------------------------------------
-		
-		// 로그인 결과처리
-		
-		// 로그인 성공시 사용자 아이디를 세션에 저장하고 캘린더/일정 페이지로 이동
-		if (<%= bLoginSuccess %> == true)
-		{
-	        <% session.setAttribute("USER_ID", USER_ID_DATA[0]); %>
-	        <% session.setAttribute("NICKNAME", USER_ID_DATA[1]); %>
-	        <% session.setAttribute("COURSE", USER_ID_DATA[2]); %>
-	        location.href="../Calendar/index.jsp";
-		}
-		// 로그인 실패 시 경고창 출력
-		if (<%= bLoginSuccess %> == false)
-		{
-			DocumentInit('로그인에 실패했습니다.');
-		}
-		// -----------------------------------------------------------------
-	</script>
 	<%------------------------------------------------------------------
 	[JSP 페이지에서 바로 이동(바이패스)]
 	----------------------------------------------------------------------%>

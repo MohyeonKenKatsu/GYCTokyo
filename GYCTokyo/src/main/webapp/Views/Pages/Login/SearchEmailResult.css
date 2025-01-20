@@ -42,9 +42,6 @@ body {
     padding: 10px;
 }
 
-td.inputform {
-    width: 350px;
-}
 
 label {
     font-size: 14px;
@@ -94,15 +91,10 @@ button.signup-btn, button.reset-btn {
     cursor: pointer;
 }
 
-
-button.signup-btn {
+button.reset-btn {
     background-color: #0353a4;
     color: white;
-}
 
-
-button.reset-btn {
-    background-color: #f1f1f1;
 }
 
 
@@ -110,11 +102,4 @@ button.reset-btn {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
-}
-
-.pwtext {
-    font-family: Pretendard, sans-serif;
-    color: #0353a4;
-    font-size: 12px;
-    margin: 0;
 }
