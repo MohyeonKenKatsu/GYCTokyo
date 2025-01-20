@@ -16,7 +16,7 @@ import Common.ExceptionMgr;
 //사용자정의 클래스 영역
 //═════════════════════════════════════════════════════════════════════════════════════════
 /***********************************************************************
-* SawonDAO		: 사원검색 Bean DAO 클래스<br>
+* HealthDAO		: 건강기록 Bean DAO 클래스<br>
 * Inheritance	: None
 ***********************************************************************/
 public class HealthDAO
@@ -186,6 +186,31 @@ public class HealthDAO
 	    }
 
 	    return bResult;
+	}
+	
+	/***********************************************************************
+	 * deleteHealthRecord()	: 오라클 데이터베이스에 건강기록 삭제
+	 * @param HealthDTO		: 건강기록 DTO(저장용)
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean deleteHealthRecord(String healthDate, int userId) throws Exception {
+	    String sSql = "BEGIN SP_HEALTH_CUD(?, ?, ?, NULL, NULL, NULL, NULL, NULL, NULL, NULL); END;";
+	    boolean result = false;
+
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            Object[] params = { "DELETE", healthDate, userId };
+	            if (this.DBMgr.RunQuery(sSql, params, 0, false)) {
+	                this.DBMgr.DbCommit();
+	                result = true;
+	            }
+	        }
+	    } catch (Exception e) {
+	        Common.ExceptionMgr.DisplayException(e);
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return result;
 	}
 	// —————————————————————————————————————————————————————————————————————————————————————
 }

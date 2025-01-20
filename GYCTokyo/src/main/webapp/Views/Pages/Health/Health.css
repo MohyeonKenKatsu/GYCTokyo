@@ -2,7 +2,6 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
     font-family: 'Pretendard', sans-serif;
 }
 
@@ -12,8 +11,7 @@ body {
 
 .main-content {
     max-width: 800px;
-    margin: 0 auto;
-    padding: 40px;
+    margin: 0;
     position: relative;
 }
 
@@ -22,18 +20,22 @@ body {
 }
 
 .content-header h1 {
-    font-size: 24px;
-    font-weight: 600;
-    margin-bottom: 16px;
+	font-size: 30px;
+	color: #0353a4;
+	margin-bottom: 5px;
+	white-space: nowrap;
 }
 
-.date-display {
-    background-color: #f0f0f0;
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
-    border-radius: 4px;
-    gap: 8px;
+.date-display #textdate {
+	color: #242424;
+ 	display: inline-block; 
+    background: #e0e0e0; 
+    padding: 4px 8px; 
+    border: none;
+    border-radius: 4px; 
+    font-size: 14px;
+    margin-top: 4px;
+    cursor: pointer;
 }
 
 .date-display span {
@@ -93,6 +95,9 @@ body {
     color: white;
     font-size: 40px;
     font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 선택 메뉴 스타일 */

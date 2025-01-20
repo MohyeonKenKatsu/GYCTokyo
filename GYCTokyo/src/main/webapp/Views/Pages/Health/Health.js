@@ -43,6 +43,35 @@ document.addEventListener('DOMContentLoaded', function() {
 		
 		textdate.value = year+month+day;
     });
+	
+	const deleteButton = document.getElementById('deleteRecordButton');
+	const textDate = document.getElementById('textdate').value;
+	const userId = document.getElementById('textuserid').value;
+
+	deleteButton.addEventListener('click', () => {
+	    if (confirm(`[${textDate}]의 기록을 삭제하시겠습니까?\n삭제 후에는 복구할 수 없습니다.`)) {
+	        fetch('DeleteHealthRecord.jsp', {
+	            method: 'POST',
+	            headers: {
+	                'Content-Type': 'application/x-www-form-urlencoded',
+	            },
+	            body: `health_date=${encodeURIComponent(textDate)}&user_id=${encodeURIComponent(userId)}`,
+	        })
+	            .then(response => response.json())
+	            .then(data => {
+	                if (data.success) {
+	                    alert('기록이 삭제되었습니다.');
+	                    location.reload();
+	                } else {
+	                    alert('기록 삭제에 실패했습니다.');
+	                }
+	            })
+	            .catch(error => {
+	                console.error('Error:', error);
+	                alert('삭제 중 오류가 발생했습니다.');
+	            });
+	    }
+	});
 
     // 선택 메뉴와 모달 관련 요소
     const addButton = document.querySelector('.add-button');
