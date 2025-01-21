@@ -141,20 +141,10 @@
 	// 회원가입에 성공했을 경우
 	if (this.usersDAO.SearchEmail(usersDTO) == true)
 	{
-		bNone = false;
 	}
-	else bNone = true;
 %>
 
-<script type="text/javascript">
-	// 회원가입에 성공했을 경우
-	if (<%= bNone %> == true)
-	{
-		//DocumentInit("검색 결과가 없습니다.");
-		alert("검색 결과가 없습니다.");
-		location.href="Login.jsp";
-	}
-</script>
+
 
 <body>
 	<div class="container">
@@ -164,13 +154,15 @@
 				<table class="form-table">
 					
 					<%
+					bNone = true;
 					while (this.usersDAO.DBMgr.Rs.next() == true)
 					{
+						bNone = false;
 						stempEmail = this.usersDAO.DBMgr.Rs.getString("EMAIL");
 					%>
 						<tr>
 							<td></td>
-							<td><a href="Login.jsp?email=<%= stempEmail %>"><%= this.usersDAO.DBMgr.Rs.getString("EMAIL") %></a></td>
+							<td><a href="Login.jsp?email=<%= stempEmail %>"><%= stempEmail %></a></td>
 							<td></td>
 						</tr>
 					<%	
@@ -241,4 +233,15 @@
 		// -----------------------------------------------------------------
 	%>
 </body>
+
+<script type="text/javascript">
+	// 이메일 조회 결과가 없을 때
+	if (<%= bNone == true %>)
+	{
+		{//DocumentInit("검색 결과가 없습니다.");
+		alert("검색 결과가 없습니다.");}
+		location.href="Login.jsp";
+	}
+</script>
+
 </html>
