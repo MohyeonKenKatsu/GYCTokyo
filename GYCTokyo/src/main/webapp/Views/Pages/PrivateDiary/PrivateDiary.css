@@ -1,9 +1,19 @@
 @charset "UTF-8";
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
+:root {
+  --font-primary: "Pretendard", sans-serif;
+}
+
+* {
+  font-family: var(--font-primary);
+}
 
 	
 	.diary-content {
            padding: 50px; /* 내부 여백 설정 */
            box-sizing: border-box; /* 패딩 포함된 박스 크기 계산 */
+           width: 100%;
        }
 
 	/* + 버튼*/
@@ -24,6 +34,18 @@
 	.add-button:hover {
 	    background-color: #0056b3; /* 호버 시 더 짙은 파란색 */
 	}
+	
+	.diary-title {
+    font-size: 30px;
+    color: #0353a4;
+    margin-bottom: 10px;
+    white-space: nowrap;
+	}
+	
+	.date-display {
+	margin-bottom: 20px;
+	}
+	
 	.diary-cards {
 	    display: flex;
 	    flex-direction: column;
@@ -49,13 +71,7 @@
 	    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* 호버 시 그림자 증가 */
 	}
 	
-	.diary-title {
-	    font-size: 16px;
-	    font-weight: bold;
-	    color: #333;
-	    margin: 0; /* 제목 위아래 여백 제거 */
-	}
-	
+
 	.diary-card p {
 	    font-size: 14px;
 	    color: #666;
@@ -234,7 +250,7 @@
 	.diary-entries {
 	    margin: 20px auto;
 	    padding: 20px;
-	    max-width: 800px;
+	    max-width: 100%;
 	    background: #f9f9f9;
 	    border: 1px solid #e0e0e0;
 	    border-radius: 12px;

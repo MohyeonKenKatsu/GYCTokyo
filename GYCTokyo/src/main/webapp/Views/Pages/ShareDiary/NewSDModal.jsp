@@ -28,7 +28,10 @@
 		/* -----------------------------------------------------------------
 			HTML Page 스타일시트
 		   ----------------------------------------------------------------- */
-			
+			.InputDiary::placeholder
+			{
+				white-space: pre-line;
+			}
         /* ----------------------------------------------------------------- */
 	</style>	
 	<link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/ShareDiary/NewSDModal.css">
@@ -195,7 +198,8 @@ if (bJobProcess == true)
       		</div>
       		
         	<div class="ModalBody">
-				<textarea class="InputDiary" name="sdContent" placeholder="오늘 어떤 하루를 보내셨나요? 친구들에게 나의 하루를 공유해 볼까요?"></textarea>
+				<textarea class="InputDiary" name="sdContent" placeholder="오늘 어떤 하루를 보내셨나요? 친구들에게 나의 하루를 공유해 볼까요?
+				※ 특수문자는 .,!~★♥만 사용 가능합니다."></textarea>
         	</div>
         	
 			<div class="ModalTail">

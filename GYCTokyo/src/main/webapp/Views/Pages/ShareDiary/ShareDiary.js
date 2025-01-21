@@ -43,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			    NewDiarySave.addEventListener("click", function () {
 			        alert("일기가 등록되었습니다!");
 					divModalFrame.style.display = "none"; // 모달창 숨기기
-			        setTimeout(function () {location.reload(true);}, 500);
+			        setTimeout(function () {location.reload(true);}, 700);
 			    });
 			}
 			
@@ -81,10 +81,10 @@ document.addEventListener("DOMContentLoaded", function () {
 					if (confirm('정말로 삭제하시겠습니까? 삭제시 복구할 수 없습니다.')) {
 					iframeDoc.forms['form2'].action = "ChangeSDModal.jsp?jobProcess=true&jobStatus=DELETE";
 					iframeDoc.forms['form2'].submit();						
-					}
 			        alert("일기가 삭제되었습니다!");
+					}
 			        divModalFrame.style.display = "none"; // 모달창 숨기기
-					setTimeout(function () {location.reload(true);}, 500);
+					setTimeout(function () {location.reload(true);}, 700);
 			    });
 			}
 			
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			    ChangeDiarySave.addEventListener("click", function () {
 			        alert("일기가 수정되었습니다!");
 			        divModalFrame.style.display = "none"; // 모달창 숨기기
-					setTimeout(function () {location.reload(true);}, 500);
+					setTimeout(function () {location.reload(true);}, 700);
 			    });
 			}
 	}
