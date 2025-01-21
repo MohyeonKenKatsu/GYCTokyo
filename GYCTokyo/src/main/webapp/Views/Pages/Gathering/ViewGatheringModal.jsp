@@ -80,39 +80,42 @@
                 
             </div>
 
-				<div class="button-group">
 				    <% 
 				        
 				        boolean isJoined = gatheringDAO.IsUserJoined(gathering.getGroup_id(), userId); 
 				    %>
 				    
 					
-				    <!-- 항상 표시되는 취소 버튼 -->
-				    <button class="reset-btn" onclick="location.href='Index.jsp';">취소</button>
-				    
-				    <% if (isCreator) { %>
-				        <!-- 생성자일 경우: 삭제 버튼 표시 -->
-						<form action="Index.jsp" method="post" style="display:inline;">
-						    <input type="hidden" name="jobStatus" value="DELETE">
-						    <input type="hidden" name="group_id" value="<%= gathering.getGroup_id() %>">
-						    <button type="submit" class="submit-btn" onclick="return confirm('모임을 삭제하시겠습니까?');">삭제</button>
-						</form>
-				    <% } else { %>
-				        <% if (!isJoined) { %>
-				            <!-- 참가 버튼 -->
-				            <form action="JoinGathering.jsp" method="post" style="display:inline;">
-				                <input type="hidden" name="group_id" value="<%= gathering.getGroup_id() %>">
-				                <button type="submit" class="submit-btn" onclick="return confirm('참가하시겠습니까?');">참가</button>
-				            </form>
-				        <% } else { %>
-				            <!-- 참가 취소 버튼 -->
-				            <form action="CancelJoinGathering.jsp" method="post" style="display:inline;">
-				                <input type="hidden" name="group_id" value="<%= gathering.getGroup_id() %>">
-				                <button type="submit" class="submit-btn" onclick="return confirm('참가를 취소하시겠습니까?');">참가 취소</button>
-				            </form>
-				        <% } %>
-				    <% } %>
-				</div>
+				   <div class="button-group">
+					    <!-- 항상 표시되는 취소 버튼 -->
+					    <button class="reset-btn" onclick="location.href='Index.jsp';">취소</button>
+					
+					    <% if (isCreator) { %>
+					        <!-- 수정 버튼 -->
+					        <button class="edit-btn" onclick="location.href='EditGathering.jsp?GROUP_ID=<%= gathering.getGroup_id() %>'">수정</button>
+					
+					        <!-- 생성자일 경우: 삭제 버튼 표시 -->
+					        <form action="Index.jsp" method="post" style="display:inline;">
+					            <input type="hidden" name="jobStatus" value="DELETE">
+					            <input type="hidden" name="group_id" value="<%= gathering.getGroup_id() %>">
+					            <button type="submit" class="submit-btn" onclick="return confirm('모임을 삭제하시겠습니까?');">삭제</button>
+					        </form>
+					    <% } else { %>
+					        <% if (!isJoined) { %>
+					            <!-- 참가 버튼 -->
+					            <form action="JoinGathering.jsp" method="post" style="display:inline;">
+					                <input type="hidden" name="group_id" value="<%= gathering.getGroup_id() %>">
+					                <button type="submit" class="submit-btn" onclick="return confirm('참가하시겠습니까?');">참가</button>
+					            </form>
+					        <% } else { %>
+					            <!-- 참가 취소 버튼 -->
+					            <form action="CancelJoinGathering.jsp" method="post" style="display:inline;">
+					                <input type="hidden" name="group_id" value="<%= gathering.getGroup_id() %>">
+					                <button type="submit" class="submit-btn" onclick="return confirm('참가를 취소하시겠습니까?');">참가 취소</button>
+					            </form>
+					        <% } %>
+					    <% } %>
+					</div>
 				
 				                <!--  댓글기능 -->
 <!--                 <div class="comments">

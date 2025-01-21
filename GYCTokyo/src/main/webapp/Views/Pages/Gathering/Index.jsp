@@ -272,7 +272,7 @@ if ("DELETE".equalsIgnoreCase(jobStatus)) {
         <%@ include file="/Views/Components/Sider/Sider.jsp" %>
 
         <!-- 메인 콘텐츠 -->
-        <main style="flex: 1; padding: 50px;">
+        <main style="flex: 1">
             <!-- 소모임 -->
             <%@ include file="/Views/Pages/Gathering/Gathering.jsp" %>
 

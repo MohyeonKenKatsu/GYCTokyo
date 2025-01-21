@@ -217,12 +217,15 @@ public class GatheringDAO
 	        // DB 연결 확인
 	        if (this.DBMgr.DbConnect() == true) {
 	            // SQL 쿼리 작성
-	            sSql = "SELECT g.GROUP_ID, g.USER_ID, g.TITLE, g.START_DATE, g.FINISH_DATE, " +
-	                    "g.ACTIVITY_DAY, g.NUMBER_LIMIT, g.CONTENT, u.NICKNAME " +
-	                    "FROM TB_GATHERING g " +
-	                    "JOIN TB_USERS u ON g.USER_ID = u.USER_ID " +
-	                    "WHERE g.GROUP_ID = ?";
-
+	        	sSql = "SELECT g.GROUP_ID, g.USER_ID, g.TITLE, " +
+	        	        "TO_CHAR(g.START_DATE, 'YYYY-MM-DD') AS START_DATE, " +
+	        	        "TO_CHAR(g.FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE, " +
+	        	        "TO_CHAR(g.ACTIVITY_DAY, 'YYYY-MM-DD') AS ACTIVITY_DAY, " +
+	        	        "g.NUMBER_LIMIT, g.CONTENT, u.NICKNAME " +
+	        	        "FROM TB_GATHERING g " +
+	        	        "JOIN TB_USERS u ON g.USER_ID = u.USER_ID " +
+	        	        "WHERE g.GROUP_ID = ?";
+	        	
 	            Object[] oPaValue = { groupId };
 
 	            // 쿼리 실행
@@ -260,11 +263,15 @@ public class GatheringDAO
 
 	        if (this.DBMgr.DbConnect() == true) {
 	            // 전체 소모임 정보 가져오는 SQL 작성
-	        	sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
+	        	sSql = "SELECT GROUP_ID, USER_ID, TITLE, " +
+	        		       "TO_CHAR(START_DATE, 'YYYY-MM-DD') AS START_DATE, " +
+	        		       "TO_CHAR(FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE, " +
+	        		       "TO_CHAR(ACTIVITY_DAY, 'YYYY-MM-DD') AS ACTIVITY_DAY, " +
+	        		       "NUMBER_LIMIT, CONTENT " +
 	        		       "FROM TB_GATHERING " +
-	 	                   "WHERE TO_DATE(FINISH_DATE, 'YYYY-MM-DD') >= TO_DATE(SYSDATE, 'YYYY-MM-DD') " + // Filter based on current date
+	        		       "WHERE TO_DATE(FINISH_DATE, 'YYYY-MM-DD') >= TO_DATE(SYSDATE, 'YYYY-MM-DD') " +
 	        		       "ORDER BY GROUP_ID DESC";
-
+	        	
 	            if (this.DBMgr.RunQuery(sSql, null, 0, true) == true) {
 	                while (this.DBMgr.Rs.next()) {
 	                    GatheringDTO dto = new GatheringDTO();

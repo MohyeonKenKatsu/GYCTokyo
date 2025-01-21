@@ -3,6 +3,9 @@
 :root {
   --font-primary: "Pretendard", sans-serif;
 }
+.edit-btn {
+	background-color: #f1f1f1;
+}
 
 * {
   font-family: var(--font-primary);
@@ -161,5 +164,20 @@ textarea {
 
 .participant-list li:last-child {
     border-bottom: none;
+}
+
+.edit-btn {
+	background-color: #f1f1f1;
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #0353a4; /* 다른 버튼과 동일한 배경색 */
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #024c8c; /* 호버 시 색상 */
 }
 
