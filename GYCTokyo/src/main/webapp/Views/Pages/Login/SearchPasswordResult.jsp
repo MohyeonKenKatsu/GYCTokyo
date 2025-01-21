@@ -283,7 +283,7 @@
 	    	   	
 				<div class = button-container>
 					<button type="reset" class="reset-btn" onclick="window.location.href='Login.jsp'">취소</button>
-					<button type="submit" id="submitbtn" class="signup-btn">등록</button>
+					<button type="submit" id="submitbtn" class="signup-btn">비밀번호 변경</button>
 				</div>
 			</form>
 		</div>
