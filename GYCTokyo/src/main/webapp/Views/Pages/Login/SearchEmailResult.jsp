@@ -40,7 +40,7 @@
 		// -----------------------------------------------------------------
 		// [브라우저 갱신 완료 시 호출 할 이벤트 핸들러 연결 - 필수]
 		// -----------------------------------------------------------------
-		// window.onload = function () { DocumentInit('페이지가 모두 로드되었습니다!'); }
+		window.onload = function () { DocumentInit('페이지가 모두 로드되었습니다!'); }
 		// window.addEventListener('load', DocumentInit('페이지가 모두 로드되었습니다!'));
 		// window.addEventListener('load', DocumentInit);
 		// -----------------------------------------------------------------
@@ -52,14 +52,14 @@
 		{
 			requestAnimationFrame(function() {
 				requestAnimationFrame(function() {
-					alert(Msg);
+					PrintErrorMsg();
 				});
 			});
         }
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		
+
 		// -----------------------------------------------------------------
 	</script>
 </head>
@@ -233,15 +233,15 @@
 		// -----------------------------------------------------------------
 	%>
 </body>
-
 <script type="text/javascript">
-	// 이메일 조회 결과가 없을 때
-	if (<%= bNone == true %>)
+	function PrintErrorMsg()
 	{
-		{//DocumentInit("검색 결과가 없습니다.");
-		alert("검색 결과가 없습니다.");}
-		location.href="Login.jsp";
+		if (<%=bNone %>)
+		{
+			alert("검색 결과가 없습니다.");
+			
+			location.href="Login.jsp";
+		}
 	}
 </script>
-
 </html>
