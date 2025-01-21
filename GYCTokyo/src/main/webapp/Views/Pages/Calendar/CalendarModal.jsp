@@ -91,13 +91,13 @@
                 <input type="date" id="calendar_date" name="calendar_date" value="<%= calendarDate != null ? calendarDate : "" %>" required />
 
                 <label for="category">카테고리</label>
-                <select id="category" name="category">
+                <select style="width: 93%;" id="category" name="category">
                     <option value="1" <%= "GYC".equals(category) ? "selected" : "" %>>GYC 일정</option>
                     <option value="2" <%= "기타".equals(category) ? "selected" : "" %>>개인 일정</option>
                 </select>
 
                 <label for="memo">메모</label>
-                <textarea id="memo" name="memo" placeholder="메모를 입력하세요"><%= memo != null ? memo : "" %></textarea>
+                <textarea id="memo" name="memo" placeholder="엔터 절대 금지!"><%= memo != null ? memo : "" %></textarea>
 
                 <!-- 숨겨진 필드: userId와 calendarId -->
                 <input type="hidden" name="submit" value="true">
