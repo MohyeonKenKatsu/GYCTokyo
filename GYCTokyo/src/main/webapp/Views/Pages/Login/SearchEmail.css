@@ -94,14 +94,21 @@ button.check-btn {
 }
 
 
-button.signup-btn, button.reset-btn {
-    width: 12%;
+button.signup-btn {
+    width: 16%;
     padding: 10px;
     font-size: 14px;
     border-radius: 12px;
     cursor: pointer;
 }
 
+button.reset-btn {
+    width: 12%;
+    padding: 10px;
+    font-size: 14px;
+    border-radius: 12px;
+    cursor: pointer;
+}
 
 button.signup-btn {
     background-color: #0353a4;

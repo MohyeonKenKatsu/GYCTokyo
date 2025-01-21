@@ -177,59 +177,7 @@ public class GatheringDAO
 		
 		return bResult;
 	}
-	/***********************************************************************
-	 * GatheringDetailUpdate()	: 모집글을 오라클 데이터베이스에서 수정(Update)
-	 * @param GatheringId		: 모집글 Id
-	 * @param GatheringDTO		: 모집글 DTO 객체
-	 * @return boolean			: true | false
-	 ***********************************************************************/
-	public boolean GatheringDetailUpdate(int GatheringId, GatheringDTO gatheringDTO)
-	{
-		String sSql	= null;						// DML 문장
-		Object[] oPaValue = null;				// DML 문장에 필요한 파라미터 객체
-		boolean bResult = false;
-		
-		try
-		{
-	    	// -----------------------------------------------------------------------------
-			// 모집글 수정
-	    	// -----------------------------------------------------------------------------
-			if (this.DBMgr.DbConnect() == true)
-			{
-				// 모집글 수정
-				sSql = "BEGIN SP_GATHERING_CUD(?,?,?,?,?,?,?,?); END;";
 
-				// IN 파라미터 만큼만 할당
-				oPaValue = new Object[8];
-				
-				oPaValue[0] = "INSERT";
-				oPaValue[1] = gatheringDTO.getGroup_id();
-				oPaValue[2] = gatheringDTO.getTitle();
-				oPaValue[3] = gatheringDTO.getStart_date();
-				oPaValue[4] = gatheringDTO.getFinish_date();
-				oPaValue[5] = gatheringDTO.getActivity_date();
-				oPaValue[6] = gatheringDTO.getNumber_limit();
-				oPaValue[7] = gatheringDTO.getContent();
-				
-				if (this.DBMgr.RunQuery(sSql, oPaValue, 0, false) == true)
-				{
-					
-					this.DBMgr.DbCommit();
-					
-					bResult = true;
-				}
-				
-				this.DBMgr.DbDisConnect();
-			}
-	    	// -----------------------------------------------------------------------------
-		}
-		catch (Exception Ex)
-		{
-			Common.ExceptionMgr.DisplayException(Ex);		// 예외처리(콘솔)
-		}
-		
-		return bResult;
-	}
 	/***********************************************************************
 	 * GatheringDetailDelete()	: 모집글을 오라클 데이터베이스에서 삭제(Delete)
 	 * @param GroupId			: 모집글 Id
@@ -518,8 +466,40 @@ public class GatheringDAO
 
 	    return gatheringList;
 	}
+	/***********************************************************************
+	 * GatheringDetailUpdate() 	: 모임 내용 수정
+	 * @param groupId 			: 그룹 Id
+	 * @param gatheringDTO 			: gatheringDTO
+	 * @return boolean 				: true | false
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean GatheringDetailUpdate(int groupId, GatheringDTO gatheringDTO) throws Exception {
+	    String sSql = "UPDATE TB_GATHERING " +
+	                  "SET TITLE = ?, START_DATE = ?, FINISH_DATE = ?, ACTIVITY_DAY = ?, NUMBER_LIMIT = ?, CONTENT = ? " +
+	                  "WHERE GROUP_ID = ?";
+	    Object[] params = {
+	        gatheringDTO.getTitle(),
+	        gatheringDTO.getStart_date(),
+	        gatheringDTO.getFinish_date(),
+	        gatheringDTO.getActivity_date(),
+	        gatheringDTO.getNumber_limit(),
+	        gatheringDTO.getContent(),
+	        groupId
+	    };
 
-	
+	    boolean result = false;
+	    try {
+	        if (this.DBMgr.DbConnect() && this.DBMgr.RunQuery(sSql, params, 0, false)) {
+	            this.DBMgr.DbCommit();
+	            result = true;
+	        }
+	    } catch (Exception ex) {
+	        Common.ExceptionMgr.DisplayException(ex);
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return result;
+	}
 	
 }
 	//#################################################################################################

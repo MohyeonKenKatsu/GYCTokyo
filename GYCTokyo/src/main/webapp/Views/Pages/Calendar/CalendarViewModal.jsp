@@ -30,7 +30,7 @@
                     <input type="date" id="calendar_date" name="calendar_date" value="<%= calendarDate %>" readonly />
 
                     <label for="category">카테고리</label>
-					<select id="category" name="category" disabled>
+					<select style="width: 93%;" id="category" name="category" disabled>
 					    <option value="1" <%= "1".equals(category) ? "selected" : "" %>>GYC 일정</option>
 					    <option value="2" <%= "2".equals(category) ? "selected" : "" %>>개인 일정</option>
 					</select>
