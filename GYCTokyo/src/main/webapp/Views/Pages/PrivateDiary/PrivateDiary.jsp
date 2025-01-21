@@ -247,7 +247,7 @@
 	            <textarea id="content" name="content" placeholder="오늘 하루는 어땠나요? 마음일기를 자유롭게 작성해주세요."></textarea>
 	        </div>
 	        <div class="modal-footer">
-	            <button class="cancel-button" id="closeModalButton">취소</button>
+	            <button class="cancel-button" id="closeModalButton" type="button">취소</button>
 	            <button class="save-button" type="submit">저장</button>
 	        </div>
 	    </div>
