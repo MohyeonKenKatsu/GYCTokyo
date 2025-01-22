@@ -3,6 +3,7 @@
 <%@page import="BeansGathering.GatheringDTO"%>
 <%@page import="BeansGathering.GatheringDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<% request.setCharacterEncoding("UTF-8");%>
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -60,15 +61,15 @@
             </div>
             <div class="form-group">
                 <label for="start_date">시작 날짜:</label>
-                <input type="date" id="start_date" name="start_date" value="<%= startDate %>" required>
+                <input type="date" id="start_date" name="start_date" value="<%= gathering.getStart_date() %>" required>
             </div>
             <div class="form-group">
                 <label for="finish_date">종료 날짜:</label>
-                <input type="date" id="finish_date" name="finish_date" value="<%= finishDate %>" required>
+                <input type="date" id="finish_date" name="finish_date" value="<%= gathering.getFinish_date() %>" required>
             </div>
             <div class="form-group">
                 <label for="activity_date">활동 날짜:</label>
-                <input type="date" id="activity_date" name="activity_date" value="<%= activityDate %>" required>
+                <input type="date" id="activity_date" name="activity_date" value="<%= gathering.getActivity_date() %>" required>
             </div>
             <div class="form-group">
                 <label for="number_limit">모집 인원:</label>

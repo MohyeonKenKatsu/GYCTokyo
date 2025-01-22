@@ -507,8 +507,91 @@ public class GatheringDAO
 	    }
 	    return result;
 	}
+	/***********************************************************************
+	 * insertComment()  : 댓글 추가
+	 * @param comment : CommentDTO
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean insertComment(CommentDTO comment) throws Exception {
+	    String sql = "INSERT INTO TB_COMMENT (COMMENT_ID, GROUP_ID, USER_ID, CONTENT, CREATED_AT) " +
+	                 "VALUES (COMMENT_SEQ.NEXTVAL, ?, ?, ?, SYSTIMESTAMP)";
+	    Object[] params = {
+	        comment.getGroupId(),
+	        comment.getUserId(),
+	        comment.getContent()
+	    };
+
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            boolean success = this.DBMgr.RunQuery(sql, params, 0, false);
+	            if (success) {
+	                this.DBMgr.DbCommit();
+	                return true;
+	            }
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return false;
+	}	/***********************************************************************
+	 * getComments()  : 댓글 조회
+	 * @param groupId : 그룹 아이디
+	 * @throws Exception 
+	 ***********************************************************************/
+	public List<CommentDTO> getComments(int groupId) throws Exception {
+	    String sql = "SELECT COMMENT_ID, GROUP_ID, USER_ID, CONTENT, CREATED_AT " +
+	                 "FROM TB_COMMENT WHERE GROUP_ID = ? ORDER BY CREATED_AT DESC";
+	    List<CommentDTO> comments = new ArrayList<>();
+	    Object[] params = { groupId };
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            if (this.DBMgr.RunQuery(sql, params, 0, true)) {
+	                while (this.DBMgr.Rs.next()) {
+	                    CommentDTO comment = new CommentDTO();
+	                    comment.setCommentId(this.DBMgr.Rs.getInt("COMMENT_ID"));
+	                    comment.setGroupId(this.DBMgr.Rs.getInt("GROUP_ID"));
+	                    comment.setUserId(this.DBMgr.Rs.getInt("USER_ID"));
+	                    comment.setContent(this.DBMgr.Rs.getString("CONTENT"));
+	                    comment.setCreatedAt(this.DBMgr.Rs.getTimestamp("CREATED_AT"));
+	                    comments.add(comment);
+	                }
+	            }
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return comments;
+	}
+	/***********************************************************************
+	 * deleteComment()  : 댓글 삭제
+	 * @param commentId : 코멘트 아이디
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean deleteComment(int commentId) throws Exception {
+	    String sql = "DELETE FROM TB_COMMENT WHERE COMMENT_ID = ?";
+	    Object[] params = { commentId };
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            boolean success = this.DBMgr.RunQuery(sql, params, 0, false);
+	            if (success) {
+	                this.DBMgr.DbCommit();
+	            }
+	            return success;
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return false;
+	}
 	
-}
+	
+	}
 	//#################################################################################################
 //<END>
 //#################################################################################################

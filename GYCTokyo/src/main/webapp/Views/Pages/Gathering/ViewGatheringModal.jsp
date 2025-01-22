@@ -1,3 +1,4 @@
+<%@page import="BeansGathering.CommentDTO"%>
 <%@page import="java.util.List"%>
 <%@page import="BeansGathering.GatheringDAO"%>
 <%@page import="BeansGathering.GatheringDTO"%>
@@ -66,26 +67,53 @@
 					    </ul>
 					</div>
          	
-            <div class="comment-section">
-                <div class="comment-header">
-                    <h3>댓글</h3>
-                    <div class="comment-input-container">
-                        <input type="text" id="comment-input" placeholder="댓글을 입력하세요">
-                        <button type="button" id="submit-comment">등록</button>
-                    </div>
-                </div>
-                
-                
-               
-                
-            </div>
+         	
+						<div class="comment-section">
+						    <h3>댓글</h3>
+						    
+						    <div class="comment-input-container">
+							    <form action="CommentHandler.jsp" method="post">
+							        <input type="hidden" name="group_id" value="<%= gathering.getGroup_id() %>">
+							        <input type="hidden" name="user_id" value="<%= userId %>">
+							        <input type="hidden" name="action" value="insert">
+							        <input type="text" name="content" placeholder="댓글을 입력하세요" required>
+							        <button type="submit">등록</button>
+							    </form>
+							</div>
+						    
+						    <ul class="comment-list">
+						        <% 
+						        List<CommentDTO> comments = gatheringDAO.getComments(gathering.getGroup_id());
+						        if (comments != null && !comments.isEmpty()) {
+						            for (CommentDTO comment : comments) {
+						        %>
+						            <li class="comment-item">
+						                <strong class="username">사용자 ID: <%= comment.getUserId() %></strong>
+						                <span class="comment-text"><%= comment.getContent() %></span>
+						                <span class="time"><%= comment.getCreatedAt() %></span>
+						                <% if (comment.getUserId() == userId) { %>
 
+						                    <%-- <form action="CommentHandler.jsp" method="post" style="display:inline;">
+											    <input type="hidden" name="action" value="delete">
+											    <input type="hidden" name="comment_id" value="<%= comment.getCommentId() %>">
+											    <button type="submit" class="delete-btn">삭제</button>
+											</form> --%>
+						                <% } %>
+						            </li>
+						        <% 
+						            }
+						        } else {
+						        %>
+						            <li>등록된 댓글이 없습니다.</li>
+						        <% } %>
+						    </ul>
+					
+						</div>
 				    <% 
-				        
 				        boolean isJoined = gatheringDAO.IsUserJoined(gathering.getGroup_id(), userId); 
 				    %>
-				    
-					
+				
+			
 				   <div class="button-group">
 					    <!-- 항상 표시되는 취소 버튼 -->
 					    <button class="reset-btn" onclick="location.href='Index.jsp';">취소</button>
@@ -115,6 +143,7 @@
 					            </form>
 					        <% } %>
 					    <% } %>
+					</div>
 					</div>
 				
 				                <!--  댓글기능 -->
