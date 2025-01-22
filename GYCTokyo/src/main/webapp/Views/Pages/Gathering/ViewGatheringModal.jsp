@@ -2,6 +2,8 @@
 <%@page import="java.util.List"%>
 <%@page import="BeansGathering.GatheringDAO"%>
 <%@page import="BeansGathering.GatheringDTO"%>
+<%@ page import="java.text.SimpleDateFormat" %>
+<%@ page import="java.util.Date" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -80,34 +82,45 @@
 							        <button type="submit">등록</button>
 							    </form>
 							</div>
-						    
-						    <ul class="comment-list">
-						        <% 
-						        List<CommentDTO> comments = gatheringDAO.getComments(gathering.getGroup_id());
-						        if (comments != null && !comments.isEmpty()) {
-						            for (CommentDTO comment : comments) {
-						        %>
-						            <li class="comment-item">
-						                <strong class="username">사용자 ID: <%= comment.getUserId() %></strong>
-						                <span class="comment-text"><%= comment.getContent() %></span>
-						                <span class="time"><%= comment.getCreatedAt() %></span>
-						                <% if (comment.getUserId() == userId) { %>
-
-						                    <%-- <form action="CommentHandler.jsp" method="post" style="display:inline;">
-											    <input type="hidden" name="action" value="delete">
-											    <input type="hidden" name="comment_id" value="<%= comment.getCommentId() %>">
-											    <button type="submit" class="delete-btn">삭제</button>
-											</form> --%>
-						                <% } %>
-						            </li>
-						        <% 
-						            }
-						        } else {
-						        %>
-						            <li>등록된 댓글이 없습니다.</li>
-						        <% } %>
-						    </ul>
-					
+							<%
+							    // 시간 포맷 설정
+							    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+							%>
+								<ul class="comment-list">
+								    <% 
+								    List<CommentDTO> comments = gatheringDAO.getComments(gathering.getGroup_id());
+								    if (comments != null && !comments.isEmpty()) {
+								        for (CommentDTO comment : comments) {
+								    %>
+								        <li class="comment-item">
+								            <strong class="username"><%= comment.getNickname() %></strong>
+								            <span class="comment-text"><%= comment.getContent() %></span>
+								            <span class="time">
+								                <% 
+								                // Timestamp를 Date로 변환하고 포맷팅
+								                if (comment.getCreatedAt() != null) {
+								                    out.print(sdf.format(comment.getCreatedAt()));
+								                } else {
+								                    out.print("시간 정보 없음");
+								                }
+								                %>
+								            </span>
+								
+								            <% if (comment.getUserId() == userId) { %>
+<%-- 								                <form action="CommentHandler.jsp" method="post" style="display:inline;">
+								                    <input type="hidden" name="action" value="delete">
+								                    <input type="hidden" name="comment_id" value="<%= comment.getCommentId() %>">
+								                    <button type="submit" class="delete-btn">삭제</button>
+								                </form> --%>
+								            <% } %>
+								        </li>
+								    <% 
+								        }
+								    } else {
+								    %>
+								        <li>등록된 댓글이 없습니다.</li>
+								    <% } %>
+								</ul>					
 						</div>
 				    <% 
 				        boolean isJoined = gatheringDAO.IsUserJoined(gathering.getGroup_id(), userId); 

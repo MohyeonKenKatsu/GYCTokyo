@@ -444,7 +444,7 @@ public class GatheringDAO
 	 ***********************************************************************/
 	public List<GatheringDTO> getFinishedGatherings() throws Exception {
 	    List<GatheringDTO> gatheringList = new ArrayList<>();
-	    String sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
+	    String sSql = "SELECT GROUP_ID, USER_ID, TITLE, TO_CHAR(START_DATE, 'YYYY-MM-DD') AS START_DATE, TO_CHAR(FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE, TO_CHAR(ACTIVITY_DAY, 'YYYY-MM-DD') AS ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
 	                  "FROM TB_GATHERING " +
 	                  "WHERE FINISH_DATE < SYSDATE " + // Filter based on current date
 	                  "ORDER BY FINISH_DATE DESC";
@@ -474,8 +474,8 @@ public class GatheringDAO
 	    return gatheringList;
 	}
 	/***********************************************************************
-	 * GatheringDetailUpdate() 	: 모임 내용 수정
-	 * @param groupId 			: 그룹 Id
+	 * GatheringDetailUpdate() 		: 모임 내용 수정
+	 * @param groupId 				: 그룹 Id
 	 * @param gatheringDTO 			: gatheringDTO
 	 * @return boolean 				: true | false
 	 * @throws Exception 
@@ -535,14 +535,18 @@ public class GatheringDAO
 	        this.DBMgr.DbDisConnect();
 	    }
 	    return false;
-	}	/***********************************************************************
-	 * getComments()  : 댓글 조회
+	}
+	/***********************************************************************
+	 * getComments()  : 댓글 조회 (닉네임 포함)
 	 * @param groupId : 그룹 아이디
 	 * @throws Exception 
 	 ***********************************************************************/
 	public List<CommentDTO> getComments(int groupId) throws Exception {
-	    String sql = "SELECT COMMENT_ID, GROUP_ID, USER_ID, CONTENT, CREATED_AT " +
-	                 "FROM TB_COMMENT WHERE GROUP_ID = ? ORDER BY CREATED_AT DESC";
+	    String sql = "SELECT c.COMMENT_ID, c.GROUP_ID, c.USER_ID, u.NICKNAME, c.CONTENT, c.CREATED_AT " +
+	                 "FROM TB_COMMENT c " +
+	                 "JOIN TB_USERS u ON c.USER_ID = u.USER_ID " +
+	                 "WHERE c.GROUP_ID = ? " +
+	                 "ORDER BY c.CREATED_AT DESC";
 	    List<CommentDTO> comments = new ArrayList<>();
 	    Object[] params = { groupId };
 	    try {
@@ -553,6 +557,7 @@ public class GatheringDAO
 	                    comment.setCommentId(this.DBMgr.Rs.getInt("COMMENT_ID"));
 	                    comment.setGroupId(this.DBMgr.Rs.getInt("GROUP_ID"));
 	                    comment.setUserId(this.DBMgr.Rs.getInt("USER_ID"));
+	                    comment.setNickname(this.DBMgr.Rs.getString("NICKNAME")); // 닉네임 추가
 	                    comment.setContent(this.DBMgr.Rs.getString("CONTENT"));
 	                    comment.setCreatedAt(this.DBMgr.Rs.getTimestamp("CREATED_AT"));
 	                    comments.add(comment);

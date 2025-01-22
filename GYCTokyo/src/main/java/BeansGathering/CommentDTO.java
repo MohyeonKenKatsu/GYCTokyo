@@ -8,6 +8,7 @@ public class CommentDTO {
     private int userId;    // 사용자 ID
     private String content; // 댓글 내용
     private Timestamp createdAt; // 작성 시간
+    private String nickname; // 작성 시간
 
     // 기본 생성자
     public CommentDTO() {}
@@ -24,6 +25,9 @@ public class CommentDTO {
     // Getter and Setter methods
     public int getCommentId() {
         return commentId;
+    }
+    public String getNickname() {
+        return nickname;
     }
 
     public void setCommentId(int commentId) {
@@ -60,5 +64,9 @@ public class CommentDTO {
 
     public void setCreatedAt(Timestamp createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickname = nickname;
     }
 }
