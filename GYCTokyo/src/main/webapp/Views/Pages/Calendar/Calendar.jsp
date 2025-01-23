@@ -80,7 +80,7 @@
 
 
                 // 새 창으로 열기
-                const modalWindow = window.open(modalUrl, "Modal", "width=600,height=400");
+                const modalWindow = window.open(modalUrl, "Modal", "width=1920,height=1080");
                 modalWindow.focus();
             },
         });
