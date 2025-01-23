@@ -3,6 +3,9 @@
 :root {
   --font-primary: "Pretendard", sans-serif;
 }
+.edit-btn {
+	background-color: #f1f1f1;
+}
 
 * {
   font-family: var(--font-primary);
@@ -17,17 +20,15 @@
     position: relative; /* 자식 요소의 위치 기준 */
 }
 
+
+
 .button-group {
     display: flex;
-    justify-content: flex-end; /* 버튼을 오른쪽으로 정렬 */
-    gap: 10px; /* 버튼 간 간격 */
-    position: absolute; /* 부모 요소의 기준으로 위치 설정 */
-    bottom: 20px; /* 부모 요소의 하단에서의 거리 */
-    right: 20px; /* 부모 요소의 오른쪽에서의 거리 */
-}
-
-.comment-section {
-    margin-bottom: 60px; /* 버튼과 댓글 섹션 사이의 거리 */
+    justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+    gap: 15px; /* 버튼 간의 간격 */
+    position: absolute; /* 부모 요소 내부에서 위치 조정 */
+    bottom: 20px; /* 하단으로부터 거리 */
+    right: 20px; /* 오른쪽으로부터 거리 */
 }
 
 input::placeholder, 
@@ -161,5 +162,111 @@ textarea {
 
 .participant-list li:last-child {
     border-bottom: none;
+}
+
+.edit-btn {
+	background-color: #f1f1f1;
+    padding: 10px 20px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #0353a4; /* 다른 버튼과 동일한 배경색 */
+    color: white;
+}
+
+.edit-btn:hover {
+    background-color: #024c8c; /* 호버 시 색상 */
+}
+.comment-section {
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 60px;
+}
+
+.comment-header h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    color: #333;
+    border-bottom: 2px solid #0353a4;
+    display: inline-block;
+    padding-bottom: 5px;
+}
+
+.comment-list {
+    max-height: 200px; /* 스크롤 영역 설정 */
+    overflow-y: auto; /* 스크롤 활성화 */
+    margin-top: 10px;
+    padding: 0;
+    list-style: none;
+}
+
+.comment-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 10px;
+    padding: 10px;
+    background-color: white;
+    border: 1px solid #eee;
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comment-item:last-child {
+    margin-bottom: 0;
+}
+
+.comment-item .username {
+    font-weight: bold;
+    color: #0353a4;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.comment-item .comment-text {
+    flex-grow: 1;
+    font-size: 14px;
+    color: #555;
+    margin-right: 10px;
+}
+
+.comment-item .time {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.comment-input-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.comment-input-container input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.comment-input-container button {
+    padding: 10px 20px;
+    background-color: #0353a4;
+    color: white;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.comment-input-container button:hover {
+    background-color: #024c8c;
 }
 

@@ -40,7 +40,7 @@
 		// -----------------------------------------------------------------
 		// [브라우저 갱신 완료 시 호출 할 이벤트 핸들러 연결 - 필수]
 		// -----------------------------------------------------------------
-		// window.onload = function () { DocumentInit('페이지가 모두 로드되었습니다!'); }
+		window.onload = function () { DocumentInit('페이지가 모두 로드되었습니다!'); }
 		// window.addEventListener('load', DocumentInit('페이지가 모두 로드되었습니다!'));
 		// window.addEventListener('load', DocumentInit);
 		// -----------------------------------------------------------------
@@ -52,14 +52,14 @@
 		{
 			requestAnimationFrame(function() {
 				requestAnimationFrame(function() {
-					alert(Msg);
+					PrintErrorMsg();
 				});
 			});
         }
 		// -----------------------------------------------------------------
 		// [사용자 함수 및 로직 구현]
 		// -----------------------------------------------------------------
-		
+
 		// -----------------------------------------------------------------
 	</script>
 </head>
@@ -141,20 +141,10 @@
 	// 회원가입에 성공했을 경우
 	if (this.usersDAO.SearchEmail(usersDTO) == true)
 	{
-		bNone = false;
 	}
-	else bNone = true;
 %>
 
-<script type="text/javascript">
-	// 회원가입에 성공했을 경우
-	if (<%= bNone %> == true)
-	{
-		//DocumentInit("검색 결과가 없습니다.");
-		alert("검색 결과가 없습니다.");
-		location.href="Login.jsp";
-	}
-</script>
+
 
 <body>
 	<div class="container">
@@ -164,13 +154,15 @@
 				<table class="form-table">
 					
 					<%
+					bNone = true;
 					while (this.usersDAO.DBMgr.Rs.next() == true)
 					{
+						bNone = false;
 						stempEmail = this.usersDAO.DBMgr.Rs.getString("EMAIL");
 					%>
 						<tr>
 							<td></td>
-							<td><a href="Login.jsp?email=<%= stempEmail %>"><%= this.usersDAO.DBMgr.Rs.getString("EMAIL") %></a></td>
+							<td><a href="Login.jsp?email=<%= stempEmail %>"><%= stempEmail %></a></td>
 							<td></td>
 						</tr>
 					<%	
@@ -241,4 +233,15 @@
 		// -----------------------------------------------------------------
 	%>
 </body>
+<script type="text/javascript">
+	function PrintErrorMsg()
+	{
+		if (<%=bNone %>)
+		{
+			alert("검색 결과가 없습니다.");
+			
+			location.href="Login.jsp";
+		}
+	}
+</script>
 </html>

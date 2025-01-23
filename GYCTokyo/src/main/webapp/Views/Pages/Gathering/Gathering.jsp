@@ -49,7 +49,9 @@
 		            <h3><%= gathering.getTitle() %></h3> <!-- 제목 -->
 		            <p>활동 날짜: <%= gathering.getActivity_date() %></p> <!-- 활동 날짜 -->
 		            <p>내용: <%= gathering.getContent() %></p> <!-- 내용 -->
+		            
 		        </div>
+		        
 		    <% } %>
 </div>
 

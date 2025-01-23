@@ -173,6 +173,40 @@
 	}
 	
 %>
+
+<%
+    // 운동종목 매핑
+    String exerciseType = ComMgr.IsNull(HealthDTO.getType_exercise(), "none");
+    String exerciseImageSrc = "";
+    String exerciseAltText = "";
+
+    switch (exerciseType) {
+        case "walk":
+            exerciseImageSrc = "walk.png";
+            exerciseAltText = "걷기";
+            break;
+        case "run":
+            exerciseImageSrc = "running.png";
+            exerciseAltText = "달리기";
+            break;
+        case "weight":
+            exerciseImageSrc = "weight.png";
+            exerciseAltText = "웨이트";
+            break;
+        case "hiking":
+            exerciseImageSrc = "hiking.png";
+            exerciseAltText = "등산";
+            break;
+        case "cycling":
+            exerciseImageSrc = "cycling.png";
+            exerciseAltText = "자전거";
+            break;
+        default:
+            exerciseImageSrc = "question.png";
+            exerciseAltText = "";
+            break;
+    }
+%>
 <body>
  	<%----------------------------------------------------------------------
 	[HTML Page - FORM 디자인 영역]
@@ -234,7 +268,10 @@
         <br>
         <hr>
         <br>
-		<p>운동종목 : <%=ComMgr.IsNull(HealthDTO.getType_exercise(), "해당없음")%></p>
+	    <p>운동종목 : 
+	        <img src="<%=exerciseImageSrc%>" alt="<%=exerciseAltText%>" style="width:30px; height:30px;">
+	        <%=exerciseAltText%>
+	    </p>
         <p>목표 운동시간 : <%=ComMgr.IsNull(HealthDTO.getGoal_exercise(), 0)*30%> 분 | 달성 운동시간 : <%=ComMgr.IsNull(HealthDTO.getAchieved_exercise(), 0)*30%> 분</p>
         </div>
         

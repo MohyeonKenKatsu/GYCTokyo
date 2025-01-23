@@ -217,12 +217,15 @@ public class GatheringDAO
 	        // DB 연결 확인
 	        if (this.DBMgr.DbConnect() == true) {
 	            // SQL 쿼리 작성
-	            sSql = "SELECT g.GROUP_ID, g.USER_ID, g.TITLE, g.START_DATE, g.FINISH_DATE, " +
-	                    "g.ACTIVITY_DAY, g.NUMBER_LIMIT, g.CONTENT, u.NICKNAME " +
-	                    "FROM TB_GATHERING g " +
-	                    "JOIN TB_USERS u ON g.USER_ID = u.USER_ID " +
-	                    "WHERE g.GROUP_ID = ?";
-
+	        	sSql = "SELECT g.GROUP_ID, g.USER_ID, g.TITLE, " +
+	        	        "TO_CHAR(g.START_DATE, 'YYYY-MM-DD') AS START_DATE, " +
+	        	        "TO_CHAR(g.FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE, " +
+	        	        "TO_CHAR(g.ACTIVITY_DAY, 'YYYY-MM-DD') AS ACTIVITY_DAY, " +
+	        	        "g.NUMBER_LIMIT, g.CONTENT, u.NICKNAME " +
+	        	        "FROM TB_GATHERING g " +
+	        	        "JOIN TB_USERS u ON g.USER_ID = u.USER_ID " +
+	        	        "WHERE g.GROUP_ID = ?";
+	        	
 	            Object[] oPaValue = { groupId };
 
 	            // 쿼리 실행
@@ -260,11 +263,15 @@ public class GatheringDAO
 
 	        if (this.DBMgr.DbConnect() == true) {
 	            // 전체 소모임 정보 가져오는 SQL 작성
-	        	sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
+	        	sSql = "SELECT GROUP_ID, USER_ID, TITLE, " +
+	        		       "TO_CHAR(START_DATE, 'YYYY-MM-DD') AS START_DATE, " +
+	        		       "TO_CHAR(FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE, " +
+	        		       "TO_CHAR(ACTIVITY_DAY, 'YYYY-MM-DD') AS ACTIVITY_DAY, " +
+	        		       "NUMBER_LIMIT, CONTENT " +
 	        		       "FROM TB_GATHERING " +
-	 	                   "WHERE TO_DATE(FINISH_DATE, 'YYYY-MM-DD') >= TO_DATE(SYSDATE, 'YYYY-MM-DD') " + // Filter based on current date
+	        		       "WHERE TO_DATE(FINISH_DATE, 'YYYY-MM-DD') >= TO_DATE(SYSDATE, 'YYYY-MM-DD') " +
 	        		       "ORDER BY GROUP_ID DESC";
-
+	        	
 	            if (this.DBMgr.RunQuery(sSql, null, 0, true) == true) {
 	                while (this.DBMgr.Rs.next()) {
 	                    GatheringDTO dto = new GatheringDTO();
@@ -437,7 +444,7 @@ public class GatheringDAO
 	 ***********************************************************************/
 	public List<GatheringDTO> getFinishedGatherings() throws Exception {
 	    List<GatheringDTO> gatheringList = new ArrayList<>();
-	    String sSql = "SELECT GROUP_ID, USER_ID, TITLE, START_DATE, FINISH_DATE, ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
+	    String sSql = "SELECT GROUP_ID, USER_ID, TITLE, TO_CHAR(START_DATE, 'YYYY-MM-DD') AS START_DATE, TO_CHAR(FINISH_DATE, 'YYYY-MM-DD') AS FINISH_DATE, TO_CHAR(ACTIVITY_DAY, 'YYYY-MM-DD') AS ACTIVITY_DAY, NUMBER_LIMIT, CONTENT " +
 	                  "FROM TB_GATHERING " +
 	                  "WHERE FINISH_DATE < SYSDATE " + // Filter based on current date
 	                  "ORDER BY FINISH_DATE DESC";
@@ -467,8 +474,8 @@ public class GatheringDAO
 	    return gatheringList;
 	}
 	/***********************************************************************
-	 * GatheringDetailUpdate() 	: 모임 내용 수정
-	 * @param groupId 			: 그룹 Id
+	 * GatheringDetailUpdate() 		: 모임 내용 수정
+	 * @param groupId 				: 그룹 Id
 	 * @param gatheringDTO 			: gatheringDTO
 	 * @return boolean 				: true | false
 	 * @throws Exception 
@@ -500,8 +507,96 @@ public class GatheringDAO
 	    }
 	    return result;
 	}
+	/***********************************************************************
+	 * insertComment()  : 댓글 추가
+	 * @param comment : CommentDTO
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean insertComment(CommentDTO comment) throws Exception {
+	    String sql = "INSERT INTO TB_COMMENT (COMMENT_ID, GROUP_ID, USER_ID, CONTENT, CREATED_AT) " +
+	                 "VALUES (COMMENT_SEQ.NEXTVAL, ?, ?, ?, SYSTIMESTAMP)";
+	    Object[] params = {
+	        comment.getGroupId(),
+	        comment.getUserId(),
+	        comment.getContent()
+	    };
+
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            boolean success = this.DBMgr.RunQuery(sql, params, 0, false);
+	            if (success) {
+	                this.DBMgr.DbCommit();
+	                return true;
+	            }
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return false;
+	}
+	/***********************************************************************
+	 * getComments()  : 댓글 조회 (닉네임 포함)
+	 * @param groupId : 그룹 아이디
+	 * @throws Exception 
+	 ***********************************************************************/
+	public List<CommentDTO> getComments(int groupId) throws Exception {
+	    String sql = "SELECT c.COMMENT_ID, c.GROUP_ID, c.USER_ID, u.NICKNAME, c.CONTENT, c.CREATED_AT " +
+	                 "FROM TB_COMMENT c " +
+	                 "JOIN TB_USERS u ON c.USER_ID = u.USER_ID " +
+	                 "WHERE c.GROUP_ID = ? " +
+	                 "ORDER BY c.CREATED_AT DESC";
+	    List<CommentDTO> comments = new ArrayList<>();
+	    Object[] params = { groupId };
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            if (this.DBMgr.RunQuery(sql, params, 0, true)) {
+	                while (this.DBMgr.Rs.next()) {
+	                    CommentDTO comment = new CommentDTO();
+	                    comment.setCommentId(this.DBMgr.Rs.getInt("COMMENT_ID"));
+	                    comment.setGroupId(this.DBMgr.Rs.getInt("GROUP_ID"));
+	                    comment.setUserId(this.DBMgr.Rs.getInt("USER_ID"));
+	                    comment.setNickname(this.DBMgr.Rs.getString("NICKNAME")); // 닉네임 추가
+	                    comment.setContent(this.DBMgr.Rs.getString("CONTENT"));
+	                    comment.setCreatedAt(this.DBMgr.Rs.getTimestamp("CREATED_AT"));
+	                    comments.add(comment);
+	                }
+	            }
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return comments;
+	}
+	/***********************************************************************
+	 * deleteComment()  : 댓글 삭제
+	 * @param commentId : 코멘트 아이디
+	 * @throws Exception 
+	 ***********************************************************************/
+	public boolean deleteComment(int commentId) throws Exception {
+	    String sql = "DELETE FROM TB_COMMENT WHERE COMMENT_ID = ?";
+	    Object[] params = { commentId };
+	    try {
+	        if (this.DBMgr.DbConnect()) {
+	            boolean success = this.DBMgr.RunQuery(sql, params, 0, false);
+	            if (success) {
+	                this.DBMgr.DbCommit();
+	            }
+	            return success;
+	        }
+	    } catch (Exception ex) {
+	        ex.printStackTrace();
+	    } finally {
+	        this.DBMgr.DbDisConnect();
+	    }
+	    return false;
+	}
 	
-}
+	
+	}
 	//#################################################################################################
 //<END>
 //#################################################################################################
