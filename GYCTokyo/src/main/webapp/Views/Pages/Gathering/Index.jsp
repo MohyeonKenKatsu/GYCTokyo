@@ -220,7 +220,7 @@
     }
 }
 %>
-
+<!--  -->
 <%
 String jobStatus = request.getParameter("jobStatus");
 if ("DELETE".equalsIgnoreCase(jobStatus)) {
