@@ -52,7 +52,8 @@ public class GatheringDAO
 			ExceptionMgr.SetMode(ExceptionMgr.RUN_MODE.DEBUG);
 			
 			this.DBMgr = new DBOracleMgr();
-			this.DBMgr.SetConnectionString("gyctokyo.duckdns.org", 1521, "educ", "educ", "XE");
+			this.DBMgr.SetConnectionStringFromProperties("db.properties");	// DB 연결문자열 읽기 
+//			this.DBMgr.SetConnectionString("gyctokyo.duckdns.org", 1521, "educ", "educ", "XE");
 			// -----------------------------------------------------------------------------
 		}
 		catch (Exception Ex)
