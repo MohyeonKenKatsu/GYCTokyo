@@ -11,7 +11,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>일정 상세 보기</title>
     <link rel="stylesheet" href="<%= request.getContextPath() %>/Views/Pages/Calendar/CalendarViewModal.css">
 </head>
